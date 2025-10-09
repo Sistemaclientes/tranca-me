@@ -88,7 +88,7 @@ const BraiderProfile = () => {
               <Card className="bg-gradient-card border-none shadow-soft">
                 <CardContent className="p-6">
                   <h2 className="font-display text-xl font-semibold mb-4">Sobre</h2>
-                  <p className="text-muted-foreground leading-relaxed">{braider.description}</p>
+                  <p className="leading-relaxed">{braider.description}</p>
                 </CardContent>
               </Card>
 
@@ -101,7 +101,7 @@ const BraiderProfile = () => {
                       <Badge 
                         key={index} 
                         variant="secondary"
-                        className="px-4 py-2 text-sm"
+                        className="px-3 py-1"
                       >
                         {service}
                       </Badge>
@@ -110,69 +110,92 @@ const BraiderProfile = () => {
                 </CardContent>
               </Card>
 
+              {/* Reviews */}
+              <Card className="bg-gradient-card border-none shadow-soft">
+                <CardContent className="p-6">
+                  <h2 className="font-display text-xl font-semibold mb-4">Avaliações</h2>
+                  <div className="space-y-4">
+                    <div className="border-b pb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star key={star} className="h-4 w-4 fill-primary text-primary" />
+                          ))}
+                        </div>
+                        <span className="font-semibold">Ana Paula</span>
+                      </div>
+                      <p className="text-sm">Excelente profissional! Amei o resultado das minhas box braids.</p>
+                    </div>
+                    <div className="border-b pb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star key={star} className="h-4 w-4 fill-primary text-primary" />
+                          ))}
+                        </div>
+                        <span className="font-semibold">Mariana Costa</span>
+                      </div>
+                      <p className="text-sm">Super atenciosa e caprichosa. Recomendo!</p>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex">
+                          {[1, 2, 3, 4].map((star) => (
+                            <Star key={star} className="h-4 w-4 fill-primary text-primary" />
+                          ))}
+                          <Star className="h-4 w-4 text-primary" />
+                        </div>
+                        <span className="font-semibold">Beatriz Silva</span>
+                      </div>
+                      <p className="text-sm">Ótimo atendimento e ambiente agradável.</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Contact Information */}
               <Card className="bg-gradient-card border-none shadow-soft">
                 <CardContent className="p-6">
                   <h2 className="font-display text-xl font-semibold mb-4">Contato</h2>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
+                  <div className="space-y-3">
+                    <a 
+                      href={`https://wa.me/${braider.whatsapp.replace(/[^0-9]/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 hover:text-primary transition-colors"
+                    >
                       <Phone className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="text-sm text-muted-foreground">WhatsApp</p>
-                        <a 
-                          href={`https://wa.me/${braider.whatsapp.replace(/[^0-9]/g, '')}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-medium hover:text-primary transition-colors"
-                        >
-                          {braider.whatsapp}
-                        </a>
-                      </div>
-                    </div>
+                      <span>{braider.whatsapp}</span>
+                    </a>
 
-                    <div className="flex items-center gap-3">
+                    <a 
+                      href={`mailto:${braider.email}`}
+                      className="flex items-center gap-3 hover:text-primary transition-colors"
+                    >
                       <Mail className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="text-sm text-muted-foreground">Email</p>
-                        <a 
-                          href={`mailto:${braider.email}`}
-                          className="font-medium hover:text-primary transition-colors"
-                        >
-                          {braider.email}
-                        </a>
-                      </div>
-                    </div>
+                      <span>{braider.email}</span>
+                    </a>
 
-                    <div className="flex items-center gap-3">
+                    <a 
+                      href={`https://instagram.com/${braider.instagram.replace('@', '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 hover:text-primary transition-colors"
+                    >
                       <Instagram className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="text-sm text-muted-foreground">Instagram</p>
-                        <a 
-                          href={`https://instagram.com/${braider.instagram.replace('@', '')}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-medium hover:text-primary transition-colors"
-                        >
-                          {braider.instagram}
-                        </a>
-                      </div>
-                    </div>
+                      <span>{braider.instagram}</span>
+                    </a>
 
                     {braider.facebook && (
-                      <div className="flex items-center gap-3">
+                      <a 
+                        href={`https://facebook.com/${braider.facebook}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 hover:text-primary transition-colors"
+                      >
                         <Facebook className="h-5 w-5 text-primary" />
-                        <div>
-                          <p className="text-sm text-muted-foreground">Facebook</p>
-                          <a 
-                            href={`https://facebook.com/${braider.facebook}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-medium hover:text-primary transition-colors"
-                          >
-                            {braider.facebook}
-                          </a>
-                        </div>
-                      </div>
+                        <span>{braider.facebook}</span>
+                      </a>
                     )}
                   </div>
                 </CardContent>

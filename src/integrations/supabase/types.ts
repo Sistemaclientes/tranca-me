@@ -14,7 +14,92 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      braider_profiles: {
+        Row: {
+          city: string
+          created_at: string
+          description: string | null
+          email: string
+          facebook: string | null
+          id: string
+          image_url: string | null
+          instagram: string | null
+          name: string
+          neighborhood: string
+          services: string[] | null
+          updated_at: string
+          user_id: string
+          whatsapp: string
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          description?: string | null
+          email: string
+          facebook?: string | null
+          id?: string
+          image_url?: string | null
+          instagram?: string | null
+          name: string
+          neighborhood: string
+          services?: string[] | null
+          updated_at?: string
+          user_id: string
+          whatsapp: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          description?: string | null
+          email?: string
+          facebook?: string | null
+          id?: string
+          image_url?: string | null
+          instagram?: string | null
+          name?: string
+          neighborhood?: string
+          services?: string[] | null
+          updated_at?: string
+          user_id?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          braider_id: string
+          client_name: string
+          comment: string | null
+          created_at: string
+          id: string
+          rating: number
+        }
+        Insert: {
+          braider_id: string
+          client_name: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+        }
+        Update: {
+          braider_id?: string
+          client_name?: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_braider_id_fkey"
+            columns: ["braider_id"]
+            isOneToOne: false
+            referencedRelation: "braider_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
