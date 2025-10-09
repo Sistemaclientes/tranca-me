@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook } from "lucide-react";
 import { braiders } from "@/data/braiders";
 
@@ -53,7 +54,7 @@ const BraiderProfile = () => {
               <Card className="bg-gradient-card border-none shadow-soft overflow-hidden">
                 <img 
                   src={braider.image} 
-                  alt={braider.name}
+                  alt={`Foto de ${braider.name}`}
                   className="w-full aspect-square object-cover"
                 />
                 <CardContent className="p-6 space-y-4">
@@ -80,80 +81,26 @@ const BraiderProfile = () => {
                   </Button>
                 </CardContent>
               </Card>
+
+              <Card className="bg-gradient-card border-none shadow-soft overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="aspect-video">
+                    <iframe
+                      className="w-full h-full rounded-md"
+                      src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                      title={`Vídeo de ${braider.name}`}
+                      loading="lazy"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                    />
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Right Column - Detailed Info */}
             <div className="lg:col-span-2 space-y-6">
-              {/* About */}
-              <Card className="bg-gradient-card border-none shadow-soft">
-                <CardContent className="p-6">
-                  <h2 className="font-display text-xl font-semibold mb-4">Sobre</h2>
-                  <p className="leading-relaxed">{braider.description}</p>
-                </CardContent>
-              </Card>
-
-              {/* Services */}
-              <Card className="bg-gradient-card border-none shadow-soft">
-                <CardContent className="p-6">
-                  <h2 className="font-display text-xl font-semibold mb-4">Serviços</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {braider.services.map((service, index) => (
-                      <Badge 
-                        key={index} 
-                        variant="secondary"
-                        className="px-3 py-1"
-                      >
-                        {service}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Reviews */}
-              <Card className="bg-gradient-card border-none shadow-soft">
-                <CardContent className="p-6">
-                  <h2 className="font-display text-xl font-semibold mb-4">Avaliações</h2>
-                  <div className="space-y-4">
-                    <div className="border-b pb-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="flex">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star key={star} className="h-4 w-4 fill-primary text-primary" />
-                          ))}
-                        </div>
-                        <span className="font-semibold">Ana Paula</span>
-                      </div>
-                      <p className="text-sm">Excelente profissional! Amei o resultado das minhas box braids.</p>
-                    </div>
-                    <div className="border-b pb-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="flex">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star key={star} className="h-4 w-4 fill-primary text-primary" />
-                          ))}
-                        </div>
-                        <span className="font-semibold">Mariana Costa</span>
-                      </div>
-                      <p className="text-sm">Super atenciosa e caprichosa. Recomendo!</p>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="flex">
-                          {[1, 2, 3, 4].map((star) => (
-                            <Star key={star} className="h-4 w-4 fill-primary text-primary" />
-                          ))}
-                          <Star className="h-4 w-4 text-primary" />
-                        </div>
-                        <span className="font-semibold">Beatriz Silva</span>
-                      </div>
-                      <p className="text-sm">Ótimo atendimento e ambiente agradável.</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Contact Information */}
               <Card className="bg-gradient-card border-none shadow-soft">
                 <CardContent className="p-6">
                   <h2 className="font-display text-xl font-semibold mb-4">Contato</h2>
@@ -197,6 +144,66 @@ const BraiderProfile = () => {
                         <span>{braider.facebook}</span>
                       </a>
                     )}
+                  </div>
+
+                  <Separator className="my-6" />
+
+                  <h2 className="font-display text-xl font-semibold mb-4">Sobre</h2>
+                  <p className="leading-relaxed">{braider.description}</p>
+
+                  <Separator className="my-6" />
+
+                  <h2 className="font-display text-xl font-semibold mb-4">Serviços</h2>
+                  <div className="flex flex-wrap gap-2">
+                    {braider.services.map((service, index) => (
+                      <Badge 
+                        key={index} 
+                        variant="secondary"
+                        className="px-3 py-1"
+                      >
+                        {service}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <Separator className="my-6" />
+
+                  <h2 className="font-display text-xl font-semibold mb-4">Avaliações</h2>
+                  <div className="space-y-4">
+                    <div className="border-b pb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star key={star} className="h-4 w-4 fill-primary text-primary" />
+                          ))}
+                        </div>
+                        <span className="font-semibold">Ana Paula</span>
+                      </div>
+                      <p className="text-sm">Excelente profissional! Amei o resultado das minhas box braids.</p>
+                    </div>
+                    <div className="border-b pb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star key={star} className="h-4 w-4 fill-primary text-primary" />
+                          ))}
+                        </div>
+                        <span className="font-semibold">Mariana Costa</span>
+                      </div>
+                      <p className="text-sm">Super atenciosa e caprichosa. Recomendo!</p>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex">
+                          {[1, 2, 3, 4].map((star) => (
+                            <Star key={star} className="h-4 w-4 fill-primary text-primary" />
+                          ))}
+                          <Star className="h-4 w-4 text-primary" />
+                        </div>
+                        <span className="font-semibold">Beatriz Silva</span>
+                      </div>
+                      <p className="text-sm">Ótimo atendimento e ambiente agradável.</p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

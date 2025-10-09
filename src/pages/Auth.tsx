@@ -17,13 +17,13 @@ const Auth = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
         navigate("/perfil");
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         navigate("/perfil");
       }
@@ -63,7 +63,7 @@ const Auth = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -74,7 +74,12 @@ const Auth = () => {
         description: error.message,
         variant: "destructive",
       });
+      setIsLoading(false);
+      return;
     }
+
+    toast({ title: "Login realizado!", description: "Redirecionando para seu perfil..." });
+    navigate("/perfil");
     setIsLoading(false);
   };
 
