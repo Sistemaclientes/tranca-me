@@ -21,14 +21,18 @@ export type Database = {
           description: string | null
           email: string
           facebook: string | null
+          gallery_urls: string[] | null
           id: string
           image_url: string | null
           instagram: string | null
           name: string
           neighborhood: string
+          pricing: string | null
+          professional_name: string | null
           services: string[] | null
           updated_at: string
           user_id: string
+          video_url: string | null
           whatsapp: string
         }
         Insert: {
@@ -37,14 +41,18 @@ export type Database = {
           description?: string | null
           email: string
           facebook?: string | null
+          gallery_urls?: string[] | null
           id?: string
           image_url?: string | null
           instagram?: string | null
           name: string
           neighborhood: string
+          pricing?: string | null
+          professional_name?: string | null
           services?: string[] | null
           updated_at?: string
           user_id: string
+          video_url?: string | null
           whatsapp: string
         }
         Update: {
@@ -53,14 +61,18 @@ export type Database = {
           description?: string | null
           email?: string
           facebook?: string | null
+          gallery_urls?: string[] | null
           id?: string
           image_url?: string | null
           instagram?: string | null
           name?: string
           neighborhood?: string
+          pricing?: string | null
+          professional_name?: string | null
           services?: string[] | null
           updated_at?: string
           user_id?: string
+          video_url?: string | null
           whatsapp?: string
         }
         Relationships: []

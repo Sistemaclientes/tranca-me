@@ -1,16 +1,49 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook } from "lucide-react";
-import { braiders } from "@/data/braiders";
+import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook, Edit } from "lucide-react";
 
 const BraiderProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const braider = braiders.find(b => b.id === id);
+  const [braider, setBraider] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [isOwner, setIsOwner] = useState(false);
+
+  useEffect(() => {
+    loadProfile();
+  }, [id]);
+
+  const loadProfile = async () => {
+    const { data: profile } = await supabase
+      .from("braider_profiles")
+      .select("*")
+      .eq("user_id", id)
+      .single();
+
+    if (profile) {
+      setBraider(profile);
+      
+      // Check if current user is the owner
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsOwner(session?.user?.id === id);
+    }
+    
+    setLoading(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-warm flex items-center justify-center">
+        <p>Carregando...</p>
+      </div>
+    );
+  }
 
   if (!braider) {
     return (
@@ -52,22 +85,25 @@ const BraiderProfile = () => {
             {/* Left Column - Image and Basic Info */}
             <div className="lg:col-span-1 space-y-6">
               <Card className="bg-gradient-card border-none shadow-soft overflow-hidden">
-                <img 
-                  src={braider.image} 
-                  alt={`Foto de ${braider.name}`}
-                  className="w-full aspect-square object-cover"
-                />
+                {braider.image_url ? (
+                  <img 
+                    src={braider.image_url} 
+                    alt={`Foto de ${braider.name}`}
+                    className="w-full aspect-square object-cover"
+                  />
+                ) : (
+                  <div className="w-full aspect-square bg-muted flex items-center justify-center">
+                    <p className="text-muted-foreground">Sem foto</p>
+                  </div>
+                )}
                 <CardContent className="p-6 space-y-4">
                   <div>
-                    <h1 className="font-display text-2xl font-bold mb-2">{braider.name}</h1>
+                    <h1 className="font-display text-2xl font-bold mb-2">
+                      {braider.professional_name || braider.name}
+                    </h1>
                     <div className="flex items-center gap-1 text-muted-foreground mb-2">
                       <MapPin className="h-4 w-4" />
                       <span>{braider.neighborhood}, {braider.city}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="h-5 w-5 fill-primary text-primary" />
-                      <span className="font-semibold text-lg">{braider.rating}</span>
-                      <span className="text-sm text-muted-foreground">({braider.reviewCount} avaliações)</span>
                     </div>
                   </div>
 
@@ -79,24 +115,35 @@ const BraiderProfile = () => {
                     <Phone className="h-4 w-4" />
                     Agendar via WhatsApp
                   </Button>
+
+                  {isOwner && (
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => navigate("/perfil")}
+                    >
+                      <Edit className="h-4 w-4" />
+                      Editar Perfil
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-card border-none shadow-soft overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="aspect-video">
-                    <iframe
-                      className="w-full h-full rounded-md"
-                      src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                      title={`Vídeo de ${braider.name}`}
-                      loading="lazy"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
-                    />
-                  </div>
-                </CardContent>
-              </Card>
+              {braider.video_url && (
+                <Card className="bg-gradient-card border-none shadow-soft overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="aspect-video">
+                      <video 
+                        controls 
+                        className="w-full h-full"
+                        src={braider.video_url}
+                      >
+                        Seu navegador não suporta vídeos.
+                      </video>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
 
             {/* Right Column - Detailed Info */}
