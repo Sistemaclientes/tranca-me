@@ -156,50 +156,52 @@ const Assinatura = () => {
                 ))}
               </div>
 
-              <Card className="max-w-md mx-auto">
-                <CardHeader>
-                  <CardTitle>Dados para Pagamento</CardTitle>
-                  <CardDescription>
-                    Preencha seus dados para gerar o QR Code PIX
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="userName">Nome Completo *</Label>
-                    <Input
-                      id="userName"
-                      value={userName}
-                      onChange={(e) => setUserName(e.target.value)}
-                      placeholder="Seu nome completo"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="email">E-mail (opcional)</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="seu@email.com"
-                    />
-                  </div>
-                  <Button
-                    onClick={handleCreatePayment}
-                    disabled={loading || !selectedPlan || !userName}
-                    className="w-full"
-                    size="lg"
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Gerando QR Code...
-                      </>
-                    ) : (
-                      "Gerar QR Code PIX"
-                    )}
-                  </Button>
-                </CardContent>
-              </Card>
+              {selectedPlan && (
+                <Card className="max-w-md mx-auto">
+                  <CardHeader>
+                    <CardTitle>Dados para Pagamento</CardTitle>
+                    <CardDescription>
+                      Preencha seus dados para gerar o QR Code PIX
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <Label htmlFor="userName">Nome Completo *</Label>
+                      <Input
+                        id="userName"
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                        placeholder="Seu nome completo"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email">E-mail (opcional)</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="seu@email.com"
+                      />
+                    </div>
+                    <Button
+                      onClick={handleCreatePayment}
+                      disabled={loading || !selectedPlan || !userName}
+                      className="w-full"
+                      size="lg"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Gerando QR Code...
+                        </>
+                      ) : (
+                        "Gerar QR Code PIX"
+                      )}
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
             </>
           ) : (
             <Card className="max-w-md mx-auto">
