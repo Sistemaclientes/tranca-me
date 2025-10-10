@@ -16,11 +16,19 @@ serve(async (req) => {
 
     console.log('Creating PIX payment:', { userName, email, amount, planType })
 
+    const accessToken = Deno.env.get('MERCADO_PAGO_ACCESS_TOKEN')
+    
+    if (!accessToken) {
+      throw new Error('MERCADO_PAGO_ACCESS_TOKEN not configured')
+    }
+
+    console.log('Access token configured:', accessToken ? 'Yes' : 'No')
+
     // Create payment in Mercado Pago
     const mercadoPagoResponse = await fetch('https://api.mercadopago.com/v1/payments', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${Deno.env.get('MERCADO_PAGO_ACCESS_TOKEN')}`,
+        'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         'X-Idempotency-Key': crypto.randomUUID(),
       },
@@ -37,10 +45,11 @@ serve(async (req) => {
     })
 
     const paymentData = await mercadoPagoResponse.json()
+    console.log('Mercado Pago status:', mercadoPagoResponse.status)
     console.log('Mercado Pago response:', paymentData)
 
     if (!mercadoPagoResponse.ok) {
-      throw new Error(`Mercado Pago error: ${JSON.stringify(paymentData)}`)
+      throw new Error(`Mercado Pago error (${mercadoPagoResponse.status}): ${JSON.stringify(paymentData)}`)
     }
 
     // Save to database
