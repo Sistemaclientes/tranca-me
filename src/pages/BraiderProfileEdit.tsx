@@ -196,12 +196,12 @@ const BraiderProfileEdit = () => {
       } else {
         toast({
           title: "Perfil salvo com sucesso!",
-          description: "Redirecionando para sua página...",
+          description: "Redirecionando para pagamento...",
         });
         
-        // Redirect to the braider's profile page
+        // Redirect to the subscription payment page
         setTimeout(() => {
-          navigate(`/trancista/${data.id}`);
+          navigate("/assinatura");
         }, 1500);
       }
     } catch (error: any) {
