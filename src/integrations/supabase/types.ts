@@ -77,6 +77,51 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_attempts: {
+        Row: {
+          amount: number
+          approved_at: string | null
+          created_at: string
+          email: string | null
+          id: string
+          payment_id: string | null
+          plan_type: string
+          qr_code: string | null
+          qr_code_base64: string | null
+          status: string
+          updated_at: string
+          user_name: string
+        }
+        Insert: {
+          amount: number
+          approved_at?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          payment_id?: string | null
+          plan_type: string
+          qr_code?: string | null
+          qr_code_base64?: string | null
+          status?: string
+          updated_at?: string
+          user_name: string
+        }
+        Update: {
+          amount?: number
+          approved_at?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          payment_id?: string | null
+          plan_type?: string
+          qr_code?: string | null
+          qr_code_base64?: string | null
+          status?: string
+          updated_at?: string
+          user_name?: string
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
           braider_id: string
@@ -114,7 +159,39 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      approved_payments: {
+        Row: {
+          amount: number | null
+          approved_at: string | null
+          created_at: string | null
+          email: string | null
+          id: string | null
+          payment_id: string | null
+          plan_type: string | null
+          user_name: string | null
+        }
+        Insert: {
+          amount?: number | null
+          approved_at?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          payment_id?: string | null
+          plan_type?: string | null
+          user_name?: string | null
+        }
+        Update: {
+          amount?: number | null
+          approved_at?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string | null
+          payment_id?: string | null
+          plan_type?: string | null
+          user_name?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

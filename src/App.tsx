@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import Buscar from "./pages/Buscar";
 import BraiderProfile from "./pages/BraiderProfile";
 import BraiderProfileEdit from "./pages/BraiderProfileEdit";
+import Assinatura from "./pages/Assinatura";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/buscar" element={<Buscar />} />
           <Route path="/trancista/:id" element={<BraiderProfile />} />
           <Route path="/perfil" element={<BraiderProfileEdit />} />
+          <Route path="/assinatura" element={<Assinatura />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
