@@ -20,13 +20,13 @@ const PremiumBraiders = () => {
     const { data, error } = await supabase
       .from("braider_profiles")
       .select("*")
-      .eq("is_premium", true)
-      .order("premium_since", { ascending: false })
-      .limit(3);
+      .order("is_premium", { ascending: false })
+      .order("created_at", { ascending: false })
+      .limit(6);
     
     if (error) {
       toast({
-        title: "Erro ao carregar trancistas premium",
+        title: "Erro ao carregar trancistas",
         description: error.message,
         variant: "destructive",
       });
@@ -39,13 +39,17 @@ const PremiumBraiders = () => {
   if (loading) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Carregando trancistas premium...</p>
+        <p className="text-muted-foreground">Carregando trancistas...</p>
       </div>
     );
   }
 
   if (premiumBraiders.length === 0) {
-    return null;
+    return (
+      <div className="text-center py-12">
+        <p className="text-muted-foreground">Nenhuma trancista cadastrada ainda.</p>
+      </div>
+    );
   }
 
   return (
@@ -71,9 +75,11 @@ const PremiumBraiders = () => {
                   </span>
                 </div>
               )}
-              <Badge className="absolute top-2 right-2 bg-gradient-hero border-none">
-                Premium
-              </Badge>
+              {braider.is_premium && (
+                <Badge className="absolute top-2 right-2 bg-gradient-hero border-none">
+                  Premium
+                </Badge>
+              )}
             </div>
             <div className="space-y-2">
               <h3 className="font-display text-xl font-semibold">
