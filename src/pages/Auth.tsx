@@ -19,13 +19,14 @@ const Auth = () => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
-        navigate("/perfil");
+        // Redirect to choice page after signup/login
+        navigate("/escolher");
       }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        navigate("/perfil");
+        navigate("/escolher");
       }
     });
 
@@ -97,9 +98,9 @@ const Auth = () => {
             <TabsContent value="braider">
               <Card className="border-none shadow-glow">
                 <CardHeader>
-                  <CardTitle className="font-display text-2xl">Entrar como Trancista</CardTitle>
+                  <CardTitle className="font-display text-2xl">Criar Conta</CardTitle>
                   <CardDescription>
-                    Gerencie seu perfil e conecte-se com clientes
+                    Cadastre-se para acessar a plataforma
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
