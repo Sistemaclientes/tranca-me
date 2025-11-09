@@ -1,103 +1,93 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { MapPin } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { MapPin, Star } from "lucide-react";
-import { Link } from "react-router-dom";
-
-interface PremiumBraider {
-  id: string;
-  professional_name: string;
-  name: string;
-  city: string;
-  neighborhood: string;
-  image_url: string;
-  pricing: string;
-}
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 const PremiumBraiders = () => {
-  const [braiders, setBraiders] = useState<PremiumBraider[]>([]);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [premiumBraiders, setPremiumBraiders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchPremiumBraiders();
+    loadPremiumBraiders();
   }, []);
 
-  const fetchPremiumBraiders = async () => {
+  const loadPremiumBraiders = async () => {
     const { data, error } = await supabase
       .from("braider_profiles")
-      .select("id, professional_name, name, city, neighborhood, image_url, pricing")
+      .select("*")
       .eq("is_premium", true)
       .order("premium_since", { ascending: false })
-      .limit(6);
-
-    if (!error && data) {
-      setBraiders(data);
+      .limit(3);
+    
+    if (error) {
+      toast({
+        title: "Erro ao carregar trancistas premium",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      setPremiumBraiders(data || []);
     }
     setLoading(false);
   };
 
   if (loading) {
     return (
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[1, 2, 3].map((i) => (
-          <Card key={i} className="animate-pulse bg-muted">
-            <CardContent className="p-6">
-              <div className="h-48 bg-muted-foreground/20 rounded-lg mb-4"></div>
-              <div className="h-6 bg-muted-foreground/20 rounded mb-2"></div>
-              <div className="h-4 bg-muted-foreground/20 rounded"></div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  }
-
-  if (braiders.length === 0) {
-    return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Nenhuma trancista premium cadastrada ainda.</p>
+        <p className="text-muted-foreground">Carregando trancistas premium...</p>
       </div>
     );
   }
 
-  const getBasePrice = (pricing: string | null) => {
-    if (!pricing) return "Consulte valores";
-    const match = pricing.match(/R\$\s*(\d+)/);
-    return match ? `A partir de R$ ${match[1]}` : "Consulte valores";
-  };
+  if (premiumBraiders.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {braiders.map((braider) => (
-        <Link key={braider.id} to={`/trancista/${braider.id}`}>
-          <Card className="overflow-hidden hover:shadow-glow transition-all duration-300 cursor-pointer bg-gradient-card border-none group">
-            <div className="relative h-64 overflow-hidden">
-              {braider.image_url && (
+    <div className="grid md:grid-cols-3 gap-6">
+      {premiumBraiders.map((braider) => (
+        <Card
+          key={braider.id}
+          className="bg-gradient-card border-none shadow-soft hover:shadow-glow transition-all duration-300 cursor-pointer"
+          onClick={() => navigate(`/trancista/${braider.id}`)}
+        >
+          <CardContent className="p-6 space-y-4">
+            <div className="aspect-square bg-muted rounded-lg overflow-hidden relative">
+              {braider.image_url ? (
                 <img
                   src={braider.image_url}
                   alt={braider.professional_name || braider.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover"
                 />
+              ) : (
+                <div className="w-full h-full bg-muted flex items-center justify-center">
+                  <span className="text-6xl font-display text-muted-foreground">
+                    {(braider.professional_name || braider.name).charAt(0)}
+                  </span>
+                </div>
               )}
-              <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
-                <Star className="h-3 w-3 fill-current" />
+              <Badge className="absolute top-2 right-2 bg-gradient-hero border-none">
                 Premium
-              </div>
+              </Badge>
             </div>
-            <CardContent className="p-6">
-              <h3 className="font-display text-xl font-semibold mb-2">
+            <div className="space-y-2">
+              <h3 className="font-display text-xl font-semibold">
                 {braider.professional_name || braider.name}
               </h3>
-              <div className="flex items-center text-muted-foreground text-sm mb-3">
-                <MapPin className="h-4 w-4 mr-1" />
-                {braider.neighborhood}, {braider.city}
+              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4" />
+                <span>
+                  {braider.neighborhood}, {braider.city}
+                </span>
               </div>
-              <p className="text-sm font-medium text-primary">
-                {getBasePrice(braider.pricing)}
-              </p>
-            </CardContent>
-          </Card>
-        </Link>
+            </div>
+          </CardContent>
+        </Card>
       ))}
     </div>
   );

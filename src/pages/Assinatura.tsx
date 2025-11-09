@@ -1,88 +1,104 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
+import { Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Check } from "lucide-react";
-import Navbar from "@/components/Navbar";
+import { useToast } from "@/hooks/use-toast";
+import { useCouponValidation } from "@/hooks/useCouponValidation";
 
 const Assinatura = () => {
-  const [selectedPlan, setSelectedPlan] = useState<"basic" | "premium" | null>(null);
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [qrCode, setQrCode] = useState<string | null>(null);
-  const [qrCodeBase64, setQrCodeBase64] = useState<string | null>(null);
-  const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
+  const navigate = useNavigate();
   const { toast } = useToast();
+  const { validateCoupon, validatingCoupon } = useCouponValidation();
+  const [selectedPlan, setSelectedPlan] = useState<"basic" | "premium" | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    coupon: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [qrCode, setQrCode] = useState("");
+  const [qrCodeBase64, setQrCodeBase64] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState<"pending" | "approved">("pending");
+  const [discount, setDiscount] = useState(0);
+  const [finalAmount, setFinalAmount] = useState(0);
 
   const plans = {
     basic: {
       name: "Plano Básico",
-      price: 9.99,
+      price: 29.90,
       features: [
-        "Acesso à página de busca",
-        "Visualizar perfis de trancistas",
-        "Ver avaliações",
+        "Perfil completo com foto",
+        "Galeria de trabalhos",
         "Contato direto via WhatsApp",
+        "Listagem em buscas",
+        "Edição de perfil",
       ],
     },
     premium: {
       name: "Plano Premium",
-      price: 19.99,
+      price: 49.90,
       features: [
-        "Todos os recursos do Plano Básico",
-        "Perfil em destaque na página inicial",
-        "Prioridade nos resultados de busca",
-        "Badge especial de destaque",
+        "Todos os benefícios do Básico",
+        "Destaque na página inicial",
+        "Badge Premium",
+        "Prioridade nos resultados",
+        "Suporte prioritário",
       ],
     },
   };
 
+  const handleApplyCoupon = async () => {
+    if (!selectedPlan) return;
+    
+    const result = await validateCoupon(formData.coupon, plans[selectedPlan].price);
+    setDiscount(result.discount);
+    setFinalAmount(result.finalAmount);
+  };
+
   const handleCreatePayment = async () => {
-    if (!selectedPlan || !userName) {
+    if (!selectedPlan || !formData.name || !formData.email) {
       toast({
-        title: "Erro",
-        description: "Por favor, preencha seu nome e selecione um plano",
+        title: "Campos obrigatórios",
+        description: "Preencha todos os campos para continuar",
         variant: "destructive",
       });
       return;
     }
 
     setLoading(true);
-    setQrCode(null);
-    setQrCodeBase64(null);
-    setPaymentStatus(null);
-
     try {
+      const amount = finalAmount > 0 ? finalAmount : plans[selectedPlan].price;
+      
       const { data, error } = await supabase.functions.invoke("create-pix-payment", {
         body: {
-          userName,
-          email: email || `${userName.replace(/\s/g, '')}@trancabrasil.com`,
-          amount: plans[selectedPlan].price,
-          planType: plans[selectedPlan].name,
+          amount: amount,
+          name: formData.name,
+          email: formData.email,
+          planType: selectedPlan,
+          coupon: formData.coupon || null,
         },
       });
 
       if (error) throw error;
 
-      if (data.success) {
+      if (data.qrCode && data.qrCodeBase64) {
         setQrCode(data.qrCode);
         setQrCodeBase64(data.qrCodeBase64);
-        setPaymentStatus(data.status);
-        
         toast({
           title: "QR Code gerado!",
-          description: "Escaneie o QR Code para realizar o pagamento via PIX",
+          description: "Escaneie o código para realizar o pagamento",
         });
       }
     } catch (error: any) {
-      console.error("Error creating payment:", error);
+      console.error("Error:", error);
       toast({
         title: "Erro ao gerar pagamento",
-        description: error.message || "Tente novamente mais tarde",
+        description: error.message,
         variant: "destructive",
       });
     } finally {
@@ -91,68 +107,66 @@ const Assinatura = () => {
   };
 
   const copyQRCode = () => {
-    if (qrCode) {
-      navigator.clipboard.writeText(qrCode);
-      toast({
-        title: "Copiado!",
-        description: "Código PIX copiado para a área de transferência",
-      });
-    }
+    navigator.clipboard.writeText(qrCode);
+    toast({
+      title: "Copiado!",
+      description: "Código PIX copiado para a área de transferência",
+    });
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-warm">
       <Navbar />
       
-      <main className="container mx-auto px-4 py-12">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4 gradient-text">
-              Escolha seu Plano
+      <section className="pt-24 pb-16 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12 space-y-4">
+            <h1 className="font-display text-4xl lg:text-5xl font-bold">
+              Escolha seu{" "}
+              <span className="bg-gradient-hero bg-clip-text text-transparent">
+                Plano
+              </span>
             </h1>
             <p className="text-muted-foreground text-lg">
-              Assinatura mensal com pagamento via PIX
+              Torne-se uma trancista destaque na plataforma
             </p>
           </div>
 
           {!qrCode ? (
             <>
-              <div className="grid md:grid-cols-2 gap-8 mb-12">
+              <div className="grid md:grid-cols-2 gap-6 mb-12">
                 {Object.entries(plans).map(([key, plan]) => (
                   <Card
                     key={key}
-                    className={`transition-all ${
-                      selectedPlan === key
-                        ? "border-primary shadow-glow"
-                        : "hover:border-primary/50"
+                    className={`bg-gradient-card border-none shadow-soft transition-all ${
+                      selectedPlan === key ? "shadow-glow ring-2 ring-primary" : ""
                     }`}
                   >
                     <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
+                      <CardTitle className="flex items-center justify-between font-display text-2xl">
                         {plan.name}
                         {selectedPlan === key && (
                           <Check className="h-6 w-6 text-primary" />
                         )}
                       </CardTitle>
-                      <CardDescription>
-                        <span className="text-3xl font-bold text-primary">
-                          R$ {plan.price.toFixed(2)}
-                        </span>
-                        <span className="text-muted-foreground">/mês</span>
+                      <CardDescription className="text-3xl font-bold text-primary pt-2">
+                        R$ {plan.price.toFixed(2)}
+                        <span className="text-base text-muted-foreground font-normal">/mês</span>
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                      <ul className="space-y-2">
+                    <CardContent className="space-y-6">
+                      <ul className="space-y-3">
                         {plan.features.map((feature, index) => (
                           <li key={index} className="flex items-start gap-2">
                             <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                            <span>{feature}</span>
+                            <span className="text-foreground">{feature}</span>
                           </li>
                         ))}
                       </ul>
                       <Button
                         variant={selectedPlan === key ? "hero" : "outline"}
                         className="w-full"
+                        size="lg"
                         onClick={() => setSelectedPlan(key as "basic" | "premium")}
                       >
                         Escolher plano
@@ -163,100 +177,139 @@ const Assinatura = () => {
               </div>
 
               {selectedPlan && (
-                <Card className="max-w-md mx-auto">
+                <Card className="max-w-md mx-auto bg-gradient-card border-none shadow-soft">
                   <CardHeader>
-                    <CardTitle>Dados para Pagamento</CardTitle>
+                    <CardTitle className="font-display text-2xl">Dados para Pagamento</CardTitle>
                     <CardDescription>
                       Preencha seus dados para gerar o QR Code PIX
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="userName">Nome Completo *</Label>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Nome Completo *</Label>
                       <Input
-                        id="userName"
-                        value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="Seu nome completo"
+                        required
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="email">E-mail (opcional)</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">E-mail *</Label>
                       <Input
                         id="email"
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="seu@email.com"
+                        required
                       />
                     </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="coupon">Cupom de Desconto (opcional)</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="coupon"
+                          type="text"
+                          value={formData.coupon}
+                          onChange={(e) => setFormData({ ...formData, coupon: e.target.value.toUpperCase() })}
+                          placeholder="CÓDIGO"
+                        />
+                        <Button
+                          onClick={handleApplyCoupon}
+                          disabled={validatingCoupon || !formData.coupon}
+                          variant="outline"
+                        >
+                          {validatingCoupon ? "Validando..." : "Aplicar"}
+                        </Button>
+                      </div>
+                      {discount > 0 && (
+                        <p className="text-sm text-primary font-semibold">
+                          Desconto de R$ {discount.toFixed(2)} aplicado!
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="pt-4 border-t">
+                      <div className="flex justify-between items-center mb-4">
+                        <span className="text-lg font-semibold">Total:</span>
+                        <div className="text-right">
+                          {discount > 0 && (
+                            <span className="text-sm text-muted-foreground line-through block">
+                              R$ {plans[selectedPlan].price.toFixed(2)}
+                            </span>
+                          )}
+                          <span className="text-2xl font-bold text-primary">
+                            R$ {(finalAmount > 0 ? finalAmount : plans[selectedPlan].price).toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
                     <Button
                       onClick={handleCreatePayment}
-                      disabled={loading || !selectedPlan || !userName}
+                      disabled={loading}
                       className="w-full"
                       size="lg"
                     >
-                      {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Gerando QR Code...
-                        </>
-                      ) : (
-                        "Gerar QR Code PIX"
-                      )}
+                      {loading ? "Gerando QR Code..." : "Gerar QR Code PIX"}
                     </Button>
                   </CardContent>
                 </Card>
               )}
             </>
           ) : (
-            <Card className="max-w-md mx-auto">
+            <Card className="max-w-md mx-auto bg-gradient-card border-none shadow-soft">
               <CardHeader>
-                <CardTitle>Pagamento PIX</CardTitle>
+                <CardTitle className="font-display text-2xl">Pagamento PIX</CardTitle>
                 <CardDescription>
-                  Escaneie o QR Code abaixo para pagar
+                  Escaneie o QR Code ou copie o código
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-center">
-                  {qrCodeBase64 && (
-                    <img
-                      src={`data:image/png;base64,${qrCodeBase64}`}
-                      alt="QR Code PIX"
-                      className="w-64 h-64"
-                    />
-                  )}
+              <CardContent className="space-y-6">
+                <div className="flex justify-center bg-white p-4 rounded-lg">
+                  <img
+                    src={`data:image/png;base64,${qrCodeBase64}`}
+                    alt="QR Code PIX"
+                    className="w-64 h-64"
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label>Código PIX (Copiar e Colar)</Label>
+                  <Label>Código PIX (Copia e Cola)</Label>
                   <div className="flex gap-2">
-                    <Input value={qrCode || ""} readOnly className="font-mono text-xs" />
+                    <Input 
+                      value={qrCode} 
+                      readOnly 
+                      className="font-mono text-xs"
+                    />
                     <Button onClick={copyQRCode} variant="outline">
                       Copiar
                     </Button>
                   </div>
                 </div>
-                <div className="text-center space-y-2">
+                <div className="text-center space-y-2 p-4 bg-muted/50 rounded-lg">
                   <p className="text-sm text-muted-foreground">
-                    Valor: <span className="font-bold text-primary">
-                      R$ {selectedPlan && plans[selectedPlan].price.toFixed(2)}
+                    Valor: <span className="font-bold text-primary text-lg">
+                      R$ {selectedPlan && (finalAmount > 0 ? finalAmount : plans[selectedPlan].price).toFixed(2)}
                     </span>
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Status: <span className="font-semibold">{paymentStatus}</span>
+                    Status: <span className="font-semibold capitalize">{paymentStatus === "pending" ? "Aguardando pagamento" : "Aprovado"}</span>
                   </p>
                   <p className="text-xs text-muted-foreground mt-4">
-                    Após o pagamento, seu acesso será liberado automaticamente.
+                    Após a confirmação do pagamento, você receberá um e-mail e terá acesso imediato aos benefícios.
                   </p>
                 </div>
                 <Button
                   onClick={() => {
-                    setQrCode(null);
-                    setQrCodeBase64(null);
-                    setPaymentStatus(null);
+                    setQrCode("");
+                    setQrCodeBase64("");
                     setSelectedPlan(null);
-                    setUserName("");
-                    setEmail("");
+                    setFormData({ name: "", email: "", coupon: "" });
+                    setDiscount(0);
+                    setFinalAmount(0);
                   }}
                   variant="outline"
                   className="w-full"
@@ -267,7 +320,7 @@ const Assinatura = () => {
             </Card>
           )}
         </div>
-      </main>
+      </section>
     </div>
   );
 };
