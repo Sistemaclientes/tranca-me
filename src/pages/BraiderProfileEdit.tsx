@@ -11,6 +11,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cities, neighborhoodsByCity } from "@/data/braiders";
 import { Upload, X, Loader2 } from "lucide-react";
+import SuggestCityDialog from "@/components/SuggestCityDialog";
+import SuggestNeighborhoodDialog from "@/components/SuggestNeighborhoodDialog";
 
 const BraiderProfileEdit = () => {
   const navigate = useNavigate();
@@ -289,7 +291,7 @@ const BraiderProfileEdit = () => {
                 <CardTitle className="font-display text-primary">Localização</CardTitle>
                 <CardDescription>Onde você atende</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="city">Cidade *</Label>
@@ -330,6 +332,16 @@ const BraiderProfileEdit = () => {
                     </Select>
                   </div>
                 </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <SuggestCityDialog />
+                  <SuggestNeighborhoodDialog cityName={formData.city} />
+                </div>
+
+                <p className="text-xs text-muted-foreground">
+                  Não encontrou sua cidade ou bairro? Use os botões acima para sugerir. 
+                  Sua sugestão será avaliada por um administrador.
+                </p>
               </CardContent>
             </Card>
 

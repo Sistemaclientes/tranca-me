@@ -107,6 +107,45 @@ export type Database = {
         }
         Relationships: []
       }
+      city_suggestions: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          state: string
+          status: string
+          suggested_by: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          state?: string
+          status?: string
+          suggested_by?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          state?: string
+          status?: string
+          suggested_by?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       coupons: {
         Row: {
           code: string
@@ -145,6 +184,56 @@ export type Database = {
           valid_until?: string | null
         }
         Relationships: []
+      }
+      neighborhood_suggestions: {
+        Row: {
+          city_id: string | null
+          city_name: string
+          created_at: string | null
+          id: string
+          name: string
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          suggested_by: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          city_id?: string | null
+          city_name: string
+          created_at?: string | null
+          id?: string
+          name: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          suggested_by?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          city_id?: string | null
+          city_name?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          suggested_by?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neighborhood_suggestions_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       neighborhoods: {
         Row: {
@@ -316,6 +405,14 @@ export type Database = {
       }
     }
     Functions: {
+      approve_city_suggestion: {
+        Args: { reviewer_id: string; suggestion_id: string }
+        Returns: undefined
+      }
+      approve_neighborhood_suggestion: {
+        Args: { reviewer_id: string; suggestion_id: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
