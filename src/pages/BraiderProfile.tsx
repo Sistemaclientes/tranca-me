@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook, Edit } from "lucide-react";
+import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook, Edit, Heart } from "lucide-react";
+import ImageGallery from "@/components/ImageGallery";
+import FavoriteButton from "@/components/FavoriteButton";
 
 const BraiderProfile = () => {
   const { id } = useParams();
@@ -107,6 +109,8 @@ const BraiderProfile = () => {
                     Agendar via WhatsApp
                   </Button>
 
+                  <FavoriteButton braiderId={id!} />
+
                   {isOwner && (
                     <Button 
                       variant="outline" 
@@ -203,6 +207,17 @@ const BraiderProfile = () => {
                       </Badge>
                     ))}
                   </div>
+
+                  {braider.gallery_urls && braider.gallery_urls.length > 0 && (
+                    <>
+                      <Separator className="my-6" />
+                      <h2 className="font-display text-xl font-semibold mb-4">Galeria de Trabalhos</h2>
+                      <ImageGallery 
+                        images={braider.gallery_urls} 
+                        title={braider.professional_name || braider.name}
+                      />
+                    </>
+                  )}
 
                   <Separator className="my-6" />
 

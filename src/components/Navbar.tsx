@@ -1,18 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Sparkles, Settings } from "lucide-react";
+import { Sparkles, Settings, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    checkAdmin();
+    checkAuthAndAdmin();
   }, []);
 
-  const checkAdmin = async () => {
+  const checkAuthAndAdmin = async () => {
     const { data: { session } } = await supabase.auth.getSession();
+    setIsAuthenticated(!!session);
     
     if (session) {
       const { data: roles } = await supabase
@@ -40,6 +42,14 @@ const Navbar = () => {
           <Link to="/buscar">
             <Button variant="ghost">Buscar Trancistas</Button>
           </Link>
+          {isAuthenticated && (
+            <Link to="/favoritos">
+              <Button variant="ghost" size="sm">
+                <Heart className="h-4 w-4 mr-2" />
+                Favoritos
+              </Button>
+            </Link>
+          )}
           {isAdmin && (
             <Link to="/admin/sugestoes">
               <Button variant="ghost" size="sm">

@@ -11,6 +11,7 @@ import BraiderProfile from "./pages/BraiderProfile";
 import BraiderProfileEdit from "./pages/BraiderProfileEdit";
 import Assinatura from "./pages/Assinatura";
 import AdminSuggestions from "./pages/AdminSuggestions";
+import Favoritos from "./pages/Favoritos";
 import NotFound from "./pages/NotFound";
 import BraiderNotFound from "./pages/BraiderNotFound";
 
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/escolher" element={<AuthChoice />} />
           <Route path="/buscar" element={<Buscar />} />
+          <Route path="/favoritos" element={<Favoritos />} />
           <Route path="/trancista/:id" element={<BraiderProfile />} />
           <Route path="/trancista-nao-encontrada" element={<BraiderNotFound />} />
           <Route path="/perfil" element={<BraiderProfileEdit />} />

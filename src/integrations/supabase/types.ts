@@ -185,6 +185,35 @@ export type Database = {
         }
         Relationships: []
       }
+      favorites: {
+        Row: {
+          braider_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          braider_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          braider_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_braider_id_fkey"
+            columns: ["braider_id"]
+            isOneToOne: false
+            referencedRelation: "braider_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       neighborhood_suggestions: {
         Row: {
           city_id: string | null
@@ -319,7 +348,11 @@ export type Database = {
           comment: string | null
           created_at: string
           id: string
+          is_verified: boolean | null
           rating: number
+          service_date: string | null
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           braider_id: string
@@ -327,7 +360,11 @@ export type Database = {
           comment?: string | null
           created_at?: string
           id?: string
+          is_verified?: boolean | null
           rating: number
+          service_date?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           braider_id?: string
@@ -335,7 +372,11 @@ export type Database = {
           comment?: string | null
           created_at?: string
           id?: string
+          is_verified?: boolean | null
           rating?: number
+          service_date?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
