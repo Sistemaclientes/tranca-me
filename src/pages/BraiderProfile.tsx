@@ -23,15 +23,18 @@ const BraiderProfile = () => {
     const { data: profile } = await supabase
       .from("braider_profiles")
       .select("*")
-      .eq("user_id", id)
-      .single();
+      .eq("id", id)
+      .maybeSingle();
 
     if (profile) {
       setBraider(profile);
       
       // Check if current user is the owner
       const { data: { session } } = await supabase.auth.getSession();
-      setIsOwner(session?.user?.id === id);
+      setIsOwner(session?.user?.id === profile.user_id);
+    } else {
+      // Redirect to not found page
+      navigate("/trancista-nao-encontrada");
     }
     
     setLoading(false);
@@ -46,19 +49,7 @@ const BraiderProfile = () => {
   }
 
   if (!braider) {
-    return (
-      <div className="min-h-screen bg-gradient-warm">
-        <Navbar />
-        <section className="pt-24 pb-16 px-4">
-          <div className="container mx-auto text-center">
-            <h1 className="font-display text-3xl font-bold mb-4">Trancista não encontrada</h1>
-            <Button onClick={() => navigate("/buscar")} variant="hero">
-              Voltar para busca
-            </Button>
-          </div>
-        </section>
-      </div>
-    );
+    return null; // Will redirect automatically
   }
 
   const handleWhatsApp = () => {

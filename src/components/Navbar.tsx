@@ -9,7 +9,7 @@ const Navbar = () => {
         <Link to="/" className="flex items-center gap-2 group">
           <Sparkles className="h-6 w-6 text-primary group-hover:text-secondary transition-colors" />
           <span className="font-display text-xl font-bold bg-gradient-hero bg-clip-text text-transparent">
-            Trança Brasil
+            Trancei
           </span>
         </Link>
         

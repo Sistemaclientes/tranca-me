@@ -121,12 +121,11 @@ const Assinatura = () => {
                 {Object.entries(plans).map(([key, plan]) => (
                   <Card
                     key={key}
-                    className={`cursor-pointer transition-all ${
+                    className={`transition-all ${
                       selectedPlan === key
-                        ? "border-primary shadow-glow scale-105"
+                        ? "border-primary shadow-glow"
                         : "hover:border-primary/50"
                     }`}
-                    onClick={() => setSelectedPlan(key as "basic" | "premium")}
                   >
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
@@ -142,7 +141,7 @@ const Assinatura = () => {
                         <span className="text-muted-foreground">/mês</span>
                       </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="space-y-4">
                       <ul className="space-y-2">
                         {plan.features.map((feature, index) => (
                           <li key={index} className="flex items-start gap-2">
@@ -151,6 +150,13 @@ const Assinatura = () => {
                           </li>
                         ))}
                       </ul>
+                      <Button
+                        variant={selectedPlan === key ? "hero" : "outline"}
+                        className="w-full"
+                        onClick={() => setSelectedPlan(key as "basic" | "premium")}
+                      >
+                        Escolher plano
+                      </Button>
                     </CardContent>
                   </Card>
                 ))}
