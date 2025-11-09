@@ -5,10 +5,8 @@ import { Search, MapPin, Star, Heart, Shield, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-braids.jpg";
 import PremiumBraiders from "@/components/PremiumBraiders";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-gradient-warm">
+  return <div className="min-h-screen bg-gradient-warm">
       <Navbar />
       
       {/* Hero Section */}
@@ -44,11 +42,7 @@ const Index = () => {
             
             <div className="relative animate-fade-in">
               <div className="absolute inset-0 bg-gradient-hero opacity-20 blur-3xl rounded-full"></div>
-              <img
-                src={heroImage}
-                alt="Tranças profissionais"
-                className="relative rounded-3xl shadow-glow w-full h-auto object-cover"
-              />
+              <img src={heroImage} alt="Tranças profissionais" className="relative rounded-3xl shadow-glow w-full h-auto object-cover" />
             </div>
           </div>
         </div>
@@ -120,11 +114,7 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link to="/auth">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="bg-white text-primary hover:bg-white/90 border-white"
-                >
+                <Button variant="outline" size="lg" className="bg-white text-primary hover:bg-white/90 border-white">
                   Criar Perfil Grátis
                 </Button>
               </Link>
@@ -167,10 +157,8 @@ const Index = () => {
       <section className="py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-12 space-y-4">
-            <h2 className="font-display text-4xl font-bold">Trancistas Premium — Destaques</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Profissionais em destaque por oferecerem o plano Premium. Reserve com facilidade.
-            </p>
+            <h2 className="font-display text-4xl font-bold">Trancistas em Destaques</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Profissionais em destaque. Reserve com facilidade.</p>
           </div>
           <PremiumBraiders />
         </div>
@@ -182,8 +170,6 @@ const Index = () => {
           <p>© 2025 Trancei. Valorizando a beleza afro-brasileira.</p>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
