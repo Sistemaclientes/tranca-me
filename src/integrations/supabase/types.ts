@@ -25,8 +25,10 @@ export type Database = {
           id: string
           image_url: string | null
           instagram: string | null
+          is_premium: boolean | null
           name: string
           neighborhood: string
+          premium_since: string | null
           pricing: string | null
           professional_name: string | null
           services: string[] | null
@@ -45,8 +47,10 @@ export type Database = {
           id?: string
           image_url?: string | null
           instagram?: string | null
+          is_premium?: boolean | null
           name: string
           neighborhood: string
+          premium_since?: string | null
           pricing?: string | null
           professional_name?: string | null
           services?: string[] | null
@@ -65,8 +69,10 @@ export type Database = {
           id?: string
           image_url?: string | null
           instagram?: string | null
+          is_premium?: boolean | null
           name?: string
           neighborhood?: string
+          premium_since?: string | null
           pricing?: string | null
           professional_name?: string | null
           services?: string[] | null
@@ -76,6 +82,101 @@ export type Database = {
           whatsapp?: string
         }
         Relationships: []
+      }
+      cities: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          state: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          state?: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          state?: string
+        }
+        Relationships: []
+      }
+      coupons: {
+        Row: {
+          code: string
+          created_at: string | null
+          current_uses: number | null
+          discount_amount: number | null
+          discount_percent: number | null
+          id: string
+          is_active: boolean | null
+          max_uses: number | null
+          updated_at: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          current_uses?: number | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          id?: string
+          is_active?: boolean | null
+          max_uses?: number | null
+          updated_at?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          current_uses?: number | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          id?: string
+          is_active?: boolean | null
+          max_uses?: number | null
+          updated_at?: string | null
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
+      neighborhoods: {
+        Row: {
+          city_id: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+        }
+        Insert: {
+          city_id: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+        }
+        Update: {
+          city_id?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neighborhoods_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       payment_attempts: {
         Row: {
@@ -157,6 +258,27 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       approved_payments: {
@@ -194,10 +316,16 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "braider" | "client"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -324,6 +452,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "braider", "client"],
+    },
   },
 } as const
