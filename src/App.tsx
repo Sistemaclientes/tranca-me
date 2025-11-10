@@ -10,6 +10,7 @@ import Buscar from "./pages/Buscar";
 import BraiderProfile from "./pages/BraiderProfile";
 import BraiderProfileEdit from "./pages/BraiderProfileEdit";
 import Assinatura from "./pages/Assinatura";
+import Checkout from "./pages/Checkout";
 import AdminSuggestions from "./pages/AdminSuggestions";
 import Favoritos from "./pages/Favoritos";
 import NotFound from "./pages/NotFound";
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/trancista-nao-encontrada" element={<BraiderNotFound />} />
           <Route path="/perfil" element={<BraiderProfileEdit />} />
           <Route path="/assinatura" element={<Assinatura />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/admin/sugestoes" element={<AdminSuggestions />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

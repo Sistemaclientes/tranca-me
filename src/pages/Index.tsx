@@ -3,48 +3,59 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Search, MapPin, Star, Heart, Shield, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/hero-braids.jpg";
+import heroCover from "@/assets/hero-cover.png";
 import PremiumBraiders from "@/components/PremiumBraiders";
+import FeaturedBraidersCarousel from "@/components/FeaturedBraidersCarousel";
+
 const Index = () => {
   return <div className="min-h-screen bg-gradient-warm">
       <Navbar />
       
       {/* Hero Section */}
-      <section className="pt-24 pb-16 px-4">
-        <div className="container mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6 animate-slide-up">
-              <h1 className="font-display text-5xl lg:text-7xl font-bold leading-tight">
-                Conectando{" "}
-                <span className="bg-gradient-hero bg-clip-text text-transparent">
-                  Trancistas
-                </span>{" "}
-                e Clientes
-              </h1>
-              <p className="text-lg text-muted-foreground max-w-xl">
-                Encontre profissionais especializadas em tranças na sua região ou
-                divulgue seus serviços para milhares de clientes em todo o Brasil.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Link to="/buscar">
-                  <Button variant="hero" size="lg" className="animate-scale-in">
-                    <Search className="h-5 w-5" />
-                    Buscar Trancistas
-                  </Button>
-                </Link>
-                <Link to="/auth">
-                  <Button variant="outline" size="lg" className="animate-scale-in">
-                    Sou Trancista
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            
-            <div className="relative animate-fade-in">
-              <div className="absolute inset-0 bg-gradient-hero opacity-20 blur-3xl rounded-full"></div>
-              <img src={heroImage} alt="Tranças profissionais" className="relative rounded-3xl shadow-glow w-full h-auto object-cover" />
+      <section className="relative pt-24 pb-16 px-4 min-h-[600px] flex items-center">
+        <div className="absolute inset-0 z-0">
+          <img src={heroCover} alt="Capa Trancei" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-transparent"></div>
+        </div>
+        
+        <div className="container mx-auto relative z-10">
+          <div className="max-w-2xl space-y-6 animate-slide-up">
+            <h1 className="font-display text-5xl lg:text-7xl font-bold leading-tight">
+              Conectando{" "}
+              <span className="bg-gradient-hero bg-clip-text text-transparent">
+                Trancistas
+              </span>{" "}
+              e Clientes
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-xl">
+              Encontre profissionais especializadas em tranças na sua região ou
+              divulgue seus serviços para milhares de clientes em todo o Brasil.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link to="/buscar">
+                <Button variant="hero" size="lg" className="animate-scale-in">
+                  <Search className="h-5 w-5" />
+                  Buscar Trancistas
+                </Button>
+              </Link>
+              <Link to="/auth">
+                <Button variant="outline" size="lg" className="animate-scale-in">
+                  Sou Trancista
+                </Button>
+              </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Featured Braiders Carousel */}
+      <section className="py-12 px-4 bg-muted/30">
+        <div className="container mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="font-display text-3xl font-bold mb-2">Trancistas em Destaque</h2>
+            <p className="text-muted-foreground">Conheça algumas profissionais cadastradas</p>
+          </div>
+          <FeaturedBraidersCarousel />
         </div>
       </section>
 

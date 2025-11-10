@@ -30,7 +30,7 @@ const Assinatura = () => {
   const plans = {
     basic: {
       name: "Plano Básico",
-      price: 29.90,
+      price: 9.99,
       features: [
         "Perfil completo com foto",
         "Galeria de trabalhos",
@@ -47,6 +47,7 @@ const Assinatura = () => {
         "Destaque na página inicial",
         "Badge Premium",
         "Prioridade nos resultados",
+        "Aparecerá em campanha",
         "Suporte prioritário",
       ],
     },
@@ -167,7 +168,7 @@ const Assinatura = () => {
                         variant={selectedPlan === key ? "hero" : "outline"}
                         className="w-full"
                         size="lg"
-                        onClick={() => setSelectedPlan(key as "basic" | "premium")}
+                        onClick={() => navigate(`/checkout?plan=${key}`)}
                       >
                         Escolher plano
                       </Button>

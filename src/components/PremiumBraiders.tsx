@@ -69,8 +69,8 @@ const PremiumBraiders = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-muted flex items-center justify-center">
-                  <span className="text-6xl font-display text-muted-foreground">
+                <div className="w-full h-full bg-gradient-hero flex items-center justify-center">
+                  <span className="text-6xl font-display text-white">
                     {(braider.professional_name || braider.name).charAt(0)}
                   </span>
                 </div>
