@@ -27,8 +27,7 @@ const Index = () => {
               e Clientes
             </h1>
             <p className="text-lg text-muted-foreground max-w-xl">
-              Encontre profissionais especializadas em tranças na sua região ou
-              divulgue seus serviços para milhares de clientes em todo o Brasil.
+              Encontre profissionais especializadas em tranças na sua região ou divulgue seus serviços para milhares de clientes em toda a grande Florianópolis.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link to="/buscar">
