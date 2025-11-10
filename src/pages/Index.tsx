@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Search, MapPin, Star, Heart, Shield, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroCover from "@/assets/hero-cover.png";
-import PremiumBraiders from "@/components/PremiumBraiders";
 import FeaturedBraidersCarousel from "@/components/FeaturedBraidersCarousel";
 
 const Index = () => {
@@ -164,16 +163,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Premium Braiders Section */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-12 space-y-4">
-            <h2 className="font-display text-4xl font-bold">Trancistas em Destaques</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">Profissionais em destaque. Reserve com facilidade.</p>
-          </div>
-          <PremiumBraiders />
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="py-8 px-4 border-t border-border">

@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook, Edit, Heart } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import FavoriteButton from "@/components/FavoriteButton";
+import ReviewsSection from "@/components/ReviewsSection";
 
 const BraiderProfile = () => {
   const { id } = useParams();
@@ -222,42 +223,7 @@ const BraiderProfile = () => {
                   <Separator className="my-6" />
 
                   <h2 className="font-display text-xl font-semibold mb-4">Avaliações</h2>
-                  <div className="space-y-4">
-                    <div className="border-b pb-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="flex">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star key={star} className="h-4 w-4 fill-primary text-primary" />
-                          ))}
-                        </div>
-                        <span className="font-semibold">Ana Paula</span>
-                      </div>
-                      <p className="text-sm">Excelente profissional! Amei o resultado das minhas box braids.</p>
-                    </div>
-                    <div className="border-b pb-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="flex">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star key={star} className="h-4 w-4 fill-primary text-primary" />
-                          ))}
-                        </div>
-                        <span className="font-semibold">Mariana Costa</span>
-                      </div>
-                      <p className="text-sm">Super atenciosa e caprichosa. Recomendo!</p>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="flex">
-                          {[1, 2, 3, 4].map((star) => (
-                            <Star key={star} className="h-4 w-4 fill-primary text-primary" />
-                          ))}
-                          <Star className="h-4 w-4 text-primary" />
-                        </div>
-                        <span className="font-semibold">Beatriz Silva</span>
-                      </div>
-                      <p className="text-sm">Ótimo atendimento e ambiente agradável.</p>
-                    </div>
-                  </div>
+                  <ReviewsSection braiderId={id!} />
                 </CardContent>
               </Card>
             </div>

@@ -11,6 +11,7 @@ import { MapPin, Star, Heart, SlidersHorizontal } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import FavoriteButton from "@/components/FavoriteButton";
+import BraiderCard from "@/components/BraiderCard";
 import {
   Collapsible,
   CollapsibleContent,
@@ -257,61 +258,7 @@ const Buscar = () => {
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredBraiders.map((braider) => (
-                <Card 
-                    key={braider.id} 
-                    className="bg-gradient-card border-none shadow-soft hover:shadow-glow transition-all duration-300 cursor-pointer relative group"
-                    onClick={() => navigate(`/trancista/${braider.id}`)}
-                  >
-                    <div className="absolute top-2 right-2 z-10">
-                      <FavoriteButton braiderId={braider.id} variant="icon" />
-                    </div>
-                    
-                    <CardContent className="p-6 space-y-4">
-                      <div className="aspect-square bg-muted rounded-lg overflow-hidden relative">
-                        {braider.image_url ? (
-                          <img 
-                            src={braider.image_url} 
-                            alt={braider.professional_name || braider.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-muted flex items-center justify-center">
-                            <span className="text-4xl font-display text-muted-foreground">
-                              {(braider.professional_name || braider.name).charAt(0)}
-                            </span>
-                          </div>
-                        )}
-                        {braider.is_premium && (
-                          <Badge className="absolute bottom-2 right-2 bg-gradient-hero border-none">
-                            Premium
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="space-y-2">
-                        <h3 className="font-display text-xl font-semibold">
-                          {braider.professional_name || braider.name}
-                        </h3>
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <MapPin className="h-4 w-4" />
-                          <span>{braider.neighborhood}, {braider.city}</span>
-                        </div>
-                        {braider.services && braider.services.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
-                            {braider.services.slice(0, 3).map((service: string, idx: number) => (
-                              <Badge key={idx} variant="secondary" className="text-xs">
-                                {service}
-                              </Badge>
-                            ))}
-                            {braider.services.length > 3 && (
-                              <Badge variant="secondary" className="text-xs">
-                                +{braider.services.length - 3}
-                              </Badge>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <BraiderCard key={braider.id} braider={braider} showFavorite />
                 ))}
               </div>
             )}
