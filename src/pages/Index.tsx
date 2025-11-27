@@ -5,6 +5,7 @@ import { Search, MapPin, Star, Heart, Shield, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroCover from "@/assets/hero-cover.png";
 import FeaturedBraidersCarousel from "@/components/FeaturedBraidersCarousel";
+import FloripaMapsSection from "@/components/FloripaMapsSection";
 
 const Index = () => {
   return <div className="min-h-screen bg-gradient-warm">
@@ -56,6 +57,9 @@ const Index = () => {
           <FeaturedBraidersCarousel />
         </div>
       </section>
+
+      {/* Mapa da Grande Florianópolis */}
+      <FloripaMapsSection />
 
       {/* Features Section */}
       <section className="py-16 px-4">
