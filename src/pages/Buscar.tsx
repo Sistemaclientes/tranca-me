@@ -2,15 +2,11 @@ import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, Heart, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import FavoriteButton from "@/components/FavoriteButton";
 import BraiderCard from "@/components/BraiderCard";
 import {
   Collapsible,
@@ -25,7 +21,6 @@ const Buscar = () => {
   const [selectedNeighborhood, setSelectedNeighborhood] = useState<string>("");
   const [selectedService, setSelectedService] = useState<string>("");
   const [minRating, setMinRating] = useState<string>("");
-  const [searchName, setSearchName] = useState<string>("");
   const [showFilters, setShowFilters] = useState(false);
   const [cities, setCities] = useState<any[]>([]);
   const [neighborhoods, setNeighborhoods] = useState<any[]>([]);
@@ -118,11 +113,10 @@ const Buscar = () => {
       const cityMatch = !selectedCity || selectedCity === "all" || braider.city === selectedCity;
       const neighborhoodMatch = !selectedNeighborhood || selectedNeighborhood === "all" || braider.neighborhood === selectedNeighborhood;
       const serviceMatch = !selectedService || selectedService === "all" || braider.services?.includes(selectedService);
-      const nameMatch = !searchName || braider.professional_name?.toLowerCase().includes(searchName.toLowerCase()) || braider.name?.toLowerCase().includes(searchName.toLowerCase());
       
-      return cityMatch && neighborhoodMatch && serviceMatch && nameMatch;
+      return cityMatch && neighborhoodMatch && serviceMatch;
     });
-  }, [braiders, selectedCity, selectedNeighborhood, selectedService, searchName]);
+  }, [braiders, selectedCity, selectedNeighborhood, selectedService]);
 
   const handleCityChange = (city: string) => {
     setSelectedCity(city);
@@ -149,15 +143,8 @@ const Buscar = () => {
             </div>
 
             <div className="space-y-4">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1">
-                  <Input
-                    placeholder="Buscar por nome..."
-                    value={searchName}
-                    onChange={(e) => setSearchName(e.target.value)}
-                    className="h-12 text-base"
-                  />
-                </div>
+              {/* City, Neighborhood, and Advanced Filters on same line */}
+              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
                 <Select value={selectedCity} onValueChange={handleCityChange}>
                   <SelectTrigger className="h-12 text-base md:w-64">
                     <SelectValue placeholder="Selecione a cidade" />
@@ -189,16 +176,20 @@ const Buscar = () => {
                     ))}
                   </SelectContent>
                 </Select>
+
+                <Collapsible open={showFilters} onOpenChange={setShowFilters}>
+                  <CollapsibleTrigger asChild>
+                    <Button variant="outline" className="h-12">
+                      <SlidersHorizontal className="h-4 w-4 mr-2" />
+                      Filtros Avançados
+                    </Button>
+                  </CollapsibleTrigger>
+                </Collapsible>
               </div>
 
+              {/* Advanced Filters Content */}
               <Collapsible open={showFilters} onOpenChange={setShowFilters}>
-                <CollapsibleTrigger asChild>
-                  <Button variant="outline" className="w-full md:w-auto">
-                    <SlidersHorizontal className="h-4 w-4 mr-2" />
-                    Filtros Avançados
-                  </Button>
-                </CollapsibleTrigger>
-                <CollapsibleContent className="mt-4 p-4 border rounded-lg bg-card">
+                <CollapsibleContent className="p-4 border rounded-lg bg-card">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Tipo de Serviço</Label>

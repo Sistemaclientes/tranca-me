@@ -11,6 +11,17 @@ import ImageGallery from "@/components/ImageGallery";
 import FavoriteButton from "@/components/FavoriteButton";
 import ReviewsSection from "@/components/ReviewsSection";
 
+const formatPhoneNumber = (phone: string): string => {
+  const digits = phone.replace(/[^0-9]/g, '');
+  if (digits.length === 11) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  }
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+  return phone;
+};
+
 const BraiderProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -155,7 +166,7 @@ const BraiderProfile = () => {
                       className="flex items-center gap-3 hover:text-primary transition-colors"
                     >
                       <Phone className="h-5 w-5 text-primary" />
-                      <span>{braider.whatsapp}</span>
+                      <span>{formatPhoneNumber(braider.whatsapp)}</span>
                     </a>
 
                     <a 
