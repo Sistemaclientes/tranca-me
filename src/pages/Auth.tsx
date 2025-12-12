@@ -8,10 +8,16 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import braider1 from "@/assets/braider-1.jpg";
+import braider2 from "@/assets/braider-2.jpg";
+import braider3 from "@/assets/braider-3.jpg";
 
 const Auth = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -19,7 +25,6 @@ const Auth = () => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
-        // Redirect to choice page after signup/login
         navigate("/escolher");
       }
     });
@@ -35,27 +40,53 @@ const Auth = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (signupPassword !== signupConfirmPassword) {
+      toast({
+        title: "Erro",
+        description: "As senhas não coincidem.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (signupPassword.length < 6) {
+      toast({
+        title: "Erro",
+        description: "A senha deve ter pelo menos 6 caracteres.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     
     const { error } = await supabase.auth.signUp({
-      email,
-      password,
+      email: signupEmail,
+      password: signupPassword,
       options: {
-        emailRedirectTo: `${window.location.origin}/perfil`,
+        emailRedirectTo: `${window.location.origin}/escolher`,
       },
     });
 
     if (error) {
+      let message = error.message;
+      if (error.message.includes("already registered")) {
+        message = "Este email já está cadastrado. Faça login.";
+      }
       toast({
         title: "Erro ao criar conta",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     } else {
       toast({
-        title: "Conta criada!",
-        description: "Você pode fazer login agora.",
+        title: "Conta criada com sucesso!",
+        description: "Você já pode fazer login.",
       });
+      setSignupEmail("");
+      setSignupPassword("");
+      setSignupConfirmPassword("");
     }
     setIsLoading(false);
   };
@@ -64,23 +95,27 @@ const Auth = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    const { error } = await supabase.auth.signInWithPassword({
+      email: loginEmail,
+      password: loginPassword,
     });
 
     if (error) {
+      let message = error.message;
+      if (error.message.includes("Invalid login credentials")) {
+        message = "Email ou senha incorretos.";
+      }
       toast({
         title: "Erro ao fazer login",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
-      setIsLoading(false);
-      return;
+    } else {
+      toast({ 
+        title: "Login realizado!", 
+        description: "Redirecionando..." 
+      });
     }
-
-    toast({ title: "Login realizado!", description: "Redirecionando para seu perfil..." });
-    navigate("/perfil");
     setIsLoading(false);
   };
 
@@ -88,62 +123,142 @@ const Auth = () => {
     <div className="min-h-screen bg-gradient-warm">
       <Navbar />
       
-      <section className="pt-32 pb-16 px-4">
-        <div className="container mx-auto max-w-md">
-          <Tabs defaultValue="braider" className="w-full">
-            <TabsList className="grid w-full grid-cols-1 mb-8">
-              <TabsTrigger value="braider">Trancista</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="braider">
-              <Card className="border-none shadow-glow">
-                <CardHeader>
-                  <CardTitle className="font-display text-2xl">Criar Conta</CardTitle>
-                  <CardDescription>
-                    Cadastre-se para acessar a plataforma
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSignIn} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input 
-                        id="email" 
-                        type="email" 
-                        placeholder="seu@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="password">Senha</Label>
-                      <Input 
-                        id="password" 
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        minLength={6}
-                      />
-                    </div>
-                    <Button className="w-full" variant="hero" type="submit" disabled={isLoading}>
-                      {isLoading ? "Entrando..." : "Entrar"}
-                    </Button>
-                    <Button 
-                      className="w-full" 
-                      variant="outline" 
-                      type="button"
-                      onClick={handleSignUp}
-                      disabled={isLoading}
-                    >
-                      Criar Conta
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+      <section className="pt-24 pb-16 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left side - Images */}
+            <div className="hidden lg:block space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <img 
+                  src={braider1} 
+                  alt="Modelo com tranças" 
+                  className="rounded-2xl shadow-lg w-full h-64 object-cover"
+                />
+                <img 
+                  src={braider2} 
+                  alt="Modelo com tranças" 
+                  className="rounded-2xl shadow-lg w-full h-64 object-cover mt-8"
+                />
+              </div>
+              <img 
+                src={braider3} 
+                alt="Modelo com tranças" 
+                className="rounded-2xl shadow-lg w-full h-48 object-cover"
+              />
+              <div className="text-center mt-6">
+                <h2 className="font-display text-2xl font-bold text-foreground mb-2">
+                  Conectando você às melhores trancistas
+                </h2>
+                <p className="text-muted-foreground">
+                  Encontre profissionais qualificadas na sua região
+                </p>
+              </div>
+            </div>
+
+            {/* Right side - Auth Forms */}
+            <div className="w-full max-w-md mx-auto">
+              <Tabs defaultValue="login" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-8">
+                  <TabsTrigger value="login">Entrar</TabsTrigger>
+                  <TabsTrigger value="signup">Criar Conta</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="login">
+                  <Card className="border-none shadow-glow">
+                    <CardHeader>
+                      <CardTitle className="font-display text-2xl">Bem-vinda de volta!</CardTitle>
+                      <CardDescription>
+                        Entre com seu email e senha
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <form onSubmit={handleSignIn} className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="login-email">Email</Label>
+                          <Input 
+                            id="login-email" 
+                            type="email" 
+                            placeholder="seu@email.com"
+                            value={loginEmail}
+                            onChange={(e) => setLoginEmail(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="login-password">Senha</Label>
+                          <Input 
+                            id="login-password" 
+                            type="password"
+                            placeholder="••••••••"
+                            value={loginPassword}
+                            onChange={(e) => setLoginPassword(e.target.value)}
+                            required
+                            minLength={6}
+                          />
+                        </div>
+                        <Button className="w-full" variant="hero" type="submit" disabled={isLoading}>
+                          {isLoading ? "Entrando..." : "Entrar"}
+                        </Button>
+                      </form>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="signup">
+                  <Card className="border-none shadow-glow">
+                    <CardHeader>
+                      <CardTitle className="font-display text-2xl">Criar Conta</CardTitle>
+                      <CardDescription>
+                        Cadastre-se para começar
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <form onSubmit={handleSignUp} className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="signup-email">Email</Label>
+                          <Input 
+                            id="signup-email" 
+                            type="email" 
+                            placeholder="seu@email.com"
+                            value={signupEmail}
+                            onChange={(e) => setSignupEmail(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="signup-password">Senha</Label>
+                          <Input 
+                            id="signup-password" 
+                            type="password"
+                            placeholder="Mínimo 6 caracteres"
+                            value={signupPassword}
+                            onChange={(e) => setSignupPassword(e.target.value)}
+                            required
+                            minLength={6}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="signup-confirm-password">Confirmar Senha</Label>
+                          <Input 
+                            id="signup-confirm-password" 
+                            type="password"
+                            placeholder="Repita a senha"
+                            value={signupConfirmPassword}
+                            onChange={(e) => setSignupConfirmPassword(e.target.value)}
+                            required
+                            minLength={6}
+                          />
+                        </div>
+                        <Button className="w-full" variant="hero" type="submit" disabled={isLoading}>
+                          {isLoading ? "Criando conta..." : "Criar Conta"}
+                        </Button>
+                      </form>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </div>
         </div>
       </section>
     </div>

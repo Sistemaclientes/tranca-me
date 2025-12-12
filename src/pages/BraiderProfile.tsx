@@ -177,15 +177,17 @@ const BraiderProfile = () => {
                       <span>{braider.email}</span>
                     </a>
 
-                    <a 
-                      href={`https://instagram.com/${braider.instagram.replace('@', '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 hover:text-primary transition-colors"
-                    >
-                      <Instagram className="h-5 w-5 text-primary" />
-                      <span>{braider.instagram}</span>
-                    </a>
+                    {braider.instagram && (
+                      <a 
+                        href={`https://instagram.com/${braider.instagram.replace('@', '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 hover:text-primary transition-colors"
+                      >
+                        <Instagram className="h-5 w-5 text-primary" />
+                        <span>{braider.instagram}</span>
+                      </a>
+                    )}
 
                     {braider.facebook && (
                       <a 
@@ -209,15 +211,19 @@ const BraiderProfile = () => {
 
                   <h2 className="font-display text-xl font-semibold mb-4">Serviços</h2>
                   <div className="flex flex-wrap gap-2">
-                    {braider.services.map((service, index) => (
-                      <Badge 
-                        key={index} 
-                        variant="secondary"
-                        className="px-3 py-1"
-                      >
-                        {service}
-                      </Badge>
-                    ))}
+                    {braider.services && braider.services.length > 0 ? (
+                      braider.services.map((service: string, index: number) => (
+                        <Badge 
+                          key={index} 
+                          variant="secondary"
+                          className="px-3 py-1"
+                        >
+                          {service}
+                        </Badge>
+                      ))
+                    ) : (
+                      <p className="text-muted-foreground">Nenhum serviço cadastrado</p>
+                    )}
                   </div>
 
                   {braider.gallery_urls && braider.gallery_urls.length > 0 && (
