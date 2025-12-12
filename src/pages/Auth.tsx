@@ -19,6 +19,8 @@ const Auth = () => {
   const [signupPassword, setSignupPassword] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -119,6 +121,31 @@ const Auth = () => {
     setIsLoading(false);
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: `${window.location.origin}/auth?reset=true`,
+    });
+
+    if (error) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Email enviado!",
+        description: "Verifique sua caixa de entrada para redefinir sua senha.",
+      });
+      setShowForgotPassword(false);
+      setResetEmail("");
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-warm">
       <Navbar />
@@ -199,10 +226,62 @@ const Auth = () => {
                         <Button className="w-full" variant="hero" type="submit" disabled={isLoading}>
                           {isLoading ? "Entrando..." : "Entrar"}
                         </Button>
+                        <button
+                          type="button"
+                          onClick={() => setShowForgotPassword(true)}
+                          className="w-full text-sm text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          Esqueceu sua senha?
+                        </button>
                       </form>
                     </CardContent>
                   </Card>
                 </TabsContent>
+
+                {/* Forgot Password Modal */}
+                {showForgotPassword && (
+                  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <Card className="w-full max-w-md border-none shadow-glow">
+                      <CardHeader>
+                        <CardTitle className="font-display text-2xl">Recuperar Senha</CardTitle>
+                        <CardDescription>
+                          Digite seu email para receber o link de recuperação
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <form onSubmit={handleForgotPassword} className="space-y-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="reset-email">Email</Label>
+                            <Input
+                              id="reset-email"
+                              type="email"
+                              placeholder="seu@email.com"
+                              value={resetEmail}
+                              onChange={(e) => setResetEmail(e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              className="flex-1"
+                              onClick={() => {
+                                setShowForgotPassword(false);
+                                setResetEmail("");
+                              }}
+                            >
+                              Cancelar
+                            </Button>
+                            <Button className="flex-1" variant="hero" type="submit" disabled={isLoading}>
+                              {isLoading ? "Enviando..." : "Enviar Email"}
+                            </Button>
+                          </div>
+                        </form>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
 
                 <TabsContent value="signup">
                   <Card className="border-none shadow-glow">
