@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import braider1 from "@/assets/braider-1.jpg";
 import braider2 from "@/assets/braider-2.jpg";
@@ -21,24 +21,37 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
 
   useEffect(() => {
+    // Check if this is a password reset flow
+    const isReset = searchParams.get("reset") === "true";
+    if (isReset) {
+      setShowResetPassword(true);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
+      // Only redirect if not in reset password flow
+      if (session && !showResetPassword) {
         navigate("/escolher");
       }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+      if (session && !showResetPassword) {
         navigate("/escolher");
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, showResetPassword]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,6 +158,105 @@ const Auth = () => {
     }
     setIsLoading(false);
   };
+
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (newPassword !== confirmNewPassword) {
+      toast({
+        title: "Erro",
+        description: "As senhas não coincidem.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast({
+        title: "Erro",
+        description: "A senha deve ter pelo menos 6 caracteres.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) {
+      toast({
+        title: "Erro ao redefinir senha",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Senha redefinida!",
+        description: "Sua senha foi alterada com sucesso.",
+      });
+      setShowResetPassword(false);
+      setNewPassword("");
+      setConfirmNewPassword("");
+      navigate("/escolher");
+    }
+    setIsLoading(false);
+  };
+
+  // Reset Password Form
+  if (showResetPassword) {
+    return (
+      <div className="min-h-screen bg-gradient-warm">
+        <Navbar />
+        
+        <section className="pt-24 pb-16 px-4">
+          <div className="container mx-auto max-w-md">
+            <Card className="border-none shadow-glow">
+              <CardHeader>
+                <CardTitle className="font-display text-2xl">Redefinir Senha</CardTitle>
+                <CardDescription>
+                  Digite sua nova senha
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleUpdatePassword} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="new-password">Nova Senha</Label>
+                    <Input
+                      id="new-password"
+                      type="password"
+                      placeholder="Mínimo 6 caracteres"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      required
+                      minLength={6}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirm-new-password">Confirmar Nova Senha</Label>
+                    <Input
+                      id="confirm-new-password"
+                      type="password"
+                      placeholder="Repita a nova senha"
+                      value={confirmNewPassword}
+                      onChange={(e) => setConfirmNewPassword(e.target.value)}
+                      required
+                      minLength={6}
+                    />
+                  </div>
+                  <Button className="w-full" variant="hero" type="submit" disabled={isLoading}>
+                    {isLoading ? "Salvando..." : "Salvar Nova Senha"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-warm">
