@@ -12,9 +12,14 @@ serve(async (req) => {
   }
 
   try {
-    const { userName, email, amount, planType } = await req.json()
+    const { name, email, cpf, amount, planType } = await req.json()
 
-    console.log('Creating PIX payment:', { userName, email, amount, planType })
+    console.log('Creating PIX payment:', { name, email, cpf: cpf ? '***' : 'not provided', amount, planType })
+
+    // Validate required fields
+    if (!name || !email || !cpf || !amount) {
+      throw new Error('Campos obrigatórios: name, email, cpf, amount')
+    }
 
     const accessToken = Deno.env.get('MERCADO_PAGO_ACCESS_TOKEN')
     
@@ -22,9 +27,19 @@ serve(async (req) => {
       throw new Error('MERCADO_PAGO_ACCESS_TOKEN not configured')
     }
 
-    console.log('Access token configured:', accessToken ? 'Yes' : 'No')
+    // Clean CPF - remove non-numeric characters
+    const cleanCpf = cpf.replace(/\D/g, '')
+    
+    if (cleanCpf.length !== 11) {
+      throw new Error('CPF inválido - deve conter 11 dígitos')
+    }
 
-    // Create payment in Mercado Pago
+    // Determine plan type based on amount
+    const determinedPlanType = amount === 29.99 ? 'destaque' : amount === 9.99 ? 'busca' : planType || 'basic'
+
+    console.log('Creating payment with Mercado Pago...')
+
+    // Create payment in Mercado Pago - Checkout Transparente PIX
     const mercadoPagoResponse = await fetch('https://api.mercadopago.com/v1/payments', {
       method: 'POST',
       headers: {
@@ -34,22 +49,27 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         transaction_amount: amount,
-        description: `Assinatura ${planType} - Trança Brasil`,
+        description: `Plano ${determinedPlanType.toUpperCase()} - Trancei`,
         payment_method_id: 'pix',
         payer: {
-          email: email || 'cliente@trancabrasil.com',
-          first_name: userName,
+          email: email,
+          first_name: name.split(' ')[0],
+          last_name: name.split(' ').slice(1).join(' ') || name,
+          identification: {
+            type: 'CPF',
+            number: cleanCpf,
+          },
         },
-        notification_url: `${Deno.env.get('SUPABASE_URL')}/functions/v1/mercadopago-webhook`,
       }),
     })
 
     const paymentData = await mercadoPagoResponse.json()
     console.log('Mercado Pago status:', mercadoPagoResponse.status)
-    console.log('Mercado Pago response:', paymentData)
+    console.log('Mercado Pago response:', JSON.stringify(paymentData, null, 2))
 
     if (!mercadoPagoResponse.ok) {
-      throw new Error(`Mercado Pago error (${mercadoPagoResponse.status}): ${JSON.stringify(paymentData)}`)
+      const errorDetail = paymentData.message || paymentData.error || JSON.stringify(paymentData)
+      throw new Error(`Erro Mercado Pago (${mercadoPagoResponse.status}): ${errorDetail}`)
     }
 
     // Save to database
@@ -61,10 +81,10 @@ serve(async (req) => {
     const { data: paymentAttempt, error: dbError } = await supabase
       .from('payment_attempts')
       .insert({
-        user_name: userName,
+        user_name: name,
         email: email,
         amount: amount,
-        plan_type: planType,
+        plan_type: determinedPlanType,
         status: paymentData.status,
         payment_id: paymentData.id.toString(),
         qr_code: paymentData.point_of_interaction?.transaction_data?.qr_code,
@@ -75,27 +95,27 @@ serve(async (req) => {
 
     if (dbError) {
       console.error('Database error:', dbError)
-      throw dbError
+      throw new Error(`Erro ao salvar pagamento: ${dbError.message}`)
     }
 
-    console.log('Payment attempt saved:', paymentAttempt)
+    console.log('Payment attempt saved:', paymentAttempt.id)
 
     return new Response(
       JSON.stringify({
         success: true,
-        paymentId: paymentData.id,
-        qrCode: paymentData.point_of_interaction?.transaction_data?.qr_code,
-        qrCodeBase64: paymentData.point_of_interaction?.transaction_data?.qr_code_base64,
+        payment_id: paymentData.id.toString(),
         status: paymentData.status,
-        attemptId: paymentAttempt.id,
+        qr_code: paymentData.point_of_interaction?.transaction_data?.qr_code,
+        qr_code_base64: paymentData.point_of_interaction?.transaction_data?.qr_code_base64,
+        attempt_id: paymentAttempt.id,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   } catch (error) {
     console.error('Error:', error)
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ success: false, error: errorMessage }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
     )
   }
