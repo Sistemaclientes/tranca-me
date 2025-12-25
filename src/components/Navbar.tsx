@@ -1,15 +1,31 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Sparkles, Settings, Heart } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Sparkles, Settings, Heart, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
+    // Check initial session
     checkAuthAndAdmin();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsAuthenticated(!!session);
+      if (session) {
+        checkAdminRole(session.user.id);
+      } else {
+        setIsAdmin(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const checkAuthAndAdmin = async () => {
@@ -17,14 +33,35 @@ const Navbar = () => {
     setIsAuthenticated(!!session);
     
     if (session) {
-      const { data: roles } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", session.user.id)
-        .eq("role", "admin")
-        .maybeSingle();
+      checkAdminRole(session.user.id);
+    }
+  };
 
-      setIsAdmin(!!roles);
+  const checkAdminRole = async (userId: string) => {
+    const { data: roles } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("role", "admin")
+      .maybeSingle();
+
+    setIsAdmin(!!roles);
+  };
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "Erro ao sair",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Até logo!",
+        description: "Você saiu da sua conta.",
+      });
+      navigate("/");
     }
   };
 
@@ -58,12 +95,21 @@ const Navbar = () => {
               </Button>
             </Link>
           )}
-          <Link to="/auth">
-            <Button variant="outline">Entrar</Button>
-          </Link>
-          <Link to="/auth">
-            <Button variant="hero">Cadastrar-se</Button>
-          </Link>
+          {isAuthenticated ? (
+            <Button variant="outline" onClick={handleLogout}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Sair
+            </Button>
+          ) : (
+            <>
+              <Link to="/auth">
+                <Button variant="outline">Entrar</Button>
+              </Link>
+              <Link to="/auth">
+                <Button variant="hero">Cadastrar-se</Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

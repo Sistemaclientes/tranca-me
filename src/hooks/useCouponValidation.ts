@@ -18,7 +18,7 @@ export const useCouponValidation = () => {
         .select("*")
         .eq("code", code)
         .eq("is_active", true)
-        .single();
+        .maybeSingle();
 
       if (error || !data) {
         toast({
