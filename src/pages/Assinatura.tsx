@@ -9,6 +9,7 @@ import { Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useCouponValidation } from "@/hooks/useCouponValidation";
+import { isValidCPF, formatCPF } from "@/lib/cpfValidator";
 
 const Assinatura = () => {
   const navigate = useNavigate();
@@ -72,11 +73,10 @@ const Assinatura = () => {
       return;
     }
 
-    const cleanCpf = formData.cpf.replace(/\D/g, '');
-    if (cleanCpf.length !== 11) {
+    if (!isValidCPF(formData.cpf)) {
       toast({
         title: "CPF inválido",
-        description: "O CPF deve conter 11 dígitos",
+        description: "Por favor, insira um CPF válido",
         variant: "destructive",
       });
       return;
@@ -224,14 +224,7 @@ const Assinatura = () => {
                       <Input
                         id="cpf"
                         value={formData.cpf}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, '').slice(0, 11);
-                          const formatted = value
-                            .replace(/(\d{3})(\d)/, '$1.$2')
-                            .replace(/(\d{3})(\d)/, '$1.$2')
-                            .replace(/(\d{3})(\d{1,2})/, '$1-$2');
-                          setFormData({ ...formData, cpf: formatted });
-                        }}
+                        onChange={(e) => setFormData({ ...formData, cpf: formatCPF(e.target.value) })}
                         placeholder="000.000.000-00"
                         required
                       />
