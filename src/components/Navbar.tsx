@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { Sparkles, Settings, Heart, LogOut } from "lucide-react";
+import { Sparkles, Settings, Heart, LogOut, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -80,12 +80,20 @@ const Navbar = () => {
             <Button variant="ghost">Buscar Trancistas</Button>
           </Link>
           {isAuthenticated && (
-            <Link to="/favoritos">
-              <Button variant="ghost" size="sm">
-                <Heart className="h-4 w-4 mr-2" />
-                Favoritos
-              </Button>
-            </Link>
+            <>
+              <Link to="/meu-perfil">
+                <Button variant="ghost" size="sm">
+                  <User className="h-4 w-4 mr-2" />
+                  Meu Perfil
+                </Button>
+              </Link>
+              <Link to="/favoritos">
+                <Button variant="ghost" size="sm">
+                  <Heart className="h-4 w-4 mr-2" />
+                  Favoritos
+                </Button>
+              </Link>
+            </>
           )}
           {isAdmin && (
             <Link to="/admin/sugestoes">
