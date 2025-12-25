@@ -18,6 +18,7 @@ const Assinatura = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    cpf: "",
     coupon: "",
   });
   const [loading, setLoading] = useState(false);
@@ -62,10 +63,20 @@ const Assinatura = () => {
   };
 
   const handleCreatePayment = async () => {
-    if (!selectedPlan || !formData.name || !formData.email) {
+    if (!selectedPlan || !formData.name || !formData.email || !formData.cpf) {
       toast({
         title: "Campos obrigatórios",
         description: "Preencha todos os campos para continuar",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const cleanCpf = formData.cpf.replace(/\D/g, '');
+    if (cleanCpf.length !== 11) {
+      toast({
+        title: "CPF inválido",
+        description: "O CPF deve conter 11 dígitos",
         variant: "destructive",
       });
       return;
@@ -80,6 +91,7 @@ const Assinatura = () => {
           amount: amount,
           name: formData.name,
           email: formData.email,
+          cpf: formData.cpf,
           planType: selectedPlan,
           coupon: formData.coupon || null,
         },
@@ -207,6 +219,23 @@ const Assinatura = () => {
                         required
                       />
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="cpf">CPF *</Label>
+                      <Input
+                        id="cpf"
+                        value={formData.cpf}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, '').slice(0, 11);
+                          const formatted = value
+                            .replace(/(\d{3})(\d)/, '$1.$2')
+                            .replace(/(\d{3})(\d)/, '$1.$2')
+                            .replace(/(\d{3})(\d{1,2})/, '$1-$2');
+                          setFormData({ ...formData, cpf: formatted });
+                        }}
+                        placeholder="000.000.000-00"
+                        required
+                      />
+                    </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="coupon">Cupom de Desconto (opcional)</Label>
@@ -308,7 +337,7 @@ const Assinatura = () => {
                     setQrCode("");
                     setQrCodeBase64("");
                     setSelectedPlan(null);
-                    setFormData({ name: "", email: "", coupon: "" });
+                    setFormData({ name: "", email: "", cpf: "", coupon: "" });
                     setDiscount(0);
                     setFinalAmount(0);
                   }}
