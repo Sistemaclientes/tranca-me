@@ -21,6 +21,7 @@ const Checkout = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    cpf: "",
     coupon: "",
   });
   const [loading, setLoading] = useState(false);
@@ -100,10 +101,20 @@ const Checkout = () => {
   };
 
   const handleCreatePayment = async () => {
-    if (!formData.name || !formData.email) {
+    if (!formData.name || !formData.email || !formData.cpf) {
       toast({
         title: "Campos obrigatórios",
         description: "Preencha todos os campos para continuar",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const cleanCpf = formData.cpf.replace(/\D/g, '');
+    if (cleanCpf.length !== 11) {
+      toast({
+        title: "CPF inválido",
+        description: "O CPF deve conter 11 dígitos",
         variant: "destructive",
       });
       return;
@@ -118,6 +129,7 @@ const Checkout = () => {
           amount: amount,
           name: formData.name,
           email: formData.email,
+          cpf: formData.cpf,
           planType: planType,
           coupon: formData.coupon || null,
         },
@@ -216,6 +228,23 @@ const Checkout = () => {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="seu@email.com"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="cpf">CPF *</Label>
+                    <Input
+                      id="cpf"
+                      value={formData.cpf}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '').slice(0, 11);
+                        const formatted = value
+                          .replace(/(\d{3})(\d)/, '$1.$2')
+                          .replace(/(\d{3})(\d)/, '$1.$2')
+                          .replace(/(\d{3})(\d{1,2})/, '$1-$2');
+                        setFormData({ ...formData, cpf: formatted });
+                      }}
+                      placeholder="000.000.000-00"
                       required
                     />
                   </div>
