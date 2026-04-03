@@ -116,54 +116,77 @@ const SuggestNeighborhoodDialog = ({ cityName }: SuggestNeighborhoodDialogProps)
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="w-full">
-          <Plus className="h-4 w-4 mr-2" />
+        <Button variant="outline" size="sm" className="w-full border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300">
+          <Plus className="h-4 w-4 mr-2 text-primary" />
           Sugerir novo bairro
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Sugerir Novo Bairro</DialogTitle>
-          <DialogDescription>
-            Sua sugestão será avaliada por um administrador antes de ficar disponível.
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label>Cidade</Label>
-            <Input value={cityName} disabled />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="neighborhoodName">Nome do Bairro *</Label>
-            <Input
-              id="neighborhoodName"
-              value={neighborhoodName}
-              onChange={(e) => setNeighborhoodName(e.target.value)}
-              placeholder="Ex: Centro"
-              required
-            />
-          </div>
-          <div className="flex gap-2 justify-end">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              disabled={loading}
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Enviando...
-                </>
-              ) : (
-                "Enviar Sugestão"
-              )}
-            </Button>
-          </div>
-        </form>
+      <DialogContent className="sm:max-w-[425px] overflow-hidden border-none p-0 bg-background shadow-2xl">
+        <div className="h-2 w-full bg-gradient-to-r from-primary via-secondary to-primary animate-gradient-x" />
+        <div className="p-6">
+          <DialogHeader className="mb-6">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 rounded-full bg-primary/10">
+                <Plus className="h-5 w-5 text-primary" />
+              </div>
+              <DialogTitle className="text-2xl font-bold tracking-tight">Sugerir Novo Bairro</DialogTitle>
+            </div>
+            <DialogDescription className="text-muted-foreground text-sm">
+              Sua sugestão será avaliada por um administrador antes de ficar disponível.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold flex items-center gap-2">
+                  Cidade selecionada
+                </Label>
+                <div className="flex items-center gap-3 p-3 bg-muted/40 rounded-lg border border-muted-foreground/10">
+                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                  <span className="font-medium text-foreground">{cityName}</span>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="neighborhoodName" className="text-sm font-semibold flex items-center gap-2">
+                  Nome do Bairro <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="neighborhoodName"
+                  value={neighborhoodName}
+                  onChange={(e) => setNeighborhoodName(e.target.value)}
+                  placeholder="Ex: Centro"
+                  className="h-12 border-muted focus-visible:ring-primary/30 focus-visible:border-primary transition-all bg-muted/20"
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex gap-3 justify-end pt-4 border-t border-muted/30">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setOpen(false)}
+                disabled={loading}
+                className="hover:bg-muted/50 font-medium"
+              >
+                Cancelar
+              </Button>
+              <Button 
+                type="submit" 
+                disabled={loading}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 px-8 font-semibold transition-all duration-300 active:scale-95"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  "Enviar Sugestão"
+                )}
+              </Button>
+            </div>
+          </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
