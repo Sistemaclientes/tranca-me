@@ -57,9 +57,12 @@ const BraiderProfile = () => {
           .maybeSingle();
         
         const is_admin = !!roleData;
-        const is_expired = profile.status !== 'active' || (profile.trial_ends_at && new Date(profile.trial_ends_at) < new Date() && profile.plan_tier === 'free');
+        
+        // Bloqueio deve ser validado no backend, mas no frontend tratamos a visibilidade
+        const is_blocked = profile.status === 'blocked';
+        const is_expired = profile.status === 'expired';
 
-        if (is_expired && !is_owner && !is_admin) {
+        if ((is_blocked || is_expired) && !is_owner && !is_admin) {
           navigate("/trancista-nao-encontrada");
           return;
         }
@@ -109,6 +112,33 @@ const BraiderProfile = () => {
       
       <section className="pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-6xl">
+          {braider.status !== 'active' && braider.status !== 'trial' && (
+            <Card className="mb-8 border-none bg-destructive/10 text-destructive shadow-soft">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="p-2 bg-destructive/20 rounded-full">
+                    <Phone className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <p className="font-bold">
+                      {braider.status === 'blocked' ? 'Perfil Bloqueado' : 'Plano Expirado'}
+                    </p>
+                    <p className="text-sm opacity-90">
+                      {isOwner 
+                        ? 'Seu perfil está oculto. Regularize seu pagamento para voltar a aparecer.' 
+                        : 'Este perfil está temporariamente indisponível para novos agendamentos.'}
+                    </p>
+                  </div>
+                </div>
+                {isOwner && (
+                  <Button variant="destructive" onClick={() => navigate("/assinatura")}>
+                    Regularizar Agora
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           <Button 
             variant="ghost" 
             onClick={() => navigate("/buscar")}
@@ -148,9 +178,12 @@ const BraiderProfile = () => {
                     variant="hero" 
                     className="w-full"
                     onClick={handleWhatsApp}
+                    disabled={braider.status === 'blocked' || braider.status === 'expired'}
                   >
                     <Phone className="h-4 w-4" />
-                    Agendar via WhatsApp
+                    {braider.status === 'blocked' || braider.status === 'expired' 
+                      ? 'Contato Indisponível' 
+                      : 'Agendar via WhatsApp'}
                   </Button>
 
                   <FavoriteButton braiderId={id!} />

@@ -48,6 +48,7 @@ interface BraiderProfile {
   gallery_urls: string[] | null;
   is_premium: boolean;
   plan_tier: 'free' | 'pro' | 'premium';
+  status: 'trial' | 'active' | 'expired' | 'blocked' | 'pending_payment';
   view_count: number;
   whatsapp_click_count: number;
   premium_since: string | null;
@@ -174,6 +175,31 @@ const MeuPerfil = () => {
       
       <section className="pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-6xl">
+          {profile && (profile.status === 'expired' || profile.status === 'blocked') && (
+            <Card className="mb-8 border-none bg-orange-500 text-white shadow-soft animate-pulse-subtle">
+              <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-white/20 rounded-full">
+                    <Zap className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold">
+                      {profile.status === 'expired' ? 'Atenção: Seu período de teste terminou!' : 'Seu perfil está bloqueado!'}
+                    </p>
+                    <p className="opacity-90">
+                      Regularize seu pagamento para voltar a aparecer no marketplace e receber clientes.
+                    </p>
+                  </div>
+                </div>
+                <Link to="/assinatura">
+                  <Button className="bg-white text-orange-600 hover:bg-white/90 font-bold px-8">
+                    Reativar Perfil Agora
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          )}
+
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
               <h1 className="font-display text-4xl font-bold text-foreground mb-2">
@@ -229,8 +255,13 @@ const MeuPerfil = () => {
                     <h2 className="font-display text-xl font-bold">
                       {profile?.professional_name || profile?.name}
                     </h2>
-                    <Badge variant="secondary" className="mt-1">
-                      Plano {profile?.plan_tier || 'Grátis'}
+                    <Badge 
+                      variant={profile?.status === 'active' || profile?.status === 'trial' ? "secondary" : "destructive"} 
+                      className="mt-1 capitalize"
+                    >
+                      {profile?.status === 'trial' ? 'Período de Teste' : 
+                       profile?.status === 'active' ? `Plano ${profile?.plan_tier}` : 
+                       profile?.status === 'expired' ? 'Plano Expirado' : 'Perfil Bloqueado'}
                     </Badge>
                   </div>
 
