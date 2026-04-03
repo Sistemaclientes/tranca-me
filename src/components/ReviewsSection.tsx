@@ -113,69 +113,90 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
                 Avaliar Trancista
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Avaliar Trancista</DialogTitle>
-                <DialogDescription>
-                  Compartilhe sua experiência com outros usuários.
-                </DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4 pt-4">
-                <div className="space-y-2">
-                  <Label>Sua nota</Label>
-                  <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() => setRating(star)}
-                        className="p-1 transition-transform hover:scale-110"
-                      >
-                        <Star
-                          className={`h-8 w-8 ${
-                            star <= rating
-                              ? "fill-amber-400 text-amber-400"
-                              : "text-muted-foreground/30"
-                          }`}
-                        />
-                      </button>
-                    ))}
+            <DialogContent className="sm:max-w-md overflow-hidden border-none p-0 bg-background shadow-2xl">
+              <div className="h-2 w-full bg-gradient-to-r from-primary via-secondary to-primary animate-gradient-x" />
+              <div className="p-6">
+                <DialogHeader className="mb-6">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 rounded-full bg-primary/10">
+                      <MessageSquarePlus className="h-5 w-5 text-primary" />
+                    </div>
+                    <DialogTitle className="text-2xl font-bold tracking-tight">Avaliar Trancista</DialogTitle>
                   </div>
-                </div>
+                  <DialogDescription className="text-muted-foreground text-sm">
+                    Compartilhe sua experiência e ajude outras pessoas a encontrarem as melhores profissionais.
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="space-y-3 p-4 bg-muted/30 rounded-xl border border-muted-foreground/10">
+                      <Label className="text-sm font-semibold block text-center">Sua nota para o serviço</Label>
+                      <div className="flex justify-center gap-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onClick={() => setRating(star)}
+                            className="p-1 transition-all hover:scale-125 group"
+                          >
+                            <Star
+                              className={`h-10 w-10 transition-colors ${
+                                star <= rating
+                                  ? "fill-amber-400 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]"
+                                  : "text-muted-foreground/20 group-hover:text-amber-400/50"
+                              }`}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                      <p className="text-center text-xs font-medium text-amber-600 dark:text-amber-400">
+                        {rating === 5 ? "Excelente!" : rating === 4 ? "Muito bom!" : rating === 3 ? "Bom" : rating === 2 ? "Poderia ser melhor" : "Ruim"}
+                      </p>
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="name">Seu nome</Label>
-                  <Input
-                    id="name"
-                    value={clientName}
-                    onChange={(e) => setClientName(e.target.value)}
-                    placeholder="Como você gostaria de ser identificado"
-                    required
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-sm font-semibold">Seu nome <span className="text-destructive">*</span></Label>
+                      <Input
+                        id="name"
+                        value={clientName}
+                        onChange={(e) => setClientName(e.target.value)}
+                        placeholder="Como você gostaria de aparecer na avaliação"
+                        className="h-12 border-muted focus-visible:ring-primary/30 focus-visible:border-primary transition-all bg-muted/20"
+                        required
+                      />
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="comment">Comentário (opcional)</Label>
-                  <Textarea
-                    id="comment"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    placeholder="O que você achou do atendimento?"
-                    rows={4}
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="comment" className="text-sm font-semibold">Comentário (opcional)</Label>
+                      <Textarea
+                        id="comment"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="Conte um pouco sobre o atendimento, as tranças, o ambiente..."
+                        className="min-h-[120px] resize-none border-muted focus-visible:ring-primary/30 focus-visible:border-primary transition-all bg-muted/20"
+                        rows={4}
+                      />
+                    </div>
+                  </div>
 
-                <Button type="submit" className="w-full" disabled={isSubmitting} variant="hero">
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Enviando...
-                    </>
-                  ) : (
-                    "Enviar Avaliação"
-                  )}
-                </Button>
-              </form>
+                  <div className="flex gap-3 pt-2">
+                    <Button 
+                      type="submit" 
+                      className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 h-12 font-bold transition-all duration-300 active:scale-[0.98]" 
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Enviando...
+                        </>
+                      ) : (
+                        "Publicar Avaliação"
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </div>
             </DialogContent>
           </Dialog>
         )}
