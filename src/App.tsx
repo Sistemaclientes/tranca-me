@@ -7,9 +7,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 
 // Lazy load pages for optimization
-const Index = lazy(() => import("./pages/Index"));
-const Auth = lazy(() => import("./pages/Auth"));
-const AuthChoice = lazy(() => import("./pages/AuthChoice"));
+import Index from "./pages/Index";
+import Auth from "./pages/Auth";
+import AuthChoice from "./pages/AuthChoice";
 const Buscar = lazy(() => import("./pages/Buscar"));
 const BraiderProfile = lazy(() => import("./pages/BraiderProfile"));
 const BraiderProfileEdit = lazy(() => import("./pages/BraiderProfileEdit"));
