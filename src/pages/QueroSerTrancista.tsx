@@ -181,8 +181,8 @@ const QueroSerTrancista = () => {
                 <div className="bg-primary/10 p-4 border-b border-primary/10 flex justify-between items-center">
                   <div className="flex gap-2">
                     <div className="w-3 h-3 rounded-full bg-destructive/60"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                    <div className="w-3 h-3 rounded-full bg-secondary/60"></div>
+                    <div className="w-3 h-3 rounded-full bg-primary/60"></div>
                   </div>
                   <span className="text-xs font-medium text-primary">Painel da Trancista</span>
                 </div>
