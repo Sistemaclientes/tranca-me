@@ -12,9 +12,9 @@ serve(async (req) => {
   }
 
   try {
-    const { name, email, cpf, amount, planType } = await req.json()
+    const { name, email, cpf, amount, planType, paymentMethod = 'pix' } = await req.json()
 
-    console.log('Creating PIX payment:', { name, email, cpf: cpf ? '***' : 'not provided', amount, planType })
+    console.log('Creating payment:', { name, email, cpf: cpf ? '***' : 'not provided', amount, planType, paymentMethod })
 
     // Validate required fields
     if (!name || !email || !cpf || !amount) {
