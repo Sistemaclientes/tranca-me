@@ -27,6 +27,7 @@ export type Database = {
           image_url: string | null
           instagram: string | null
           is_premium: boolean | null
+          leads_count: number | null
           mercado_pago_id: string | null
           name: string
           neighborhood: string
@@ -57,6 +58,7 @@ export type Database = {
           image_url?: string | null
           instagram?: string | null
           is_premium?: boolean | null
+          leads_count?: number | null
           mercado_pago_id?: string | null
           name: string
           neighborhood: string
@@ -87,6 +89,7 @@ export type Database = {
           image_url?: string | null
           instagram?: string | null
           is_premium?: boolean | null
+          leads_count?: number | null
           mercado_pago_id?: string | null
           name?: string
           neighborhood?: string
@@ -233,6 +236,13 @@ export type Database = {
             foreignKeyName: "favorites_braider_id_fkey"
             columns: ["braider_id"]
             isOneToOne: false
+            referencedRelation: "active_braiders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favorites_braider_id_fkey"
+            columns: ["braider_id"]
+            isOneToOne: false
             referencedRelation: "braider_profiles"
             referencedColumns: ["id"]
           },
@@ -258,6 +268,13 @@ export type Database = {
           id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "leads_braider_id_fkey"
+            columns: ["braider_id"]
+            isOneToOne: false
+            referencedRelation: "active_braiders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "leads_braider_id_fkey"
             columns: ["braider_id"]
@@ -436,6 +453,13 @@ export type Database = {
             foreignKeyName: "reviews_braider_id_fkey"
             columns: ["braider_id"]
             isOneToOne: false
+            referencedRelation: "active_braiders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_braider_id_fkey"
+            columns: ["braider_id"]
+            isOneToOne: false
             referencedRelation: "braider_profiles"
             referencedColumns: ["id"]
           },
@@ -483,6 +507,13 @@ export type Database = {
             foreignKeyName: "subscriptions_braider_id_fkey"
             columns: ["braider_id"]
             isOneToOne: false
+            referencedRelation: "active_braiders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_braider_id_fkey"
+            columns: ["braider_id"]
+            isOneToOne: false
             referencedRelation: "braider_profiles"
             referencedColumns: ["id"]
           },
@@ -511,6 +542,99 @@ export type Database = {
       }
     }
     Views: {
+      active_braiders: {
+        Row: {
+          average_rating: number | null
+          city: string | null
+          created_at: string | null
+          description: string | null
+          email: string | null
+          facebook: string | null
+          gallery_urls: string[] | null
+          id: string | null
+          image_url: string | null
+          instagram: string | null
+          is_premium: boolean | null
+          mercado_pago_id: string | null
+          name: string | null
+          neighborhood: string | null
+          plan_tier: Database["public"]["Enums"]["plan_tier"] | null
+          premium_since: string | null
+          pricing: string | null
+          professional_name: string | null
+          services: string[] | null
+          status: string | null
+          total_reviews: number | null
+          trial_ends_at: string | null
+          updated_at: string | null
+          user_id: string | null
+          video_url: string | null
+          view_count: number | null
+          whatsapp: string | null
+          whatsapp_click_count: number | null
+        }
+        Insert: {
+          average_rating?: number | null
+          city?: string | null
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          facebook?: string | null
+          gallery_urls?: string[] | null
+          id?: string | null
+          image_url?: string | null
+          instagram?: string | null
+          is_premium?: boolean | null
+          mercado_pago_id?: string | null
+          name?: string | null
+          neighborhood?: string | null
+          plan_tier?: Database["public"]["Enums"]["plan_tier"] | null
+          premium_since?: string | null
+          pricing?: string | null
+          professional_name?: string | null
+          services?: string[] | null
+          status?: string | null
+          total_reviews?: number | null
+          trial_ends_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          video_url?: string | null
+          view_count?: number | null
+          whatsapp?: string | null
+          whatsapp_click_count?: number | null
+        }
+        Update: {
+          average_rating?: number | null
+          city?: string | null
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          facebook?: string | null
+          gallery_urls?: string[] | null
+          id?: string | null
+          image_url?: string | null
+          instagram?: string | null
+          is_premium?: boolean | null
+          mercado_pago_id?: string | null
+          name?: string | null
+          neighborhood?: string | null
+          plan_tier?: Database["public"]["Enums"]["plan_tier"] | null
+          premium_since?: string | null
+          pricing?: string | null
+          professional_name?: string | null
+          services?: string[] | null
+          status?: string | null
+          total_reviews?: number | null
+          trial_ends_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          video_url?: string | null
+          view_count?: number | null
+          whatsapp?: string | null
+          whatsapp_click_count?: number | null
+        }
+        Relationships: []
+      }
       approved_payments: {
         Row: {
           amount: number | null
