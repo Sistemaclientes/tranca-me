@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { BRAID_TYPES } from "@/constants/braidTypes";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
