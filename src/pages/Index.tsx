@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, Sparkles, MapPin, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import FeaturedBraidersCarousel from "@/components/FeaturedBraidersCarousel";
 import CoverageAreas from "@/components/home/CoverageAreas";
@@ -9,6 +9,7 @@ import Features from "@/components/home/Features";
 import Inspiration from "@/components/home/Inspiration";
 import ForBraiders from "@/components/home/ForBraiders";
 import Footer from "@/components/home/Footer";
+import PremiumBraiders from "@/components/PremiumBraiders";
 
 const Index = () => {
   return (
@@ -18,6 +19,28 @@ const Index = () => {
       <main>
         {/* Hero Section */}
         <Hero />
+
+        {/* Categories Section - Added this as it might be the "missing cards" */}
+        <section className="py-12 px-4">
+          <div className="container mx-auto">
+            <div className="flex flex-wrap justify-center gap-4">
+              {[
+                { name: "Box Braids", icon: <Sparkles className="h-5 w-5" /> },
+                { name: "Nagô", icon: <MapPin className="h-5 w-5" /> },
+                { name: "Knotless", icon: <Star className="h-5 w-5" /> },
+                { name: "Twist", icon: <Sparkles className="h-5 w-5" /> },
+                { name: "Dreads", icon: <MapPin className="h-5 w-5" /> },
+              ].map((cat, idx) => (
+                <Link key={idx} to={`/buscar?service=${cat.name}`}>
+                  <Button variant="outline" className="rounded-full px-6 py-6 border-2 hover:bg-primary hover:text-white transition-all">
+                    {cat.icon}
+                    <span className="ml-2 font-semibold">{cat.name}</span>
+                  </Button>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* Featured Braiders Section */}
         <section id="destaques" className="py-16 px-4 bg-muted/30 relative overflow-hidden">
@@ -45,6 +68,17 @@ const Index = () => {
             </div>
             
             <FeaturedBraidersCarousel />
+          </div>
+        </section>
+
+        {/* Premium Section - Re-adding this as it was removed previously */}
+        <section className="py-16 px-4 bg-white/50">
+          <div className="container mx-auto">
+             <div className="text-center mb-12 space-y-2">
+                <h2 className="font-display text-3xl font-bold text-primary">Profissionais Premium</h2>
+                <p className="text-muted-foreground">Encontre as melhores trancistas com planos exclusivos</p>
+             </div>
+             <PremiumBraiders />
           </div>
         </section>
 
