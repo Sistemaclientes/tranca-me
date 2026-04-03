@@ -9,13 +9,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import AutoScroll from "embla-carousel-auto-scroll";
 
 interface ImageGalleryProps {
   images: string[];
   title?: string;
+  isPremium?: boolean;
 }
 
-const ImageGallery = ({ images, title }: ImageGalleryProps) => {
+const ImageGallery = ({ images, title, isPremium }: ImageGalleryProps) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   if (!images || images.length === 0) return null;
