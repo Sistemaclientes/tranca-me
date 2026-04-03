@@ -29,20 +29,12 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
       
       <CardContent className="p-6 space-y-4">
         <div className="aspect-square bg-muted rounded-lg overflow-hidden relative">
-          {braider.image_url ? (
-            <img 
-              src={braider.image_url} 
-              alt={braider.professional_name || braider.name}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-hero flex items-center justify-center">
-              <span className="text-5xl font-display text-white">
-                {(braider.professional_name || braider.name).charAt(0)}
-              </span>
-            </div>
-          )}
+          <img 
+            src={braider.image_url || `https://images.unsplash.com/photo-1620331311520-246422fd82f9?q=80&w=600&auto=format&fit=crop`} 
+            alt={braider.professional_name || braider.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            loading="lazy"
+          />
           {braider.is_premium && (
             <Badge className="absolute bottom-2 right-2 bg-gradient-hero border-none text-white">
               Premium

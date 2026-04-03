@@ -26,6 +26,7 @@ export type Database = {
           image_url: string | null
           instagram: string | null
           is_premium: boolean | null
+          mercado_pago_id: string | null
           name: string
           neighborhood: string
           plan_tier: Database["public"]["Enums"]["plan_tier"] | null
@@ -33,6 +34,8 @@ export type Database = {
           pricing: string | null
           professional_name: string | null
           services: string[] | null
+          status: string | null
+          trial_ends_at: string | null
           updated_at: string
           user_id: string
           video_url: string | null
@@ -51,6 +54,7 @@ export type Database = {
           image_url?: string | null
           instagram?: string | null
           is_premium?: boolean | null
+          mercado_pago_id?: string | null
           name: string
           neighborhood: string
           plan_tier?: Database["public"]["Enums"]["plan_tier"] | null
@@ -58,6 +62,8 @@ export type Database = {
           pricing?: string | null
           professional_name?: string | null
           services?: string[] | null
+          status?: string | null
+          trial_ends_at?: string | null
           updated_at?: string
           user_id: string
           video_url?: string | null
@@ -76,6 +82,7 @@ export type Database = {
           image_url?: string | null
           instagram?: string | null
           is_premium?: boolean | null
+          mercado_pago_id?: string | null
           name?: string
           neighborhood?: string
           plan_tier?: Database["public"]["Enums"]["plan_tier"] | null
@@ -83,6 +90,8 @@ export type Database = {
           pricing?: string | null
           professional_name?: string | null
           services?: string[] | null
+          status?: string | null
+          trial_ends_at?: string | null
           updated_at?: string
           user_id?: string
           video_url?: string | null
@@ -419,6 +428,53 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "reviews_braider_id_fkey"
+            columns: ["braider_id"]
+            isOneToOne: false
+            referencedRelation: "braider_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          amount: number | null
+          braider_id: string
+          created_at: string | null
+          id: string
+          mercado_pago_id: string | null
+          payment_date: string | null
+          plan_type: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount?: number | null
+          braider_id: string
+          created_at?: string | null
+          id?: string
+          mercado_pago_id?: string | null
+          payment_date?: string | null
+          plan_type: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number | null
+          braider_id?: string
+          created_at?: string | null
+          id?: string
+          mercado_pago_id?: string | null
+          payment_date?: string | null
+          plan_type?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_braider_id_fkey"
             columns: ["braider_id"]
             isOneToOne: false
             referencedRelation: "braider_profiles"
