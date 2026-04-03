@@ -40,6 +40,16 @@ const Buscar = () => {
   useEffect(() => {
     loadCities();
     loadBraiders();
+
+    // Safety timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      if (loading) {
+        console.warn("Braiders data load timed out");
+        setLoading(false);
+      }
+    }, 10000); // 10 seconds
+
+    return () => clearTimeout(timeout);
   }, []);
 
   useEffect(() => {
