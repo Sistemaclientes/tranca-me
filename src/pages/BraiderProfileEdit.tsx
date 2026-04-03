@@ -77,7 +77,7 @@ const BraiderProfileEdit = () => {
         setFormData({
           name: profile.name || "",
           professionalName: profile.professional_name || "",
-          whatsapp: profile.whatsapp || "",
+          whatsapp: formatPhoneNumber(profile.whatsapp || ""),
           email: profile.email || "",
           instagram: profile.instagram || "",
           facebook: profile.facebook || "",
