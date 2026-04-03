@@ -52,8 +52,8 @@ const Index = () => {
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-bold uppercase tracking-wider mx-auto">
                   Seleção Premium
                 </div>
-                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-primary leading-tight">
-                  Trancistas em Destaque
+                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                  Trancistas em <span className="text-primary italic">Destaque</span>
                 </h2>
                 <p className="text-muted-foreground text-lg md:text-xl">
                   Conheça as profissionais mais recomendadas e bem avaliadas da nossa plataforma.
