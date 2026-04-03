@@ -28,6 +28,7 @@ export type Database = {
           is_premium: boolean | null
           name: string
           neighborhood: string
+          plan_tier: Database["public"]["Enums"]["plan_tier"] | null
           premium_since: string | null
           pricing: string | null
           professional_name: string | null
@@ -35,7 +36,9 @@ export type Database = {
           updated_at: string
           user_id: string
           video_url: string | null
+          view_count: number | null
           whatsapp: string
+          whatsapp_click_count: number | null
         }
         Insert: {
           city: string
@@ -50,6 +53,7 @@ export type Database = {
           is_premium?: boolean | null
           name: string
           neighborhood: string
+          plan_tier?: Database["public"]["Enums"]["plan_tier"] | null
           premium_since?: string | null
           pricing?: string | null
           professional_name?: string | null
@@ -57,7 +61,9 @@ export type Database = {
           updated_at?: string
           user_id: string
           video_url?: string | null
+          view_count?: number | null
           whatsapp: string
+          whatsapp_click_count?: number | null
         }
         Update: {
           city?: string
@@ -72,6 +78,7 @@ export type Database = {
           is_premium?: boolean | null
           name?: string
           neighborhood?: string
+          plan_tier?: Database["public"]["Enums"]["plan_tier"] | null
           premium_since?: string | null
           pricing?: string | null
           professional_name?: string | null
@@ -79,7 +86,9 @@ export type Database = {
           updated_at?: string
           user_id?: string
           video_url?: string | null
+          view_count?: number | null
           whatsapp?: string
+          whatsapp_click_count?: number | null
         }
         Relationships: []
       }
@@ -207,6 +216,35 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "favorites_braider_id_fkey"
+            columns: ["braider_id"]
+            isOneToOne: false
+            referencedRelation: "braider_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          braider_id: string
+          client_id: string | null
+          created_at: string
+          id: string
+        }
+        Insert: {
+          braider_id: string
+          client_id?: string | null
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          braider_id?: string
+          client_id?: string | null
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_braider_id_fkey"
             columns: ["braider_id"]
             isOneToOne: false
             referencedRelation: "braider_profiles"
@@ -464,6 +502,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "braider" | "client"
+      plan_tier: "free" | "pro" | "premium"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -592,6 +631,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "braider", "client"],
+      plan_tier: ["free", "pro", "premium"],
     },
   },
 } as const
