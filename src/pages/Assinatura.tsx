@@ -30,27 +30,36 @@ const Assinatura = () => {
   const [finalAmount, setFinalAmount] = useState(0);
 
   const plans = {
-    basic: {
-      name: "Plano Básico",
-      price: 9.99,
+    free: {
+      name: "Plano Grátis",
+      price: 0,
       features: [
-        "Perfil completo com foto",
-        "Galeria de trabalhos",
-        "Contato direto via WhatsApp",
-        "Listagem em buscas",
-        "Edição de perfil",
+        "Perfil básico com foto",
+        "Galeria limitada (3 fotos)",
+        "Contato via WhatsApp",
+        "Visibilidade padrão",
+      ],
+    },
+    pro: {
+      name: "Plano Pro",
+      price: 19.90,
+      features: [
+        "Perfil completo sem limites",
+        "Galeria ilimitada",
+        "Destaque nos resultados",
+        "Badge Verificado",
+        "Suporte por WhatsApp",
       ],
     },
     premium: {
       name: "Plano Premium",
       price: 49.90,
       features: [
-        "Todos os benefícios do Básico",
-        "Destaque na página inicial",
-        "Badge Premium",
-        "Prioridade nos resultados",
-        "Aparecerá em campanha",
-        "Suporte prioritário",
+        "Topo dos resultados de busca",
+        "Destaque visual exclusivo",
+        "Relatório detalhado de leads",
+        "Acesso antecipado a recursos",
+        "Prioridade total na região",
       ],
     },
   };
