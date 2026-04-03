@@ -61,8 +61,8 @@ const App = () => (
             <Route path="/meu-perfil" element={<MeuPerfil />} />
             <Route path="/assinatura" element={<Assinatura />} />
             <Route path="/checkout" element={<Checkout />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/sugestoes" element={<AdminSuggestions />} />
+            <Route path="/paineladm" element={<AdminDashboard />} />
+            <Route path="/paineladm/sugestoes" element={<AdminSuggestions />} />
             <Route path="/quero-ser-trancista" element={<QueroSerTrancista />} />
             <Route path="/cursos" element={<Cursos />} />
             {/* SEO Routes for Cities */}

@@ -132,7 +132,7 @@ const Navbar = () => {
               )}
               
               {isAdmin && (
-                <Link to="/admin" className="hidden lg:block">
+                <Link to="/paineladm" className="hidden lg:block">
                   <Button variant="ghost" size="sm" className="text-primary font-bold">
                     <Settings className="h-4 w-4 mr-2" />
                     Admin
