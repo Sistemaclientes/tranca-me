@@ -3,6 +3,7 @@ import StarRating from "@/components/StarRating";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Star, MessageSquarePlus, Loader2 } from "lucide-react";
 import {
@@ -24,14 +25,16 @@ interface ReviewsSectionProps {
 }
 
 const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
-  const { reviews, averageRating, totalReviews, loading, submitReview } = useReviews(braiderId);
+  const { reviews, averageRating, totalReviews, loading, submitReview, loadReviews } = useReviews(braiderId);
   const [isLogged, setIsLogged] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [clientName, setClientName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     checkUser();
@@ -55,6 +58,23 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
 
       if (session) {
         await checkOwner(session.user.id);
+        
+        // Check if admin
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .eq("role", "admin")
+          .maybeSingle();
+        
+        setIsAdmin(!!roleData);
+        
+        // Use user metadata to prefill name
+        if (session.user.user_metadata?.full_name) {
+          setClientName(session.user.user_metadata.full_name);
+        } else if (session.user.user_metadata?.name) {
+          setClientName(session.user.user_metadata.name);
+        }
       }
     } catch (error) {
       console.error("Error checking user:", error);
@@ -123,10 +143,20 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
           </div>
         </div>
 
-        {isLogged && !isOwner && (
+        {!isOwner && (
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button variant="hero" className="shrink-0">
+              <Button 
+                variant="hero" 
+                className="shrink-0"
+                onClick={(e) => {
+                  if (!isLogged) {
+                    e.preventDefault();
+                    toast.info("Faça login para deixar sua avaliação!");
+                    navigate("/auth");
+                  }
+                }}
+              >
                 <MessageSquarePlus className="h-4 w-4 mr-2" />
                 Avaliar Trancista
               </Button>
@@ -221,11 +251,27 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
       </div>
 
       {totalReviews === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">Nenhuma avaliação ainda.</p>
-          <p className="text-sm text-muted-foreground mt-2">
+        <div className="text-center py-12 bg-muted/20 rounded-xl border-2 border-dashed border-muted-foreground/10">
+          <MessageSquarePlus className="h-12 w-12 mx-auto text-muted-foreground/30 mb-4" />
+          <p className="text-muted-foreground font-medium">Nenhuma avaliação ainda.</p>
+          <p className="text-sm text-muted-foreground mt-2 mb-6">
             Seja o primeiro a avaliar esta trancista!
           </p>
+          {!isOwner && (
+            <Button 
+              variant="hero" 
+              onClick={() => {
+                if (!isLogged) {
+                  toast.info("Faça login para deixar sua avaliação!");
+                  navigate("/auth");
+                } else {
+                  setIsOpen(true);
+                }
+              }}
+            >
+              Avaliar Agora
+            </Button>
+          )}
         </div>
       ) : (
         <div className="space-y-4">
@@ -243,9 +289,59 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
                   </div>
                   <StarRating rating={review.rating} showNumber={false} size="sm" />
                 </div>
-                <span className="text-xs text-muted-foreground">
-                  {format(new Date(review.created_at), "dd MMM yyyy", { locale: ptBR })}
-                </span>
+                <div className="flex flex-col items-end gap-2">
+                  <span className="text-xs text-muted-foreground">
+                    {format(new Date(review.created_at), "dd MMM yyyy", { locale: ptBR })}
+                  </span>
+                  <div className="flex gap-2">
+                    {(isOwner || isAdmin) && !review.is_verified && (
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="h-7 text-xs border-primary text-primary hover:bg-primary/10"
+                        onClick={async () => {
+                          const { error } = await supabase
+                            .from("reviews")
+                            .update({ is_verified: true })
+                            .eq("id", review.id);
+                          
+                          if (error) {
+                            toast.error("Erro ao publicar avaliação.");
+                          } else {
+                            toast.success("Avaliação publicada!");
+                            loadReviews();
+                          }
+                        }}
+                      >
+                        Publicar
+                      </Button>
+                    )}
+                    {isAdmin && (
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="h-7 text-xs text-destructive hover:bg-destructive/10 border-destructive"
+                        onClick={async () => {
+                          if (!confirm("Tem certeza que deseja excluir esta avaliação?")) return;
+                          
+                          const { error } = await supabase
+                            .from("reviews")
+                            .delete()
+                            .eq("id", review.id);
+                          
+                          if (error) {
+                            toast.error("Erro ao excluir avaliação.");
+                          } else {
+                            toast.success("Avaliação excluída!");
+                            loadReviews();
+                          }
+                        }}
+                      >
+                        Excluir
+                      </Button>
+                    )}
+                  </div>
+                </div>
               </div>
               {review.comment && (
                 <p className="text-sm text-foreground mt-2">{review.comment}</p>
