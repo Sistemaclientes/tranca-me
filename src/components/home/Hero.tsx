@@ -1,0 +1,59 @@
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+import { Link } from "react-router-dom";
+import heroCover from "@/assets/hero-cover.png";
+
+const Hero = () => {
+  return (
+    <section className="relative pt-24 pb-16 px-4 min-h-[600px] flex items-center overflow-hidden">
+      <div className="absolute inset-0 z-0 scale-105 animate-subtle-zoom">
+        <img 
+          src={heroCover} 
+          alt="Capa Trancei" 
+          className="w-full h-full object-cover" 
+          fetchPriority="high" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-transparent"></div>
+      </div>
+      
+      <div className="container mx-auto relative z-10">
+        <div className="max-w-2xl space-y-8 animate-slide-up">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+            </span>
+            A maior rede de trancistas de SC
+          </div>
+          
+          <h1 className="font-display text-5xl lg:text-7xl font-bold leading-tight">
+            Sua beleza, <br />
+            <span className="bg-gradient-hero bg-clip-text text-transparent">
+              nossa conexão.
+            </span>
+          </h1>
+          
+          <p className="text-xl text-muted-foreground max-w-xl leading-relaxed">
+            Encontre profissionais especializadas em tranças na sua região ou divulgue seus serviços para milhares de clientes em toda a grande Florianópolis.
+          </p>
+          
+          <div className="flex flex-wrap gap-4 pt-4">
+            <Link to="/buscar">
+              <Button variant="hero" size="xl" className="shadow-glow hover:scale-105 transition-all">
+                <Search className="h-5 w-5 mr-2" />
+                Buscar Trancistas
+              </Button>
+            </Link>
+            <Link to="/quero-ser-trancista">
+              <Button variant="outline" size="xl" className="bg-background/50 backdrop-blur-sm border-2 hover:bg-background/80 transition-all">
+                Sou Trancista
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
