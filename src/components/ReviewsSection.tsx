@@ -49,17 +49,6 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
         .maybeSingle();
 
       setIsOwner(session.user.id === profile?.user_id);
-      
-      // Get current user's profile for the name if possible
-      const { data: userProfile } = await supabase
-        .from("profiles")
-        .select("display_name")
-        .eq("user_id", session.user.id)
-        .maybeSingle();
-      
-      if (userProfile?.display_name) {
-        setClientName(userProfile.display_name);
-      }
     }
   };
 
