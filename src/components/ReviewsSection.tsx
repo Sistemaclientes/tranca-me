@@ -33,6 +33,7 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
   const [clientName, setClientName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     checkUser();
