@@ -77,6 +77,13 @@ const ImageGallery = ({ images, title, isPremium }: ImageGalleryProps) => {
               align: "start",
               loop: true,
             }}
+            plugins={isPremium ? [
+              AutoScroll({
+                speed: 1.5,
+                stopOnInteraction: false,
+                stopOnMouseEnter: true,
+              }),
+            ] : []}
             className="w-full"
           >
             <CarouselContent className="-ml-2 md:-ml-4">
