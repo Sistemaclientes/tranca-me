@@ -39,29 +39,76 @@ serve(async (req) => {
 
     console.log('Creating payment with Mercado Pago...')
 
-    // Create payment in Mercado Pago - Checkout Transparente PIX
-    const mercadoPagoResponse = await fetch('https://api.mercadopago.com/v1/payments', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-        'X-Idempotency-Key': crypto.randomUUID(),
-      },
-      body: JSON.stringify({
-        transaction_amount: amount,
-        description: `Plano ${determinedPlanType.toUpperCase()} - Trancei`,
-        payment_method_id: 'pix',
-        payer: {
-          email: email,
-          first_name: name.split(' ')[0],
-          last_name: name.split(' ').slice(1).join(' ') || name,
-          identification: {
-            type: 'CPF',
-            number: cleanCpf,
-          },
+    console.log(`Creating ${paymentMethod} payment with Mercado Pago...`)
+
+    let mercadoPagoResponse
+    
+    if (paymentMethod === 'pix') {
+      // Create payment in Mercado Pago - Checkout Transparente PIX
+      mercadoPagoResponse = await fetch('https://api.mercadopago.com/v1/payments', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+          'X-Idempotency-Key': crypto.randomUUID(),
         },
-      }),
-    })
+        body: JSON.stringify({
+          transaction_amount: amount,
+          description: `Plano ${determinedPlanType.toUpperCase()} - Trancei`,
+          payment_method_id: 'pix',
+          payer: {
+            email: email,
+            first_name: name.split(' ')[0],
+            last_name: name.split(' ').slice(1).join(' ') || name,
+            identification: {
+              type: 'CPF',
+              number: cleanCpf,
+            },
+          },
+        }),
+      })
+    } else {
+      // Create preference for Checkout Pro (Redirect)
+      mercadoPagoResponse = await fetch('https://api.mercadopago.com/checkout/preferences', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items: [
+            {
+              title: `Plano ${determinedPlanType.toUpperCase()} - Trancei`,
+              quantity: 1,
+              unit_price: amount,
+              currency_id: 'BRL',
+            },
+          ],
+          payer: {
+            name: name,
+            email: email,
+            identification: {
+              type: 'CPF',
+              number: cleanCpf,
+            },
+          },
+          back_urls: {
+            success: `${req.headers.get('origin')}/perfil?status=success`,
+            failure: `${req.headers.get('origin')}/checkout?status=failure&plan=${determinedPlanType}`,
+            pending: `${req.headers.get('origin')}/checkout?status=pending&plan=${determinedPlanType}`,
+          },
+          auto_return: 'approved',
+          payment_methods: {
+            excluded_payment_methods: [
+              { id: 'pix' }, // We handle PIX separately
+            ],
+            installments: 12,
+          },
+          external_reference: `${crypto.randomUUID()}`,
+          notification_url: `${req.headers.get('origin').replace('localhost', 'ngrok-free.app')}/supabase/functions/mercadopago-webhook`, // In reality this should be the edge function URL
+        }),
+      })
+    }
 
     const paymentData = await mercadoPagoResponse.json()
     console.log('Mercado Pago status:', mercadoPagoResponse.status)
