@@ -55,15 +55,9 @@ const BraiderProfile = () => {
 
   useEffect(() => {
     loadProfile();
-
-    // Safety timeout to prevent infinite loading
     const timeout = setTimeout(() => {
-      if (loading) {
-        console.warn("Loading profile timed out");
-        setLoading(false);
-      }
-    }, 10000); // 10 seconds
-
+      if (loading) setLoading(false);
+    }, 10000);
     return () => clearTimeout(timeout);
   }, [id]);
 
@@ -76,7 +70,6 @@ const BraiderProfile = () => {
         .maybeSingle();
 
       if (profile) {
-        // Check if profile is active or user is owner/admin
         const { data: { session } } = await supabase.auth.getSession();
         const is_owner = session?.user?.id === profile.user_id;
         
@@ -89,45 +82,25 @@ const BraiderProfile = () => {
         
         const is_admin = !!roleData;
         
-        // Bloqueio deve ser validado no backend, mas no frontend tratamos a visibilidade
-        const is_blocked = profile.status === 'blocked';
-        const is_expired = profile.status === 'expired';
-
-        if ((is_blocked || is_expired) && !is_owner && !is_admin) {
+        if ((profile.status === 'blocked' || profile.status === 'expired') && !is_owner && !is_admin) {
           navigate("/trancista-nao-encontrada");
           return;
         }
 
         setBraider(profile);
         setIsOwner(is_owner);
-        
-        // Increment view count
         await supabase.rpc('increment_view_count', { profile_id: id });
       } else {
         navigate("/trancista-nao-encontrada");
       }
     } catch (error) {
-      console.error("Error loading profile:", error);
       navigate("/trancista-nao-encontrada");
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-warm flex items-center justify-center">
-        <p>Carregando...</p>
-      </div>
-    );
-  }
-
-  if (!braider) {
-    return null; // Will redirect automatically
-  }
-
   const handleWhatsApp = async () => {
-    // Register lead
     const success = await registerLead(braider.id);
     if (success) {
       const message = encodeURIComponent(`Olá ${braider.name}! Encontrei seu perfil na plataforma de trancistas e gostaria de agendar um horário.`);
@@ -136,6 +109,49 @@ const BraiderProfile = () => {
       toast.error("Erro ao registrar interesse. Tente novamente.");
     }
   };
+
+  const handleReport = async () => {
+    if (!reportReason) {
+      toast.error("Por favor, selecione um motivo.");
+      return;
+    }
+
+    setSubmittingReport(true);
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session) {
+      toast.error("Faça login para denunciar um perfil.");
+      setSubmittingReport(false);
+      return;
+    }
+
+    const { error } = await supabase.from("reports").insert({
+      braider_id: id,
+      reporter_id: session.user.id,
+      reason: reportReason,
+      description: reportDescription,
+    });
+
+    if (error) {
+      toast.error("Erro ao enviar denúncia: " + error.message);
+    } else {
+      toast.success("Denúncia enviada com sucesso. Analisaremos o caso.");
+      setIsReportDialogOpen(false);
+      setReportReason("");
+      setReportDescription("");
+    }
+    setSubmittingReport(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-warm flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!braider) return null;
 
   return (
     <div className="min-h-screen bg-gradient-warm">
@@ -147,233 +163,92 @@ const BraiderProfile = () => {
             <Card className="mb-8 border-none bg-destructive/10 text-destructive shadow-soft">
               <CardContent className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="p-2 bg-destructive/20 rounded-full">
-                    <Phone className="h-5 w-5" />
-                  </span>
+                  <span className="p-2 bg-destructive/20 rounded-full"><Phone className="h-5 w-5" /></span>
                   <div>
-                    <p className="font-bold">
-                      {braider.status === 'blocked' ? 'Perfil Bloqueado' : 'Plano Expirado'}
-                    </p>
-                    <p className="text-sm opacity-90">
-                      {isOwner 
-                        ? 'Seu perfil está oculto. Regularize seu pagamento para voltar a aparecer.' 
-                        : 'Este perfil está temporariamente indisponível para novos agendamentos.'}
-                    </p>
+                    <p className="font-bold">{braider.status === 'blocked' ? 'Perfil Bloqueado' : 'Plano Expirado'}</p>
+                    <p className="text-sm opacity-90">{isOwner ? 'Seu perfil está oculto. Regularize seu pagamento.' : 'Perfil indisponível.'}</p>
                   </div>
                 </div>
-                {isOwner && (
-                  <Button variant="destructive" onClick={() => navigate("/assinatura")}>
-                    Regularizar Agora
-                  </Button>
-                )}
+                {isOwner && <Button variant="destructive" onClick={() => navigate("/assinatura")}>Regularizar Agora</Button>}
               </CardContent>
             </Card>
           )}
 
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate("/buscar")}
-            className="mb-6"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar para busca
-          </Button>
+          <Button variant="ghost" onClick={() => navigate("/buscar")} className="mb-6"><ArrowLeft className="h-4 w-4" /> Voltar</Button>
 
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Left Column - Image and Basic Info */}
             <div className="lg:col-span-1 space-y-6">
               <Card className="bg-gradient-card border-none shadow-soft overflow-hidden">
-                {braider.image_url ? (
-                  <img 
-                    src={braider.image_url} 
-                    alt={`Foto de ${braider.name}`}
-                    className="w-full aspect-square object-cover"
-                  />
-                ) : (
-                  <div className="w-full aspect-square bg-muted flex items-center justify-center">
-                    <p className="text-muted-foreground">Sem foto</p>
-                  </div>
-                )}
+                <img src={braider.image_url || "/placeholder.svg"} className="w-full aspect-square object-cover" alt="" />
                 <CardContent className="p-6 space-y-4">
-                  <div>
-                    <h1 className="font-display text-2xl font-bold mb-2">
-                      {braider.professional_name || braider.name}
-                    </h1>
-                    <div className="flex items-center gap-1 text-muted-foreground mb-2">
-                      <MapPin className="h-4 w-4" />
-                      <span>{braider.neighborhood}, {braider.city}</span>
-                    </div>
-                  </div>
-
-                  <Button 
-                    variant="hero" 
-                    className="w-full"
-                    onClick={handleWhatsApp}
-                    disabled={braider.status === 'blocked' || braider.status === 'expired'}
-                  >
-                    <Phone className="h-4 w-4" />
-                    {braider.status === 'blocked' || braider.status === 'expired' 
-                      ? 'Contato Indisponível' 
-                      : 'Agendar via WhatsApp'}
-                  </Button>
-
-                  <FavoriteButton braiderId={id!} />
-
-                  {isOwner && (
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      onClick={() => navigate("/perfil")}
-                    >
-                      <Edit className="h-4 w-4" />
-                      Editar Perfil
+                  <h1 className="font-display text-2xl font-bold">{braider.professional_name || braider.name}</h1>
+                  <div className="flex items-center gap-1 text-muted-foreground"><MapPin className="h-4 w-4" /><span>{braider.neighborhood}, {braider.city}</span></div>
+                  
+                  <div className="flex flex-col gap-3">
+                    <Button variant="hero" className="w-full h-12" onClick={handleWhatsApp} disabled={braider.status === 'blocked' || braider.status === 'expired'}>
+                      <MessageCircle className="h-5 w-5 mr-2" /> Agendar via WhatsApp
                     </Button>
-                  )}
+                    <FavoriteButton braiderId={id!} />
+                    <Button variant="outline" className="w-full" onClick={() => setIsReportDialogOpen(true)}><Flag className="h-4 w-4 mr-2" /> Denunciar Perfil</Button>
+                    {isOwner && <Button variant="outline" className="w-full border-primary/30" onClick={() => navigate("/perfil")}><Edit className="h-4 w-4 mr-2" /> Editar Perfil</Button>}
+                  </div>
                 </CardContent>
               </Card>
 
               {braider.video_url && (
                 <Card className="bg-gradient-card border-none shadow-soft overflow-hidden">
-                  <CardContent className="p-0">
-                    <div className="aspect-video">
-                      <video 
-                        controls 
-                        className="w-full h-full"
-                        src={braider.video_url}
-                      >
-                        Seu navegador não suporta vídeos.
-                      </video>
-                    </div>
-                  </CardContent>
+                  <CardContent className="p-0"><div className="aspect-video"><video controls className="w-full h-full" src={braider.video_url} /></div></CardContent>
                 </Card>
               )}
             </div>
 
-            {/* Right Column - Detailed Info */}
             <div className="lg:col-span-2 space-y-6">
-              <Card className="bg-gradient-card border-none shadow-soft">
-                <CardContent className="p-6">
-                  <h2 className="font-display text-xl font-semibold mb-4">Contato</h2>
+              <Card className="bg-gradient-card border-none shadow-soft p-6">
+                <h2 className="font-display text-xl font-semibold mb-4">Sobre & Contato</h2>
+                <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-3">
-                    <a 
-                      href={`https://wa.me/${braider.whatsapp.replace(/[^0-9]/g, '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 hover:text-primary transition-colors"
-                    >
-                      <Phone className="h-5 w-5 text-primary" />
-                      <span>{formatPhoneNumber(braider.whatsapp)}</span>
-                    </a>
-
-                    <a 
-                      href={`mailto:${braider.email}`}
-                      className="flex items-center gap-3 hover:text-primary transition-colors"
-                    >
-                      <Mail className="h-5 w-5 text-primary" />
-                      <span>{braider.email}</span>
-                    </a>
-
-                    {braider.instagram && (
-                      <a 
-                        href={`https://instagram.com/${braider.instagram.replace('@', '')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 hover:text-primary transition-colors"
-                      >
-                        <Instagram className="h-5 w-5 text-primary" />
-                        <span>{braider.instagram}</span>
-                      </a>
-                    )}
-
-                    {braider.facebook && (
-                      <a 
-                        href={`https://facebook.com/${braider.facebook}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 hover:text-primary transition-colors"
-                      >
-                        <Facebook className="h-5 w-5 text-primary" />
-                        <span>{braider.facebook}</span>
-                      </a>
-                    )}
+                    <div className="flex items-center gap-3"><Phone className="h-5 w-5 text-primary" /><span>{formatPhoneNumber(braider.whatsapp)}</span></div>
+                    <div className="flex items-center gap-3"><Mail className="h-5 w-5 text-primary" /><span>{braider.email}</span></div>
+                    {braider.instagram && <div className="flex items-center gap-3"><Instagram className="h-5 w-5 text-primary" /><span>{braider.instagram}</span></div>}
                   </div>
-
-                  <Separator className="my-6" />
-
-                  <h2 className="font-display text-xl font-semibold mb-4">Sobre</h2>
-                  <p className="leading-relaxed">{braider.description}</p>
-
-                  <Separator className="my-6" />
-
-                  <h2 className="font-display text-xl font-semibold mb-4">Serviços</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {braider.braid_types && braider.braid_types.length > 0 && (
-                      braider.braid_types.map((type: string, index: number) => (
-                        <Badge 
-                          key={`braid-${index}`} 
-                          variant="hero"
-                          className="px-3 py-1"
-                        >
-                          {type}
-                        </Badge>
-                      ))
-                    )}
-                    {braider.services && braider.services.length > 0 && (
-                      braider.services.map((service: string, index: number) => (
-                        <Badge 
-                          key={`service-${index}`} 
-                          variant="secondary"
-                          className="px-3 py-1"
-                        >
-                          {service}
-                        </Badge>
-                      ))
-                    )}
-                    {(!braider.braid_types || braider.braid_types.length === 0) && (!braider.services || braider.services.length === 0) && (
-                      <p className="text-muted-foreground">Nenhum serviço cadastrado</p>
-                    )}
-                  </div>
-
-                  {braider.gallery_urls && braider.gallery_urls.length > 0 && (
-                    <>
-                      <Separator className="my-6" />
-                      <h2 className="font-display text-xl font-semibold mb-4">Galeria de Trabalhos</h2>
-                      <ImageGallery 
-                        images={braider.gallery_urls} 
-                        title={braider.professional_name || braider.name}
-                        isPremium={braider.is_premium}
-                      />
-                    </>
-                  )}
-
-                  <Separator className="my-6" />
-
-                  <h2 className="font-display text-xl font-semibold mb-4">Avaliações</h2>
-                  <ReviewsSection braiderId={id!} />
-                </CardContent>
+                  <div className="space-y-3"><p>{braider.description}</p></div>
+                </div>
+                <Separator className="my-6" />
+                <h2 className="font-display text-xl font-semibold mb-4">Serviços</h2>
+                <div className="flex flex-wrap gap-2">
+                  {(braider.braid_types || []).map((t: string) => <Badge key={t} variant="hero">{t}</Badge>)}
+                  {(braider.services || []).map((s: string) => <Badge key={s} variant="secondary">{s}</Badge>)}
+                </div>
+                {braider.gallery_urls && (
+                  <><Separator className="my-6" /><h2 className="font-display text-xl font-semibold mb-4">Galeria</h2><ImageGallery images={braider.gallery_urls} title={braider.professional_name} isPremium={braider.is_premium} /></>
+                )}
+                <Separator className="my-6" /><h2 className="font-display text-xl font-semibold mb-4">Avaliações</h2><ReviewsSection braiderId={id!} />
               </Card>
             </div>
           </div>
 
-          <Separator className="my-16" />
-          
-          <div className="space-y-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="text-center md:text-left">
-                <h2 className="font-display text-3xl font-bold mb-2">Trancistas em Destaque</h2>
-                <p className="text-muted-foreground">Conheça outras profissionais de destaque na plataforma</p>
-              </div>
-              <Link to="/buscar">
-                <Button variant="outline" className="group">
-                  Ver Todas
-                  <Search className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-                </Button>
-              </Link>
-            </div>
-            <FeaturedBraidersCarousel />
-          </div>
+          <div className="mt-16"><h2 className="font-display text-3xl font-bold mb-8 text-center">Trancistas Recomendadas</h2><FeaturedBraidersCarousel /></div>
         </div>
       </section>
+
+      <Dialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Denunciar Perfil</DialogTitle><DialogDescription>Informe o motivo da denúncia para análise da administração.</DialogDescription></DialogHeader>
+          <div className="space-y-4 py-4">
+            <Select onValueChange={setReportReason} value={reportReason}>
+              <SelectTrigger><SelectValue placeholder="Selecione o motivo" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="fraude">Conteúdo Falso / Fraude</SelectItem>
+                <SelectItem value="improprio">Conteúdo Impróprio</SelectItem>
+                <SelectItem value="spam">Spam / Publicidade Indesejada</SelectItem>
+                <SelectItem value="outro">Outro</SelectItem>
+              </SelectContent>
+            </Select>
+            <Textarea placeholder="Descreva mais detalhes (opcional)" value={reportDescription} onChange={(e) => setReportDescription(e.target.value)} />
+          </div>
+          <DialogFooter><Button variant="ghost" onClick={() => setIsReportDialogOpen(false)}>Cancelar</Button><Button variant="destructive" onClick={handleReport} disabled={submittingReport}>{submittingReport ? <Loader2 className="animate-spin" /> : "Enviar Denúncia"}</Button></DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
