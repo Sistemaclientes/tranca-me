@@ -45,48 +45,52 @@ const BraiderProfileEdit = () => {
   }, []);
 
   const checkUser = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session) {
-      navigate("/auth");
-      return;
-    }
-
-    setUserId(session.user.id);
-    setFormData(prev => ({ ...prev, email: session.user.email || "" }));
-
-    // Load existing profile if exists
-    const { data: profile } = await supabase
-      .from("braider_profiles")
-      .select("*")
-      .eq("user_id", session.user.id)
-      .single();
-
-    if (profile) {
-      setFormData({
-        name: profile.name || "",
-        professionalName: profile.professional_name || "",
-        whatsapp: profile.whatsapp || "",
-        email: profile.email || "",
-        instagram: profile.instagram || "",
-        facebook: profile.facebook || "",
-        description: profile.description || "",
-        city: profile.city || "",
-        neighborhood: profile.neighborhood || "",
-        services: profile.services?.join(", ") || "",
-        pricing: profile.pricing || "",
-      });
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
       
-      if (profile.image_url) {
-        setProfilePhotoPreview(profile.image_url);
+      if (!session) {
+        navigate("/auth");
+        return;
       }
-      
-      if (profile.gallery_urls && profile.gallery_urls.length > 0) {
-        setGalleryPreviews(profile.gallery_urls);
-      }
-    }
 
-    setLoading(false);
+      setUserId(session.user.id);
+      setFormData(prev => ({ ...prev, email: session.user.email || "" }));
+
+      // Load existing profile if exists
+      const { data: profile } = await supabase
+        .from("braider_profiles")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .maybeSingle();
+
+      if (profile) {
+        setFormData({
+          name: profile.name || "",
+          professionalName: profile.professional_name || "",
+          whatsapp: profile.whatsapp || "",
+          email: profile.email || "",
+          instagram: profile.instagram || "",
+          facebook: profile.facebook || "",
+          description: profile.description || "",
+          city: profile.city || "",
+          neighborhood: profile.neighborhood || "",
+          services: profile.services?.join(", ") || "",
+          pricing: profile.pricing || "",
+        });
+        
+        if (profile.image_url) {
+          setProfilePhotoPreview(profile.image_url);
+        }
+        
+        if (profile.gallery_urls && profile.gallery_urls.length > 0) {
+          setGalleryPreviews(profile.gallery_urls);
+        }
+      }
+    } catch (error) {
+      console.error("Error checking user:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleProfilePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -90,24 +90,29 @@ const Buscar = () => {
 
   const loadBraiders = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("active_braiders")
-      .select("*")
-      .order("plan_tier", { ascending: false }) // Premium > Pro > Free
-      .order("whatsapp_click_count", { ascending: false })
-      .order("view_count", { ascending: false })
-      .order("professional_name");
+    try {
+      const { data, error } = await supabase
+        .from("active_braiders")
+        .select("*")
+        .order("plan_tier", { ascending: false }) // Premium > Pro > Free
+        .order("whatsapp_click_count", { ascending: false })
+        .order("view_count", { ascending: false })
+        .order("professional_name");
 
-    if (error) {
-      toast({
-        title: "Erro ao carregar trancistas",
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      setBraiders(data || []);
+      if (error) {
+        toast({
+          title: "Erro ao carregar trancistas",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        setBraiders(data || []);
+      }
+    } catch (error) {
+      console.error("Error loading braiders:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const filteredBraiders = useMemo(() => {
