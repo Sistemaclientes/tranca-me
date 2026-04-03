@@ -103,7 +103,7 @@ const AdminDashboard = () => {
 
   const toggleStatus = async (braiderId: string, currentStatus: string) => {
     setProcessingId(braiderId);
-    const newStatus = currentStatus === "active" ? "inactive" : "active";
+    const newStatus = currentStatus === "active" ? "blocked" : "active";
     
     const { error } = await supabase
       .from("braider_profiles")
