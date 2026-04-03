@@ -8,34 +8,43 @@ import { useToast } from "@/hooks/use-toast";
 const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check initial session
-    checkAuthAndAdmin();
+    let mounted = true;
 
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const initializeAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!mounted) return;
+      
       setIsAuthenticated(!!session);
       if (session) {
-        checkAdminRole(session.user.id);
+        await checkAdminRole(session.user.id);
+      }
+      setIsLoading(false);
+    };
+
+    initializeAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return;
+      setIsAuthenticated(!!session);
+      if (session) {
+        await checkAdminRole(session.user.id);
       } else {
         setIsAdmin(false);
       }
+      setIsLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
-  const checkAuthAndAdmin = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    setIsAuthenticated(!!session);
-    
-    if (session) {
-      checkAdminRole(session.user.id);
-    }
-  };
 
   const checkAdminRole = async (userId: string) => {
     const { data: roles } = await supabase
@@ -79,44 +88,51 @@ const Navbar = () => {
           <Link to="/buscar">
             <Button variant="ghost">Buscar Trancistas</Button>
           </Link>
-          {isAuthenticated && (
+          {!isLoading && (
             <>
-              <Link to="/meu-perfil">
-                <Button variant="ghost" size="sm">
-                  <User className="h-4 w-4 mr-2" />
-                  Meu Perfil
+              {isAuthenticated && (
+                <>
+                  <Link to="/meu-perfil">
+                    <Button variant="ghost" size="sm">
+                      <User className="h-4 w-4 mr-2" />
+                      Meu Perfil
+                    </Button>
+                  </Link>
+                  <Link to="/favoritos">
+                    <Button variant="ghost" size="sm">
+                      <Heart className="h-4 w-4 mr-2" />
+                      Favoritos
+                    </Button>
+                  </Link>
+                </>
+              )}
+              {isAdmin && (
+                <Link to="/admin/sugestoes">
+                  <Button variant="ghost" size="sm">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Admin
+                  </Button>
+                </Link>
+              )}
+              {isAuthenticated ? (
+                <Button variant="outline" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sair
                 </Button>
-              </Link>
-              <Link to="/favoritos">
-                <Button variant="ghost" size="sm">
-                  <Heart className="h-4 w-4 mr-2" />
-                  Favoritos
-                </Button>
-              </Link>
+              ) : (
+                <>
+                  <Link to="/auth">
+                    <Button variant="outline">Entrar</Button>
+                  </Link>
+                  <Link to="/auth">
+                    <Button variant="hero">Cadastrar-se</Button>
+                  </Link>
+                </>
+              )}
             </>
           )}
-          {isAdmin && (
-            <Link to="/admin/sugestoes">
-              <Button variant="ghost" size="sm">
-                <Settings className="h-4 w-4 mr-2" />
-                Admin
-              </Button>
-            </Link>
-          )}
-          {isAuthenticated ? (
-            <Button variant="outline" onClick={handleLogout}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Sair
-            </Button>
-          ) : (
-            <>
-              <Link to="/auth">
-                <Button variant="outline">Entrar</Button>
-              </Link>
-              <Link to="/auth">
-                <Button variant="hero">Cadastrar-se</Button>
-              </Link>
-            </>
+          {isLoading && (
+             <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
           )}
         </div>
       </div>

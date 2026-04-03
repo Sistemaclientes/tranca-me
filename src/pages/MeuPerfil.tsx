@@ -188,6 +188,7 @@ const MeuPerfil = () => {
                         src={profile.image_url} 
                         alt={profile.name}
                         className="w-32 h-32 rounded-full object-cover mx-auto mb-4 ring-4 ring-primary/20"
+                        loading="lazy"
                       />
                     ) : (
                       <div className="w-32 h-32 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Star } from "lucide-react";
@@ -14,7 +14,7 @@ import {
 import StarRating from "@/components/StarRating";
 import { useReviews } from "@/hooks/useReviews";
 
-const BraiderCard = ({ braider }: { braider: any }) => {
+const BraiderCard = memo(({ braider }: { braider: any }) => {
   const navigate = useNavigate();
   const { averageRating, totalReviews } = useReviews(braider.id);
 
@@ -30,6 +30,7 @@ const BraiderCard = ({ braider }: { braider: any }) => {
               src={braider.image_url}
               alt={braider.professional_name || braider.name}
               className="w-full h-full object-cover"
+              loading="lazy"
             />
           ) : (
             <div className="w-full h-full bg-gradient-hero flex items-center justify-center">
@@ -61,7 +62,9 @@ const BraiderCard = ({ braider }: { braider: any }) => {
       </CardContent>
     </Card>
   );
-};
+});
+
+BraiderCard.displayName = "BraiderCard";
 
 const FeaturedBraidersCarousel = () => {
   const navigate = useNavigate();

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +12,7 @@ interface BraiderCardProps {
   showFavorite?: boolean;
 }
 
-const BraiderCard = ({ braider, showFavorite = false }: BraiderCardProps) => {
+const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) => {
   const navigate = useNavigate();
   const { averageRating, totalReviews } = useReviews(braider.id);
 
@@ -33,6 +34,7 @@ const BraiderCard = ({ braider, showFavorite = false }: BraiderCardProps) => {
               src={braider.image_url} 
               alt={braider.professional_name || braider.name}
               className="w-full h-full object-cover"
+              loading="lazy"
             />
           ) : (
             <div className="w-full h-full bg-gradient-hero flex items-center justify-center">
@@ -75,7 +77,9 @@ const BraiderCard = ({ braider, showFavorite = false }: BraiderCardProps) => {
         </div>
       </CardContent>
     </Card>
-  );
-};
+    );
+});
+
+BraiderCard.displayName = "BraiderCard";
 
 export default BraiderCard;
