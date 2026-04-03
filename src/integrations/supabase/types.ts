@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       braider_profiles: {
         Row: {
+          average_rating: number | null
           city: string
           created_at: string
           description: string | null
@@ -35,6 +36,7 @@ export type Database = {
           professional_name: string | null
           services: string[] | null
           status: string | null
+          total_reviews: number | null
           trial_ends_at: string | null
           updated_at: string
           user_id: string
@@ -44,6 +46,7 @@ export type Database = {
           whatsapp_click_count: number | null
         }
         Insert: {
+          average_rating?: number | null
           city: string
           created_at?: string
           description?: string | null
@@ -63,6 +66,7 @@ export type Database = {
           professional_name?: string | null
           services?: string[] | null
           status?: string | null
+          total_reviews?: number | null
           trial_ends_at?: string | null
           updated_at?: string
           user_id: string
@@ -72,6 +76,7 @@ export type Database = {
           whatsapp_click_count?: number | null
         }
         Update: {
+          average_rating?: number | null
           city?: string
           created_at?: string
           description?: string | null
@@ -91,6 +96,7 @@ export type Database = {
           professional_name?: string | null
           services?: string[] | null
           status?: string | null
+          total_reviews?: number | null
           trial_ends_at?: string | null
           updated_at?: string
           user_id?: string
