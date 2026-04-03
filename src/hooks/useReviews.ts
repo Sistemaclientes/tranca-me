@@ -25,12 +25,28 @@ export const useReviews = (braiderId: string) => {
   }, [braiderId]);
 
   const loadReviews = async () => {
-    const { data, error } = await supabase
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    // First get the braider profile to see if current user is owner
+    const { data: profile } = await supabase
+      .from("braider_profiles")
+      .select("user_id")
+      .eq("id", braiderId)
+      .maybeSingle();
+
+    const isOwner = session?.user?.id === profile?.user_id;
+
+    let query = supabase
       .from("reviews")
       .select("*")
-      .eq("braider_id", braiderId)
-      .eq("is_verified", true)
-      .order("created_at", { ascending: false });
+      .eq("braider_id", braiderId);
+
+    // Only show unverified reviews to the owner
+    if (!isOwner) {
+      query = query.eq("is_verified", true);
+    }
+
+    const { data, error } = await query.order("created_at", { ascending: false });
 
     if (!error && data) {
       setReviews(data);
