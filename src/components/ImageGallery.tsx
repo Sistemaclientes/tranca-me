@@ -10,6 +10,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import AutoScroll from "embla-carousel-auto-scroll";
+import { getOptimizedImageUrl } from "@/lib/image-utils";
 
 interface ImageGalleryProps {
   images: string[];
@@ -57,7 +58,7 @@ const ImageGallery = ({ images, title, isPremium }: ImageGalleryProps) => {
             onClick={() => openLightbox(index)}
           >
             <img
-              src={image}
+              src={getOptimizedImageUrl(image, 600)}
               alt={`${title} - Foto ${index + 1}`}
               className="w-full h-full object-cover"
               loading="lazy"
@@ -94,7 +95,7 @@ const ImageGallery = ({ images, title, isPremium }: ImageGalleryProps) => {
                     onClick={() => openLightbox(index + 3)}
                   >
                     <img
-                      src={image}
+                      src={getOptimizedImageUrl(image, 400)}
                       alt={`${title} - Foto ${index + 4}`}
                       className="w-full h-full object-cover"
                       loading="lazy"

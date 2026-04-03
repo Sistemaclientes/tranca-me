@@ -13,6 +13,7 @@ import { cities, neighborhoodsByCity } from "@/data/braiders";
 import { Upload, X, Loader2 } from "lucide-react";
 import SuggestCityDialog from "@/components/SuggestCityDialog";
 import SuggestNeighborhoodDialog from "@/components/SuggestNeighborhoodDialog";
+import { compressImage } from "@/lib/image-utils";
 
 const BraiderProfileEdit = () => {
   const navigate = useNavigate();
@@ -150,10 +151,21 @@ const BraiderProfileEdit = () => {
   };
 
   const uploadFile = async (file: File, bucket: string, path: string) => {
+    // Compress image if it's an image file
+    let fileToUpload = file;
+    if (file.type.startsWith('image/')) {
+      console.log(`Comprimindo imagem ${file.name}...`);
+      fileToUpload = await compressImage(file);
+      // Ensure extension is .webp if it was converted
+      if (fileToUpload.type === 'image/webp' && !path.endsWith('.webp')) {
+        path = path.replace(/\.[^/.]+$/, "") + ".webp";
+      }
+    }
+
     const { data, error } = await supabase.storage
       .from(bucket)
-      .upload(path, file, { upsert: true });
-    
+      .upload(path, fileToUpload, { upsert: true });
+
     if (error) throw error;
     
     const { data: { publicUrl } } = supabase.storage

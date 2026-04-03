@@ -6,6 +6,7 @@ import { MapPin } from "lucide-react";
 import StarRating from "@/components/StarRating";
 import FavoriteButton from "@/components/FavoriteButton";
 import { useReviews } from "@/hooks/useReviews";
+import { getOptimizedImageUrl } from "@/lib/image-utils";
 
 interface BraiderCardProps {
   braider: any;
@@ -31,7 +32,7 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
       
       <div className="aspect-[4/5] overflow-hidden relative">
         <img 
-          src={braider.image_url || `https://images.unsplash.com/photo-1620331311520-246422fd82f9?q=80&w=600&auto=format&fit=crop`} 
+          src={getOptimizedImageUrl(braider.image_url || `https://images.unsplash.com/photo-1620331311520-246422fd82f9?q=80&w=600&auto=format&fit=crop`, 400)} 
           alt={braider.professional_name || braider.name}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           loading="lazy"

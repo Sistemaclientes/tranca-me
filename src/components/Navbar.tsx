@@ -99,6 +99,9 @@ const Navbar = () => {
             <Link to="/buscar">
               <Button variant="ghost" size="sm" className="font-semibold text-muted-foreground hover:text-primary transition-colors">Buscar Trancistas</Button>
             </Link>
+            <Link to="/cursos">
+              <Button variant="ghost" size="sm" className="font-semibold text-muted-foreground hover:text-primary transition-colors">Cursos</Button>
+            </Link>
           </div>
           
           <div className="md:hidden">

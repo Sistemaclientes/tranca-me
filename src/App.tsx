@@ -23,6 +23,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const BraiderNotFound = lazy(() => import("./pages/BraiderNotFound"));
 const QueroSerTrancista = lazy(() => import("./pages/QueroSerTrancista"));
 const CitySEO = lazy(() => import("./pages/CitySEO"));
+const Cursos = lazy(() => import("./pages/Cursos"));
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-gradient-warm">
@@ -63,6 +64,7 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/sugestoes" element={<AdminSuggestions />} />
             <Route path="/quero-ser-trancista" element={<QueroSerTrancista />} />
+            <Route path="/cursos" element={<Cursos />} />
             {/* SEO Routes for Cities */}
             <Route path="/trancistas-sao-jose-sc" element={<CitySEO />} />
             <Route path="/trancistas-florianopolis" element={<CitySEO />} />
