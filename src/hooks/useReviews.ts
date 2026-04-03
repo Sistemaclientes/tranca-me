@@ -45,5 +45,36 @@ export const useReviews = (braiderId: string) => {
     setLoading(false);
   };
 
-  return { reviews, averageRating, totalReviews, loading };
+  const submitReview = async (reviewData: {
+    rating: number;
+    comment: string;
+    client_name: string;
+    service_date?: string;
+  }) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (!session) {
+      throw new Error("Você precisa estar logado para avaliar.");
+    }
+
+    const { error } = await supabase
+      .from("reviews")
+      .insert({
+        braider_id: braiderId,
+        user_id: session.user.id,
+        client_name: reviewData.client_name,
+        rating: reviewData.rating,
+        comment: reviewData.comment,
+        service_date: reviewData.service_date,
+        is_verified: true, // Auto-verify for now so it works immediately
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    await loadReviews();
+  };
+
+  return { reviews, averageRating, totalReviews, loading, submitReview, loadReviews };
 };
