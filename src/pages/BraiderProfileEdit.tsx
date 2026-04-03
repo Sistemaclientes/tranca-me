@@ -405,7 +405,8 @@ const BraiderProfileEdit = () => {
                       id="whatsapp"
                       placeholder="(11) 99999-9999"
                       value={formData.whatsapp}
-                      onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+                      onChange={(e) => setFormData({ ...formData, whatsapp: formatPhoneNumber(e.target.value) })}
+                      maxLength={15}
                       required
                     />
                   </div>
