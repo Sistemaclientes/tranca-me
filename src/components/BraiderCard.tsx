@@ -65,16 +65,16 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
           )}
         </div>
 
-        {braider.services && braider.services.length > 0 && (
+        {((braider.braid_types && braider.braid_types.length > 0) || (braider.services && braider.services.length > 0)) && (
           <div className="flex flex-wrap gap-1.5">
-            {braider.services.slice(0, 2).map((service: string, idx: number) => (
+            {[...(braider.braid_types || []), ...(braider.services || [])].slice(0, 2).map((service: string, idx: number) => (
               <Badge key={idx} variant="secondary" className="text-[10px] bg-primary/5 text-primary border-primary/10 hover:bg-primary/10 px-2 py-0">
                 {service}
               </Badge>
             ))}
-            {braider.services.length > 2 && (
+            {[...(braider.braid_types || []), ...(braider.services || [])].length > 2 && (
               <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground border-none px-2 py-0">
-                +{braider.services.length - 2}
+                +{[...(braider.braid_types || []), ...(braider.services || [])].length - 2}
               </Badge>
             )}
           </div>

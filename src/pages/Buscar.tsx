@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { BRAID_TYPES } from "@/constants/braidTypes";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -27,15 +28,7 @@ const Buscar = () => {
   const [braiders, setBraiders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
-  const allServices = [
-    "Box Braids",
-    "Knotless Braids",
-    "Twist",
-    "Nagô",
-    "Tranças",
-    "Dreads",
-    "Crochet Braids",
-  ];
+  const allServices = BRAID_TYPES;
 
   useEffect(() => {
     loadCities();
@@ -129,7 +122,9 @@ const Buscar = () => {
     return braiders.filter((braider) => {
       const cityMatch = !selectedCity || selectedCity === "all" || braider.city === selectedCity;
       const neighborhoodMatch = !selectedNeighborhood || selectedNeighborhood === "all" || braider.neighborhood === selectedNeighborhood;
-      const serviceMatch = !selectedService || selectedService === "all" || braider.services?.includes(selectedService);
+      const serviceMatch = !selectedService || selectedService === "all" || 
+                           braider.services?.includes(selectedService) || 
+                           braider.braid_types?.includes(selectedService);
       
       return cityMatch && neighborhoodMatch && serviceMatch;
     });
