@@ -20,6 +20,8 @@ const AdminSuggestions = lazy(() => import("./pages/AdminSuggestions"));
 const Favoritos = lazy(() => import("./pages/Favoritos"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const BraiderNotFound = lazy(() => import("./pages/BraiderNotFound"));
+const QueroSerTrancista = lazy(() => import("./pages/QueroSerTrancista"));
+const CitySEO = lazy(() => import("./pages/CitySEO"));
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-gradient-warm">
