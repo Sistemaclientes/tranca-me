@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Check } from "lucide-react";
+import { Check, CreditCard, QrCode } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useCouponValidation } from "@/hooks/useCouponValidation";
@@ -30,6 +31,7 @@ const Checkout = () => {
   const [discount, setDiscount] = useState(0);
   const [finalAmount, setFinalAmount] = useState(0);
   const [paymentId, setPaymentId] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"pix" | "credit_card">("pix");
 
   const plans = {
     pro: {
@@ -59,6 +61,15 @@ const Checkout = () => {
   };
 
   useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate("/auth?redirect=" + encodeURIComponent(window.location.pathname + window.location.search));
+        return;
+      }
+    };
+    checkSession();
+
     if (!planType || !plans[planType]) {
       navigate("/assinatura");
     }
@@ -132,10 +143,16 @@ const Checkout = () => {
           cpf: formData.cpf,
           planType: planType,
           coupon: formData.coupon || null,
+          paymentMethod: paymentMethod,
         },
       });
 
       if (error) throw error;
+
+      if (paymentMethod === "credit_card" && data.init_point) {
+        window.location.href = data.init_point;
+        return;
+      }
 
       if (data.qrCode && data.qrCodeBase64 && data.paymentId) {
         setQrCode(data.qrCode);
@@ -202,45 +219,68 @@ const Checkout = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-card border-none shadow-soft">
-                <CardHeader>
-                  <CardTitle className="font-display text-2xl">Dados para Pagamento</CardTitle>
-                  <CardDescription>
-                    Preencha seus dados para gerar o QR Code PIX
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Nome Completo *</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Seu nome completo"
-                      required
-                    />
+            <Card className="bg-gradient-card border-none shadow-soft">
+              <CardHeader>
+                <CardTitle className="font-display text-2xl">Pagamento</CardTitle>
+                <CardDescription>
+                  Escolha como deseja pagar sua assinatura
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <Tabs value={paymentMethod} onValueChange={(v) => setPaymentMethod(v as "pix" | "credit_card")}>
+                  <TabsList className="grid w-full grid-cols-2 mb-6">
+                    <TabsTrigger value="pix" className="gap-2">
+                      <QrCode className="h-4 w-4" /> PIX
+                    </TabsTrigger>
+                    <TabsTrigger value="credit_card" className="gap-2">
+                      <CreditCard className="h-4 w-4" /> Cartão
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Nome Completo *</Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="Seu nome completo"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">E-mail *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="seu@email.com"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="cpf">CPF *</Label>
+                      <Input
+                        id="cpf"
+                        value={formData.cpf}
+                        onChange={(e) => setFormData({ ...formData, cpf: formatCPF(e.target.value) })}
+                        placeholder="000.000.000-00"
+                        required
+                      />
+                    </div>
+
+                    <TabsContent value="credit_card">
+                      <div className="p-4 bg-muted/50 rounded-lg border border-dashed border-primary/50 text-center space-y-2">
+                        <CreditCard className="h-8 w-8 mx-auto text-primary opacity-50" />
+                        <p className="text-sm font-medium">Pagamento via Cartão de Crédito</p>
+                        <p className="text-xs text-muted-foreground">
+                          Você será redirecionado para o ambiente seguro do Mercado Pago para finalizar com seu cartão.
+                        </p>
+                      </div>
+                    </TabsContent>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">E-mail *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="seu@email.com"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cpf">CPF *</Label>
-                    <Input
-                      id="cpf"
-                      value={formData.cpf}
-                      onChange={(e) => setFormData({ ...formData, cpf: formatCPF(e.target.value) })}
-                      placeholder="000.000.000-00"
-                      required
-                    />
-                  </div>
+                </Tabs>
 
                   <div className="space-y-2">
                     <Label htmlFor="coupon">Cupom de Desconto (opcional)</Label>
@@ -289,7 +329,11 @@ const Checkout = () => {
                     className="w-full"
                     size="lg"
                   >
-                    {loading ? "Gerando QR Code..." : "Gerar QR Code PIX"}
+                    {loading 
+                      ? "Processando..." 
+                      : paymentMethod === "pix" 
+                        ? "Gerar QR Code PIX" 
+                        : "Pagar com Cartão"}
                   </Button>
                 </CardContent>
               </Card>

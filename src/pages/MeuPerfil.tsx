@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -65,6 +65,7 @@ interface Lead {
 const MeuPerfil = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
   const { getBraiderLeads } = useLeads();
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string>("");
@@ -76,7 +77,16 @@ const MeuPerfil = () => {
 
   useEffect(() => {
     loadUserData();
-  }, []);
+    
+    if (searchParams.get("status") === "success") {
+      toast({
+        title: "Pagamento Aprovado!",
+        description: "Bem-vinda ao seu novo plano. Seu perfil já está atualizado.",
+      });
+      // Clear the query param without refreshing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, [searchParams, toast]);
 
   const loadUserData = async () => {
     try {

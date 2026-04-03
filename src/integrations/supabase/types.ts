@@ -374,6 +374,7 @@ export type Database = {
           email: string | null
           id: string
           payment_id: string | null
+          payment_method: string | null
           plan_type: string
           qr_code: string | null
           qr_code_base64: string | null
@@ -388,6 +389,7 @@ export type Database = {
           email?: string | null
           id?: string
           payment_id?: string | null
+          payment_method?: string | null
           plan_type: string
           qr_code?: string | null
           qr_code_base64?: string | null
@@ -402,6 +404,7 @@ export type Database = {
           email?: string | null
           id?: string
           payment_id?: string | null
+          payment_method?: string | null
           plan_type?: string
           qr_code?: string | null
           qr_code_base64?: string | null
