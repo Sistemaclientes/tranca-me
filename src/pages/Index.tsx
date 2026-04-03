@@ -43,7 +43,7 @@ const Index = () => {
         </section>
 
         {/* Featured Braiders Section */}
-        <section id="destaques" className="py-20 px-4 bg-muted/30 relative overflow-hidden">
+        <section id="destaques" className="py-24 px-4 bg-gradient-to-b from-muted/50 to-background relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl -z-10"></div>
           
           <div className="container mx-auto">
