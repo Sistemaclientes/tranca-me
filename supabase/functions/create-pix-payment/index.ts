@@ -89,6 +89,7 @@ serve(async (req) => {
         payment_id: paymentData.id.toString(),
         qr_code: paymentData.point_of_interaction?.transaction_data?.qr_code,
         qr_code_base64: paymentData.point_of_interaction?.transaction_data?.qr_code_base64,
+        payment_method: paymentMethod,
       })
       .select()
       .single()
