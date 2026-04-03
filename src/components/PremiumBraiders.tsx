@@ -45,11 +45,7 @@ const PremiumBraiders = () => {
   }
 
   if (premiumBraiders.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">Nenhuma trancista cadastrada ainda.</p>
-      </div>
-    );
+    return null; // Don't show the section if it's empty to avoid confusion
   }
 
   return (
