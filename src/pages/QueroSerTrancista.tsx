@@ -258,7 +258,7 @@ const QueroSerTrancista = () => {
           <div className="pt-4">
             <Link to="/auth?role=braider">
               <Button variant="outline" size="hero" className="bg-white text-primary hover:bg-white/90 border-white text-lg px-12">
-                Começar hoje - É Grátis
+                Começar hoje
               </Button>
             </Link>
           </div>

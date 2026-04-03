@@ -187,7 +187,7 @@ const Index = () => {
               <div className="pt-8">
                 <Link to="/quero-ser-trancista">
                   <Button variant="outline" size="lg" className="bg-white text-primary hover:bg-white/90 border-white font-bold px-8">
-                    Criar Perfil Grátis
+                    Criar meu perfil
                   </Button>
                 </Link>
               </div>
