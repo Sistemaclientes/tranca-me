@@ -12,7 +12,7 @@ interface BraiderCardProps {
   showFavorite?: boolean;
 }
 
-const BraiderCard = ({ braider, showFavorite = false }: BraiderCardProps) => {
+const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) => {
   const navigate = useNavigate();
   const { averageRating, totalReviews } = useReviews(braider.id);
 
