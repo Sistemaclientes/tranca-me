@@ -77,7 +77,16 @@ const MeuPerfil = () => {
 
   useEffect(() => {
     loadUserData();
-  }, []);
+    
+    if (searchParams.get("status") === "success") {
+      toast({
+        title: "Pagamento Aprovado!",
+        description: "Bem-vinda ao seu novo plano. Seu perfil já está atualizado.",
+      });
+      // Clear the query param without refreshing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, [searchParams, toast]);
 
   const loadUserData = async () => {
     try {
