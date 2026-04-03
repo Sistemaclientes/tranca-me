@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 // Lazy load pages for optimization
 import Index from "./pages/Index";
@@ -34,7 +35,15 @@ const LoadingFallback = () => (
   </div>
 );
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -48,32 +57,34 @@ const App = () => (
         }}
       >
         <ScrollToTop />
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/escolher" element={<AuthChoice />} />
-            <Route path="/buscar" element={<Buscar />} />
-            <Route path="/favoritos" element={<Favoritos />} />
-            <Route path="/trancista/:id" element={<BraiderProfile />} />
-            <Route path="/trancista-nao-encontrada" element={<BraiderNotFound />} />
-            <Route path="/perfil" element={<BraiderProfileEdit />} />
-            <Route path="/meu-perfil" element={<MeuPerfil />} />
-            <Route path="/assinatura" element={<Assinatura />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/paineladm" element={<AdminDashboard />} />
-            <Route path="/paineladm/sugestoes" element={<AdminSuggestions />} />
-            <Route path="/quero-ser-trancista" element={<QueroSerTrancista />} />
-            <Route path="/cursos" element={<Cursos />} />
-            {/* SEO Routes for Cities */}
-            <Route path="/trancistas-sao-jose-sc" element={<CitySEO />} />
-            <Route path="/trancistas-florianopolis" element={<CitySEO />} />
-            <Route path="/trancistas-palhoca" element={<CitySEO />} />
-            <Route path="/trancistas-biguacu" element={<CitySEO />} />
-            
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/escolher" element={<AuthChoice />} />
+              <Route path="/buscar" element={<Buscar />} />
+              <Route path="/favoritos" element={<Favoritos />} />
+              <Route path="/trancista/:id" element={<BraiderProfile />} />
+              <Route path="/trancista-nao-encontrada" element={<BraiderNotFound />} />
+              <Route path="/perfil" element={<BraiderProfileEdit />} />
+              <Route path="/meu-perfil" element={<MeuPerfil />} />
+              <Route path="/assinatura" element={<Assinatura />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/paineladm" element={<AdminDashboard />} />
+              <Route path="/paineladm/sugestoes" element={<AdminSuggestions />} />
+              <Route path="/quero-ser-trancista" element={<QueroSerTrancista />} />
+              <Route path="/cursos" element={<Cursos />} />
+              {/* SEO Routes for Cities */}
+              <Route path="/trancistas-sao-jose-sc" element={<CitySEO />} />
+              <Route path="/trancistas-florianopolis" element={<CitySEO />} />
+              <Route path="/trancistas-palhoca" element={<CitySEO />} />
+              <Route path="/trancistas-biguacu" element={<CitySEO />} />
+              
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
