@@ -64,6 +64,12 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
             <MapPin className="h-3 w-3 text-primary" />
             <span>{braider.neighborhood}, {braider.city}</span>
           </div>
+          {braider.whatsapp && (
+            <div className="h-0 opacity-0 group-hover:h-auto group-hover:opacity-100 group-hover:mt-2 transition-all duration-300 overflow-hidden transform group-hover:scale-105 origin-left">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-primary">Informações de Contato</p>
+              <p className="text-sm font-semibold">{maskPhone(braider.whatsapp)}</p>
+            </div>
+          )}
         </div>
       </div>
 
