@@ -130,6 +130,9 @@ const Auth = () => {
         title: "Login realizado!", 
         description: "Redirecionando..." 
       });
+      // Explicit navigate to ensure redirect happens even if listener is slow
+      const redirectTo = searchParams.get("redirect") || "/escolher";
+      navigate(redirectTo);
     }
     setIsLoading(false);
   };
