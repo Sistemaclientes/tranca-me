@@ -20,55 +20,64 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
 
   return (
     <Card 
-      className="bg-gradient-card border-none shadow-soft hover:shadow-glow transition-all duration-300 cursor-pointer relative group hover:scale-105"
+      className="bg-card border border-border/50 shadow-sm hover:shadow-glow transition-all duration-500 cursor-pointer relative group overflow-hidden rounded-[24px]"
       onClick={() => navigate(`/trancista/${braider.id}`)}
     >
       {showFavorite && (
-        <div className="absolute top-2 right-2 z-10">
+        <div className="absolute top-4 right-4 z-10">
           <FavoriteButton braiderId={braider.id} variant="icon" />
         </div>
       )}
       
-      <CardContent className="p-6 space-y-4">
-        <div className="aspect-square bg-muted rounded-lg overflow-hidden relative">
-          <img 
-            src={braider.image_url || `https://images.unsplash.com/photo-1620331311520-246422fd82f9?q=80&w=600&auto=format&fit=crop`} 
-            alt={braider.professional_name || braider.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            loading="lazy"
-          />
-          {braider.is_premium && (
-            <Badge className="absolute bottom-2 right-2 bg-gradient-hero border-none text-white">
-              Premium
-            </Badge>
-          )}
-        </div>
-        <div className="space-y-2">
-          <h3 className="font-display text-xl font-semibold">
+      <div className="aspect-[4/5] overflow-hidden relative">
+        <img 
+          src={braider.image_url || `https://images.unsplash.com/photo-1620331311520-246422fd82f9?q=80&w=600&auto=format&fit=crop`} 
+          alt={braider.professional_name || braider.name}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500"></div>
+        
+        {braider.is_premium && (
+          <Badge className="absolute top-4 left-4 bg-gradient-hero border-none text-white shadow-glow px-3 py-1 font-bold text-[10px] uppercase tracking-wider">
+            Premium
+          </Badge>
+        )}
+
+        <div className="absolute bottom-4 left-4 right-4 text-white space-y-1">
+          <h3 className="font-display text-xl font-bold leading-tight">
             {braider.professional_name || braider.name}
           </h3>
-          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4" />
+          <div className="flex items-center gap-1 text-xs text-white/90">
+            <MapPin className="h-3 w-3 text-primary" />
             <span>{braider.neighborhood}, {braider.city}</span>
           </div>
-          {totalReviews > 0 && (
+        </div>
+      </div>
+
+      <CardContent className="p-5 space-y-4 bg-background">
+        <div className="flex items-center justify-between">
+          {totalReviews > 0 ? (
             <StarRating rating={averageRating} totalReviews={totalReviews} size="sm" />
-          )}
-          {braider.services && braider.services.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {braider.services.slice(0, 3).map((service: string, idx: number) => (
-                <Badge key={idx} variant="secondary" className="text-xs">
-                  {service}
-                </Badge>
-              ))}
-              {braider.services.length > 3 && (
-                <Badge variant="secondary" className="text-xs">
-                  +{braider.services.length - 3}
-                </Badge>
-              )}
-            </div>
+          ) : (
+            <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Nova Profissional</div>
           )}
         </div>
+
+        {braider.services && braider.services.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {braider.services.slice(0, 2).map((service: string, idx: number) => (
+              <Badge key={idx} variant="secondary" className="text-[10px] bg-primary/5 text-primary border-primary/10 hover:bg-primary/10 px-2 py-0">
+                {service}
+              </Badge>
+            ))}
+            {braider.services.length > 2 && (
+              <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground border-none px-2 py-0">
+                +{braider.services.length - 2}
+              </Badge>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
     );
