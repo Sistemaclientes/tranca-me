@@ -61,6 +61,15 @@ const Checkout = () => {
   };
 
   useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate("/auth?redirect=" + encodeURIComponent(window.location.pathname + window.location.search));
+        return;
+      }
+    };
+    checkSession();
+
     if (!planType || !plans[planType]) {
       navigate("/assinatura");
     }
