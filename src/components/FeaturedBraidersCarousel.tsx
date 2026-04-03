@@ -80,9 +80,9 @@ const FeaturedBraidersCarousel = () => {
     const { data } = await supabase
       .from("active_braiders")
       .select("*")
-      .order("is_premium", { ascending: false })
+      .eq("is_premium", true)
       .order("created_at", { ascending: false })
-      .limit(6);
+      .limit(8);
     
     setBraiders(data || []);
     setLoading(false);
