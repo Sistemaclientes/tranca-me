@@ -89,10 +89,22 @@ const Navbar = () => {
           </span>
         </Link>
         
-        <div className="flex items-center gap-4">
-          <Link to="/buscar">
-            <Button variant="ghost">Buscar Trancistas</Button>
-          </Link>
+        <div className="flex items-center gap-2 md:gap-4">
+          <div className="hidden md:flex items-center gap-2">
+            <Link to="/#destaques">
+              <Button variant="ghost" size="sm">Destaques</Button>
+            </Link>
+            <Link to="/buscar">
+              <Button variant="ghost" size="sm">Buscar Trancistas</Button>
+            </Link>
+          </div>
+          <div className="md:hidden">
+            <Link to="/buscar">
+              <Button variant="ghost" size="icon">
+                <Sparkles className="h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
           {!isLoading && (
             <>
               {isAuthenticated && (
