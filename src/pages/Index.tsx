@@ -48,11 +48,19 @@ const Index = () => {
       </section>
 
       {/* Featured Braiders Carousel */}
-      <section className="py-12 px-4 bg-muted/30">
+      <section id="destaques" className="py-12 px-4 bg-muted/30">
         <div className="container mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="font-display text-3xl font-bold mb-2">Trancistas em Destaque</h2>
-            <p className="text-muted-foreground">Conheça algumas profissionais cadastradas</p>
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div className="text-center md:text-left">
+              <h2 className="font-display text-3xl font-bold mb-2 text-primary">Trancistas em Destaque</h2>
+              <p className="text-muted-foreground">Conheça as profissionais em destaque na nossa plataforma</p>
+            </div>
+            <Link to="/buscar">
+              <Button variant="outline" className="group">
+                Ver Todas
+                <Search className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+              </Button>
+            </Link>
           </div>
           <FeaturedBraidersCarousel />
         </div>
