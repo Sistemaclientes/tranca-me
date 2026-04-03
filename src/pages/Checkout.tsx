@@ -30,6 +30,7 @@ const Checkout = () => {
   const [discount, setDiscount] = useState(0);
   const [finalAmount, setFinalAmount] = useState(0);
   const [paymentId, setPaymentId] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"pix" | "credit_card">("pix");
 
   const plans = {
     pro: {
