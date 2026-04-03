@@ -41,9 +41,13 @@ export const useReviews = (braiderId: string) => {
       .select("*")
       .eq("braider_id", braiderId);
 
-    // Only show unverified reviews to the owner
+    // Only show unverified reviews to the owner or the author
     if (!isOwner) {
-      query = query.eq("is_verified", true);
+      if (session?.user?.id) {
+        query = query.or(`is_verified.eq.true,user_id.eq.${session.user.id}`);
+      } else {
+        query = query.eq("is_verified", true);
+      }
     }
 
     const { data, error } = await query.order("created_at", { ascending: false });
