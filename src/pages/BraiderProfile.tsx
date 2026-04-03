@@ -178,9 +178,12 @@ const BraiderProfile = () => {
                     variant="hero" 
                     className="w-full"
                     onClick={handleWhatsApp}
+                    disabled={braider.status === 'blocked' || braider.status === 'expired'}
                   >
                     <Phone className="h-4 w-4" />
-                    Agendar via WhatsApp
+                    {braider.status === 'blocked' || braider.status === 'expired' 
+                      ? 'Contato Indisponível' 
+                      : 'Agendar via WhatsApp'}
                   </Button>
 
                   <FavoriteButton braiderId={id!} />

@@ -255,8 +255,13 @@ const MeuPerfil = () => {
                     <h2 className="font-display text-xl font-bold">
                       {profile?.professional_name || profile?.name}
                     </h2>
-                    <Badge variant="secondary" className="mt-1">
-                      Plano {profile?.plan_tier || 'Grátis'}
+                    <Badge 
+                      variant={profile?.status === 'active' || profile?.status === 'trial' ? "secondary" : "destructive"} 
+                      className="mt-1 capitalize"
+                    >
+                      {profile?.status === 'trial' ? 'Período de Teste' : 
+                       profile?.status === 'active' ? `Plano ${profile?.plan_tier}` : 
+                       profile?.status === 'expired' ? 'Plano Expirado' : 'Perfil Bloqueado'}
                     </Badge>
                   </div>
 
