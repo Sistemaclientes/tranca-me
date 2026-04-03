@@ -134,10 +134,16 @@ const Checkout = () => {
           cpf: formData.cpf,
           planType: planType,
           coupon: formData.coupon || null,
+          paymentMethod: paymentMethod,
         },
       });
 
       if (error) throw error;
+
+      if (paymentMethod === "credit_card" && data.init_point) {
+        window.location.href = data.init_point;
+        return;
+      }
 
       if (data.qrCode && data.qrCodeBase64 && data.paymentId) {
         setQrCode(data.qrCode);
