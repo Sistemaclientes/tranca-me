@@ -18,7 +18,7 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
 
   return (
     <div
-      className="group relative bg-card rounded-2xl overflow-hidden border border-border/40 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer max-w-[280px] w-full mx-auto"
+      className="group relative bg-card rounded-2xl overflow-hidden border border-border/40 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer max-w-[140px] sm:max-w-[180px] w-full mx-auto"
       onClick={() => navigate(`/trancista/${braider.id}`)}
     >
       {showFavorite && (
@@ -44,13 +44,13 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
         )}
 
         {/* Name overlay on image */}
-        <div className="absolute bottom-0 left-0 right-0 p-3">
-          <h3 className="font-display text-base font-bold text-white leading-tight truncate">
+        <div className="absolute bottom-0 left-0 right-0 p-1.5 sm:p-2">
+          <h3 className="font-display text-xs sm:text-sm font-bold text-white leading-tight truncate">
             {braider.professional_name || braider.name}
           </h3>
           <div className="flex items-center gap-1 mt-0.5">
-            <MapPin className="h-3 w-3 text-primary shrink-0" />
-            <span className="text-[11px] text-white/85 truncate">
+            <MapPin className="h-2.5 w-2.5 text-primary shrink-0" />
+            <span className="text-[9px] sm:text-[10px] text-white/85 truncate">
               {braider.neighborhood}, {braider.city}
             </span>
           </div>
@@ -58,30 +58,30 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
       </div>
 
       {/* Content */}
-      <div className="p-3 space-y-2">
+      <div className="p-1.5 sm:p-2 space-y-1">
         {/* Rating */}
         <div className="flex items-center justify-between">
           {totalReviews > 0 ? (
             <div className="flex items-center gap-1">
-              <Star className="h-3.5 w-3.5 fill-primary text-primary" />
-              <span className="text-xs font-semibold">{averageRating.toFixed(1)}</span>
-              <span className="text-[10px] text-muted-foreground">({totalReviews})</span>
+              <Star className="h-2.5 w-2.5 fill-primary text-primary" />
+              <span className="text-[10px] font-semibold">{averageRating.toFixed(1)}</span>
+              <span className="text-[8px] text-muted-foreground">({totalReviews})</span>
             </div>
           ) : (
-            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Nova</span>
+            <span className="text-[8px] text-muted-foreground font-medium uppercase tracking-wide">Nova</span>
           )}
         </div>
 
         {/* Services */}
         {allServices.length > 0 && (
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-0.5">
             {allServices.slice(0, 2).map((service: string, idx: number) => (
-              <span key={idx} className="text-[10px] bg-primary/8 text-primary rounded-full px-2 py-0.5 font-medium">
+              <span key={idx} className="text-[8px] bg-primary/8 text-primary rounded-full px-1.5 py-0.5 font-medium">
                 {service}
               </span>
             ))}
             {allServices.length > 2 && (
-              <span className="text-[10px] bg-muted text-muted-foreground rounded-full px-2 py-0.5">
+              <span className="text-[8px] bg-muted text-muted-foreground rounded-full px-1.5 py-0.5">
                 +{allServices.length - 2}
               </span>
             )}
