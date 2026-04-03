@@ -10,8 +10,11 @@ import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook, Edit, Heart 
 import ImageGallery from "@/components/ImageGallery";
 import FavoriteButton from "@/components/FavoriteButton";
 import ReviewsSection from "@/components/ReviewsSection";
+import FeaturedBraidersCarousel from "@/components/FeaturedBraidersCarousel";
 import { useLeads } from "@/hooks/useLeads";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
+import { Search } from "lucide-react";
 
 const formatPhoneNumber = (phone: string): string => {
   const digits = phone.replace(/[^0-9]/g, '');
