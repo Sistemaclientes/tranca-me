@@ -77,8 +77,8 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
         </div>
       </CardContent>
     </Card>
-  );
-};
+    );
+});
 
 BraiderCard.displayName = "BraiderCard";
 export default BraiderCard;

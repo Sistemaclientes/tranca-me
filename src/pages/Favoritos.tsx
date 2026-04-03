@@ -141,6 +141,7 @@ const Favoritos = () => {
                               src={braider.image_url} 
                               alt={braider.professional_name || braider.name}
                               className="w-full h-full object-cover"
+                              loading="lazy"
                             />
                           ) : (
                             <div className="w-full h-full bg-muted flex items-center justify-center">
