@@ -47,18 +47,19 @@ const Index = () => {
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl -z-10"></div>
           
           <div className="container mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-              <div className="text-center md:text-left space-y-2">
-                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
+            <div className="flex flex-col items-center text-center mb-12 gap-6">
+              <div className="space-y-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-bold uppercase tracking-wider mx-auto">
                   Seleção Premium
                 </div>
-                <h2 className="font-display text-3xl lg:text-4xl font-bold text-primary leading-tight">
+                <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-primary leading-tight">
                   Trancistas em Destaque
                 </h2>
-                <p className="text-muted-foreground text-base max-w-xl">
+                <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
                   Conheça as profissionais mais recomendadas e bem avaliadas da nossa plataforma.
                 </p>
               </div>
+            </div>
               <Link to="/buscar">
                 <Button variant="outline" size="sm" className="group border-2 font-bold px-6 shadow-sm hover:shadow-md transition-all">
                   Ver Todas
