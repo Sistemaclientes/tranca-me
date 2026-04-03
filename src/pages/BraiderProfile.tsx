@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
@@ -6,15 +6,29 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook, Edit, Heart } from "lucide-react";
+import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook, Edit, Heart, Flag, Search, MessageCircle, AlertTriangle } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import FavoriteButton from "@/components/FavoriteButton";
 import ReviewsSection from "@/components/ReviewsSection";
 import FeaturedBraidersCarousel from "@/components/FeaturedBraidersCarousel";
 import { useLeads } from "@/hooks/useLeads";
 import { toast } from "sonner";
-import { Link } from "react-router-dom";
-import { Search } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formatPhoneNumber = (phone: string): string => {
   const digits = phone.replace(/[^0-9]/g, '');
