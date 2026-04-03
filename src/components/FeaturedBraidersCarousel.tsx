@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Star } from "lucide-react";
@@ -14,7 +14,7 @@ import {
 import StarRating from "@/components/StarRating";
 import { useReviews } from "@/hooks/useReviews";
 
-const BraiderCard = ({ braider }: { braider: any }) => {
+const BraiderCard = memo(({ braider }: { braider: any }) => {
   const navigate = useNavigate();
   const { averageRating, totalReviews } = useReviews(braider.id);
 
