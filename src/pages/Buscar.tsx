@@ -28,15 +28,7 @@ const Buscar = () => {
   const [braiders, setBraiders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
-  const allServices = [
-    "Box Braids",
-    "Knotless Braids",
-    "Twist",
-    "Nagô",
-    "Tranças",
-    "Dreads",
-    "Crochet Braids",
-  ];
+  const allServices = BRAID_TYPES;
 
   useEffect(() => {
     loadCities();
