@@ -497,14 +497,55 @@ const BraiderProfileEdit = () => {
                   />
                 </div>
 
+                <div className="space-y-3">
+                  <Label>Tipos de Tranças Oferecidas *</Label>
+                  <ScrollArea className="h-48 border rounded-md p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {BRAID_TYPES.map((type) => (
+                        <div key={type} className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={`type-${type}`} 
+                            checked={formData.braidTypes.includes(type)}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setFormData({ ...formData, braidTypes: [...formData.braidTypes, type] });
+                              } else {
+                                setFormData({ ...formData, braidTypes: formData.braidTypes.filter(t => t !== type) });
+                              }
+                            }}
+                          />
+                          <label
+                            htmlFor={`type-${type}`}
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            {type}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                  {formData.braidTypes.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {formData.braidTypes.map((type) => (
+                        <Badge key={type} variant="secondary" className="flex items-center gap-1">
+                          {type}
+                          <X 
+                            className="h-3 w-3 cursor-pointer" 
+                            onClick={() => setFormData({ ...formData, braidTypes: formData.braidTypes.filter(t => t !== type) })}
+                          />
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="services">Tipos de Tranças Oferecidas (separados por vírgula) *</Label>
+                  <Label htmlFor="services">Outros Serviços (opcional)</Label>
                   <Input
                     id="services"
-                    placeholder="Box Braids, Nagô, Twist, Dreadlocks"
+                    placeholder="Ex: Lavagem, Hidratação, Escova"
                     value={formData.services}
                     onChange={(e) => setFormData({ ...formData, services: e.target.value })}
-                    required
                   />
                 </div>
 
