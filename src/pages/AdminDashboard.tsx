@@ -119,7 +119,7 @@ const AdminDashboard = () => {
     } else {
       toast({
         title: "Status atualizado",
-        description: `Trancista agora está ${newStatus === "active" ? "ativa" : "inativa"}.`,
+        description: `Trancista agora está ${newStatus === "active" ? "ativa" : "bloqueada"}.`,
       });
       await loadData();
     }
