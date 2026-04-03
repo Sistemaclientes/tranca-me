@@ -15,6 +15,8 @@ const Favoritos = () => {
 
   useEffect(() => {
     checkAuthAndLoadFavorites();
+    const timeout = setTimeout(() => { if (loading) setLoading(false); }, 10000);
+    return () => clearTimeout(timeout);
   }, []);
 
   const checkAuthAndLoadFavorites = async () => {
