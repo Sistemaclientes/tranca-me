@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook, Edit, Heart, Flag, Search, MessageCircle, AlertTriangle } from "lucide-react";
+import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook, Edit, Heart, Flag, Search, MessageCircle, AlertTriangle, Loader2 } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import FavoriteButton from "@/components/FavoriteButton";
 import ReviewsSection from "@/components/ReviewsSection";
