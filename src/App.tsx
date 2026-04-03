@@ -47,29 +47,31 @@ const App = () => (
         }}
       >
         <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
-          <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth /></Suspense>} />
-          <Route path="/escolher" element={<Suspense fallback={<LoadingFallback />}><AuthChoice /></Suspense>} />
-          <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><Buscar /></Suspense>} />
-          <Route path="/favoritos" element={<Suspense fallback={<LoadingFallback />}><Favoritos /></Suspense>} />
-          <Route path="/trancista/:id" element={<Suspense fallback={<LoadingFallback />}><BraiderProfile /></Suspense>} />
-          <Route path="/trancista-nao-encontrada" element={<Suspense fallback={<LoadingFallback />}><BraiderNotFound /></Suspense>} />
-          <Route path="/perfil" element={<Suspense fallback={<LoadingFallback />}><BraiderProfileEdit /></Suspense>} />
-          <Route path="/meu-perfil" element={<Suspense fallback={<LoadingFallback />}><MeuPerfil /></Suspense>} />
-          <Route path="/assinatura" element={<Suspense fallback={<LoadingFallback />}><Assinatura /></Suspense>} />
-          <Route path="/checkout" element={<Suspense fallback={<LoadingFallback />}><Checkout /></Suspense>} />
-          <Route path="/admin" element={<Suspense fallback={<LoadingFallback />}><AdminDashboard /></Suspense>} />
-          <Route path="/admin/sugestoes" element={<Suspense fallback={<LoadingFallback />}><AdminSuggestions /></Suspense>} />
-          <Route path="/quero-ser-trancista" element={<Suspense fallback={<LoadingFallback />}><QueroSerTrancista /></Suspense>} />
-          {/* SEO Routes for Cities */}
-          <Route path="/trancistas-sao-jose-sc" element={<Suspense fallback={<LoadingFallback />}><CitySEO /></Suspense>} />
-          <Route path="/trancistas-florianopolis" element={<Suspense fallback={<LoadingFallback />}><CitySEO /></Suspense>} />
-          <Route path="/trancistas-palhoca" element={<Suspense fallback={<LoadingFallback />}><CitySEO /></Suspense>} />
-          <Route path="/trancistas-biguacu" element={<Suspense fallback={<LoadingFallback />}><CitySEO /></Suspense>} />
-          
-          <Route path="*" element={<Suspense fallback={<LoadingFallback />}><NotFound /></Suspense>} />
-        </Routes>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/escolher" element={<AuthChoice />} />
+            <Route path="/buscar" element={<Buscar />} />
+            <Route path="/favoritos" element={<Favoritos />} />
+            <Route path="/trancista/:id" element={<BraiderProfile />} />
+            <Route path="/trancista-nao-encontrada" element={<BraiderNotFound />} />
+            <Route path="/perfil" element={<BraiderProfileEdit />} />
+            <Route path="/meu-perfil" element={<MeuPerfil />} />
+            <Route path="/assinatura" element={<Assinatura />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/sugestoes" element={<AdminSuggestions />} />
+            <Route path="/quero-ser-trancista" element={<QueroSerTrancista />} />
+            {/* SEO Routes for Cities */}
+            <Route path="/trancistas-sao-jose-sc" element={<CitySEO />} />
+            <Route path="/trancistas-florianopolis" element={<CitySEO />} />
+            <Route path="/trancistas-palhoca" element={<CitySEO />} />
+            <Route path="/trancistas-biguacu" element={<CitySEO />} />
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
