@@ -45,14 +45,6 @@ const Navbar = () => {
     };
   }, []);
 
-  const checkAuthAndAdmin = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    setIsAuthenticated(!!session);
-    
-    if (session) {
-      checkAdminRole(session.user.id);
-    }
-  };
 
   const checkAdminRole = async (userId: string) => {
     const { data: roles } = await supabase
