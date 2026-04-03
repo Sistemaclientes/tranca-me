@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/carousel";
 import StarRating from "@/components/StarRating";
 import { useReviews } from "@/hooks/useReviews";
+import AutoScroll from "embla-carousel-auto-scroll";
 
 const BraiderCard = memo(({ braider }: { braider: any }) => {
   const navigate = useNavigate();
