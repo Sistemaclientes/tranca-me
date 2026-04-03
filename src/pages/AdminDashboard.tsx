@@ -250,8 +250,22 @@ const AdminDashboard = () => {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <Badge variant={braider.status === "active" ? "default" : "destructive"} className={braider.status === "active" ? "bg-green-500" : ""}>
-                              {braider.status === "active" ? "Ativo" : "Inativo"}
+                            <Badge 
+                              variant={braider.status === "active" ? "default" : "destructive"} 
+                              className={
+                                braider.status === "active" ? "bg-green-500" : 
+                                braider.status === "trial" ? "bg-blue-500" : 
+                                braider.status === "expired" ? "bg-orange-500" :
+                                braider.status === "pending" ? "bg-yellow-500" :
+                                ""
+                              }
+                            >
+                              {braider.status === "active" ? "Ativo" : 
+                               braider.status === "trial" ? "Trial" :
+                               braider.status === "expired" ? "Expirado" :
+                               braider.status === "pending" ? "Pendente" :
+                               braider.status === "blocked" ? "Bloqueado" :
+                               braider.status}
                             </Badge>
                           </TableCell>
                           <TableCell>{braider.city} / {braider.neighborhood}</TableCell>
