@@ -3,6 +3,7 @@ import StarRating from "@/components/StarRating";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Star, MessageSquarePlus, Loader2 } from "lucide-react";
 import {
