@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import FeaturedBraidersCarousel from "@/components/FeaturedBraidersCarousel";
-import FloripaMapsSection from "@/components/FloripaMapsSection";
+import CoverageAreas from "@/components/home/CoverageAreas";
 import Hero from "@/components/home/Hero";
 import Features from "@/components/home/Features";
 import Inspiration from "@/components/home/Inspiration";
