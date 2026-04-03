@@ -16,7 +16,7 @@ const Checkout = () => {
   const { toast } = useToast();
   const { validateCoupon, validatingCoupon } = useCouponValidation();
   
-  const planType = searchParams.get("plan") as "basic" | "premium";
+  const planType = searchParams.get("plan") as "pro" | "premium";
   
   const [formData, setFormData] = useState({
     name: "",
@@ -32,27 +32,27 @@ const Checkout = () => {
   const [paymentId, setPaymentId] = useState("");
 
   const plans = {
-    basic: {
-      name: "Plano Básico",
-      price: 9.99,
+    pro: {
+      name: "Plano Pro",
+      price: 19.99,
       features: [
+        "7 dias de teste grátis",
         "Perfil completo com foto",
-        "Galeria de trabalhos",
+        "Galeria ilimitada",
         "Contato direto via WhatsApp",
-        "Listagem em buscas",
-        "Edição de perfil",
+        "Destaque nos resultados",
+        "Suporte prioritário",
       ],
     },
     premium: {
       name: "Plano Premium",
       price: 49.90,
       features: [
-        "Todos os benefícios do Básico",
-        "Destaque na página inicial",
-        "Badge Premium",
-        "Prioridade nos resultados",
-        "Aparecerá em campanha",
-        "Suporte prioritário",
+        "Todos os benefícios do Pro",
+        "Destaque máximo na home",
+        "Badge Premium exclusiva",
+        "Prioridade total na região",
+        "Aparecerá em campanhas",
       ],
     },
   };

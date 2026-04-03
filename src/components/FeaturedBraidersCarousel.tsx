@@ -77,7 +77,7 @@ const FeaturedBraidersCarousel = () => {
 
   const loadBraiders = async () => {
     const { data } = await supabase
-      .from("braider_profiles")
+      .from("active_braiders")
       .select("*")
       .order("is_premium", { ascending: false })
       .order("created_at", { ascending: false })

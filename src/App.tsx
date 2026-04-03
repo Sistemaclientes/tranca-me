@@ -17,6 +17,7 @@ const MeuPerfil = lazy(() => import("./pages/MeuPerfil"));
 const Assinatura = lazy(() => import("./pages/Assinatura"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 const AdminSuggestions = lazy(() => import("./pages/AdminSuggestions"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const Favoritos = lazy(() => import("./pages/Favoritos"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const BraiderNotFound = lazy(() => import("./pages/BraiderNotFound"));
@@ -58,6 +59,7 @@ const App = () => (
           <Route path="/meu-perfil" element={<Suspense fallback={<LoadingFallback />}><MeuPerfil /></Suspense>} />
           <Route path="/assinatura" element={<Suspense fallback={<LoadingFallback />}><Assinatura /></Suspense>} />
           <Route path="/checkout" element={<Suspense fallback={<LoadingFallback />}><Checkout /></Suspense>} />
+          <Route path="/admin" element={<Suspense fallback={<LoadingFallback />}><AdminDashboard /></Suspense>} />
           <Route path="/admin/sugestoes" element={<Suspense fallback={<LoadingFallback />}><AdminSuggestions /></Suspense>} />
           <Route path="/quero-ser-trancista" element={<Suspense fallback={<LoadingFallback />}><QueroSerTrancista /></Suspense>} />
           {/* SEO Routes for Cities */}

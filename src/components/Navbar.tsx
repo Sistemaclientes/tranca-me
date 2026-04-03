@@ -107,7 +107,7 @@ const Navbar = () => {
                 </>
               )}
               {isAdmin && (
-                <Link to="/admin/sugestoes">
+                <Link to="/admin">
                   <Button variant="ghost" size="sm">
                     <Settings className="h-4 w-4 mr-2" />
                     Admin

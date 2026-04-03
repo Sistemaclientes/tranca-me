@@ -44,16 +44,31 @@ const BraiderProfile = () => {
       .maybeSingle();
 
     if (profile) {
+      // Check if profile is active or user is owner/admin
+      const { data: { session } } = await supabase.auth.getSession();
+      const is_owner = session?.user?.id === profile.user_id;
+      
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session?.user?.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      
+      const is_admin = !!roleData;
+      const is_expired = profile.status !== 'active' || (profile.trial_ends_at && new Date(profile.trial_ends_at) < new Date() && profile.plan_tier === 'free');
+
+      if (is_expired && !is_owner && !is_admin) {
+        navigate("/trancista-nao-encontrada");
+        return;
+      }
+
       setBraider(profile);
+      setIsOwner(is_owner);
       
       // Increment view count
       await supabase.rpc('increment_view_count', { profile_id: id });
-      
-      // Check if current user is the owner
-      const { data: { session } } = await supabase.auth.getSession();
-      setIsOwner(session?.user?.id === profile.user_id);
     } else {
-      // Redirect to not found page
       navigate("/trancista-nao-encontrada");
     }
     

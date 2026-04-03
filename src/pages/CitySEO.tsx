@@ -80,8 +80,29 @@ const CitySEO = () => {
     return <div className="min-h-screen flex items-center justify-center">Cidade não encontrada</div>;
   }
 
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": `Trancistas em ${currentCity.name}`,
+    "description": currentCity.description,
+    "url": window.location.href,
+    "areaServed": {
+      "@type": "City",
+      "name": currentCity.name,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": currentCity.name,
+        "addressRegion": "SC",
+        "addressCountry": "BR"
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-warm">
+      <script type="application/ld+json">
+        {JSON.stringify(schemaData)}
+      </script>
       <Navbar />
       
       <section className="pt-32 pb-16 px-4 bg-gradient-hero text-white">

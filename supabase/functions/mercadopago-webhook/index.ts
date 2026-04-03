@@ -48,7 +48,8 @@ serve(async (req) => {
         updated_at: new Date().toISOString(),
       }
 
-      if (paymentData.status === 'approved') {
+      const isApproved = paymentData.status === 'approved'
+      if (isApproved) {
         updateData.approved_at = new Date().toISOString()
       }
 
@@ -63,6 +64,7 @@ serve(async (req) => {
         console.error('Error fetching payment attempt:', fetchError)
       }
 
+      // Update payment attempt status
       const { error: updateError } = await supabase
         .from('payment_attempts')
         .update(updateData)
@@ -71,6 +73,43 @@ serve(async (req) => {
       if (updateError) {
         console.error('Database update error:', updateError)
         throw updateError
+      }
+
+      // If approved, update the braider profile and create subscription record
+      if (isApproved && paymentAttempt) {
+        // Find the user's braider profile
+        const { data: profile, error: profileError } = await supabase
+          .from('braider_profiles')
+          .select('id, user_id')
+          .eq('email', paymentAttempt.email)
+          .maybeSingle()
+
+        if (profile) {
+          // Update profile to premium and active
+          await supabase
+            .from('braider_profiles')
+            .update({
+              is_premium: true,
+              plan_tier: paymentAttempt.plan_type === 'premium' ? 'premium' : 'pro',
+              status: 'active',
+              trial_ends_at: null, // Clear trial if they paid
+              premium_since: new Date().toISOString()
+            })
+            .eq('id', profile.id)
+
+          // Insert subscription record
+          await supabase
+            .from('subscriptions')
+            .insert({
+              user_id: profile.user_id,
+              braider_id: profile.id,
+              plan_type: paymentAttempt.plan_type === 'premium' ? 'premium' : 'pro',
+              status: 'approved',
+              amount: paymentAttempt.amount,
+              payment_date: new Date().toISOString(),
+              mercado_pago_id: paymentId.toString()
+            })
+        }
       }
 
       console.log('Payment status updated successfully')

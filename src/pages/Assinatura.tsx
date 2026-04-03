@@ -42,13 +42,14 @@ const Assinatura = () => {
     },
     pro: {
       name: "Plano Pro",
-      price: 19.90,
+      price: 19.99,
       features: [
         "Perfil completo sem limites",
         "Galeria ilimitada",
         "Destaque nos resultados",
         "Badge Verificado",
         "Suporte por WhatsApp",
+        "Teste grátis por 7 dias",
       ],
     },
     premium: {

@@ -91,7 +91,7 @@ const Buscar = () => {
   const loadBraiders = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from("braider_profiles")
+      .from("active_braiders")
       .select("*")
       .order("plan_tier", { ascending: false }) // Premium > Pro > Free
       .order("whatsapp_click_count", { ascending: false })
@@ -249,7 +249,7 @@ const Buscar = () => {
                 </Button>
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6">
                 {filteredBraiders.map((braider) => (
                   <BraiderCard key={braider.id} braider={braider} showFavorite />
                 ))}
