@@ -37,6 +37,16 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     checkAdminAndLoadData();
+
+    // Safety timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      if (loading) {
+        console.warn("Admin data load timed out");
+        setLoading(false);
+      }
+    }, 10000); // 10 seconds
+
+    return () => clearTimeout(timeout);
   }, []);
 
   const checkAdminAndLoadData = async () => {

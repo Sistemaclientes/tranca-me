@@ -38,20 +38,22 @@ const Auth = () => {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      // Only redirect if not in reset password flow
+      // Only redirect if not in reset password flow and session exists
       if (session && !showResetPassword) {
-        navigate("/escolher");
+        const redirectTo = searchParams.get("redirect") || "/escolher";
+        navigate(redirectTo);
       }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session && !showResetPassword) {
-        navigate("/escolher");
+        const redirectTo = searchParams.get("redirect") || "/escolher";
+        navigate(redirectTo);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate, showResetPassword]);
+  }, [navigate, showResetPassword, searchParams]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,6 +132,9 @@ const Auth = () => {
         title: "Login realizado!", 
         description: "Redirecionando..." 
       });
+      // Explicit navigate to ensure redirect happens even if listener is slow
+      const redirectTo = searchParams.get("redirect") || "/escolher";
+      navigate(redirectTo);
     }
     setIsLoading(false);
   };

@@ -78,6 +78,14 @@ const MeuPerfil = () => {
   useEffect(() => {
     loadUserData();
     
+    // Safety timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      if (loading) {
+        console.warn("Loading user data timed out");
+        setLoading(false);
+      }
+    }, 10000); // 10 seconds
+
     if (searchParams.get("status") === "success") {
       toast({
         title: "Pagamento Aprovado!",
@@ -86,6 +94,8 @@ const MeuPerfil = () => {
       // Clear the query param without refreshing
       window.history.replaceState({}, '', window.location.pathname);
     }
+
+    return () => clearTimeout(timeout);
   }, [searchParams, toast]);
 
   const loadUserData = async () => {

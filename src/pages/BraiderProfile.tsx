@@ -34,6 +34,16 @@ const BraiderProfile = () => {
 
   useEffect(() => {
     loadProfile();
+
+    // Safety timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      if (loading) {
+        console.warn("Loading profile timed out");
+        setLoading(false);
+      }
+    }, 10000); // 10 seconds
+
+    return () => clearTimeout(timeout);
   }, [id]);
 
   const loadProfile = async () => {
