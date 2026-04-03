@@ -49,7 +49,7 @@ const Index = () => {
         </section>
 
         {/* Map Section */}
-        <FloripaMapsSection />
+        <CoverageAreas />
 
         {/* How it works Section */}
         <Features />
