@@ -35,6 +35,17 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
 
   useEffect(() => {
     checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLogged(!!session);
+      if (session) {
+        checkOwner(session.user.id);
+      } else {
+        setIsOwner(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, [braiderId]);
 
   const checkUser = async () => {
@@ -43,19 +54,26 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
       setIsLogged(!!session);
 
       if (session) {
-        // Use a simpler query or type assertion if needed, but maybeSingle should be fine
-        const { data: profile } = await supabase
-          .from("braider_profiles")
-          .select("user_id")
-          .eq("id", braiderId)
-          .single();
-
-        if (profile) {
-          setIsOwner(session.user.id === profile.user_id);
-        }
+        await checkOwner(session.user.id);
       }
     } catch (error) {
       console.error("Error checking user:", error);
+    }
+  };
+
+  const checkOwner = async (userId: string) => {
+    try {
+      const { data: profile } = await supabase
+        .from("braider_profiles")
+        .select("user_id")
+        .eq("id", braiderId)
+        .maybeSingle();
+
+      if (profile) {
+        setIsOwner(userId === profile.user_id);
+      }
+    } catch (error) {
+      console.error("Error checking owner:", error);
     }
   };
 
