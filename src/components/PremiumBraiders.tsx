@@ -18,7 +18,7 @@ const PremiumBraiders = () => {
 
   const loadPremiumBraiders = async () => {
     const { data, error } = await supabase
-      .from("braider_profiles")
+      .from("active_braiders")
       .select("*")
       .order("is_premium", { ascending: false })
       .order("created_at", { ascending: false })
