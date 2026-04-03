@@ -170,7 +170,7 @@ const AdminDashboard = () => {
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
-              <h1 className="font-display text-4xl font-bold mb-2">Painel Admin Master</h1>
+              <h1 className="font-display text-4xl font-bold mb-2">Painel Adm Master</h1>
               <p className="text-muted-foreground">Gestão estratégica e operacional da Trancei</p>
             </div>
             <div className="flex gap-2">
