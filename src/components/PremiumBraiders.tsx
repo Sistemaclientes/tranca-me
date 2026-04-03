@@ -45,7 +45,7 @@ const PremiumBraiders = () => {
   }
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
       {premiumBraiders.map((braider) => (
         <BraiderCard key={braider.id} braider={braider} showFavorite />
       ))}
