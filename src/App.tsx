@@ -59,7 +59,13 @@ const App = () => (
           <Route path="/assinatura" element={<Suspense fallback={<LoadingFallback />}><Assinatura /></Suspense>} />
           <Route path="/checkout" element={<Suspense fallback={<LoadingFallback />}><Checkout /></Suspense>} />
           <Route path="/admin/sugestoes" element={<Suspense fallback={<LoadingFallback />}><AdminSuggestions /></Suspense>} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/quero-ser-trancista" element={<Suspense fallback={<LoadingFallback />}><QueroSerTrancista /></Suspense>} />
+          {/* SEO Routes for Cities */}
+          <Route path="/trancistas-sao-jose-sc" element={<Suspense fallback={<LoadingFallback />}><CitySEO /></Suspense>} />
+          <Route path="/trancistas-florianopolis" element={<Suspense fallback={<LoadingFallback />}><CitySEO /></Suspense>} />
+          <Route path="/trancistas-palhoca" element={<Suspense fallback={<LoadingFallback />}><CitySEO /></Suspense>} />
+          <Route path="/trancistas-biguacu" element={<Suspense fallback={<LoadingFallback />}><CitySEO /></Suspense>} />
+          
           <Route path="*" element={<Suspense fallback={<LoadingFallback />}><NotFound /></Suspense>} />
         </Routes>
       </BrowserRouter>
