@@ -14,7 +14,7 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative pt-24 pb-16 px-4 min-h-[600px] flex items-center">
         <div className="absolute inset-0 z-0">
-          <img src={heroCover} alt="Capa Trancei" className="w-full h-full object-cover" />
+          <img src={heroCover} alt="Capa Trancei" className="w-full h-full object-cover" fetchPriority="high" />
           <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-transparent"></div>
         </div>
         

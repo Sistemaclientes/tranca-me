@@ -88,6 +88,7 @@ const ImageGallery = ({ images, title }: ImageGalleryProps) => {
                       src={image}
                       alt={`${title} - Foto ${index + 4}`}
                       className="w-full h-full object-cover"
+                      loading="lazy"
                     />
                   </div>
                 </CarouselItem>

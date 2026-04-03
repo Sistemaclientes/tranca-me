@@ -8,24 +8,41 @@ import { useToast } from "@/hooks/use-toast";
 const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check initial session
-    checkAuthAndAdmin();
+    let mounted = true;
 
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const initializeAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!mounted) return;
+      
       setIsAuthenticated(!!session);
       if (session) {
-        checkAdminRole(session.user.id);
+        await checkAdminRole(session.user.id);
+      }
+      setIsLoading(false);
+    };
+
+    initializeAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return;
+      setIsAuthenticated(!!session);
+      if (session) {
+        await checkAdminRole(session.user.id);
       } else {
         setIsAdmin(false);
       }
+      setIsLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const checkAuthAndAdmin = async () => {
