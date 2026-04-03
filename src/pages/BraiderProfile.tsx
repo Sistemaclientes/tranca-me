@@ -46,6 +46,9 @@ const BraiderProfile = () => {
     if (profile) {
       setBraider(profile);
       
+      // Increment view count
+      await supabase.rpc('increment_view_count', { profile_id: id });
+      
       // Check if current user is the owner
       const { data: { session } } = await supabase.auth.getSession();
       setIsOwner(session?.user?.id === profile.user_id);
