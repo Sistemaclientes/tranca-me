@@ -19,6 +19,17 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
   const averageRating = braider.average_rating || 0;
   const totalReviews = braider.total_reviews || 0;
 
+  const maskPhone = (phone: string) => {
+    if (!phone) return "";
+    const clean = phone.replace(/\D/g, "");
+    if (clean.length === 11) {
+      return `(${clean.slice(0, 2)}) ${clean.slice(2, 7)}-${clean.slice(7)}`;
+    } else if (clean.length === 10) {
+      return `(${clean.slice(0, 2)}) ${clean.slice(2, 6)}-${clean.slice(6)}`;
+    }
+    return phone;
+  };
+
   return (
     <Card 
       className="bg-card border border-border/50 shadow-sm hover:shadow-glow hover:scale-[1.02] transition-all duration-500 cursor-pointer relative group overflow-hidden rounded-[24px]"
