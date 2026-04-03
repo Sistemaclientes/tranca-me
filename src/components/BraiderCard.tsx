@@ -18,7 +18,7 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
 
   return (
     <div
-      className="group relative bg-card rounded-2xl overflow-hidden border border-border/40 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer max-w-[280px] w-full mx-auto"
+      className="group relative bg-card rounded-2xl overflow-hidden border border-border/40 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer max-w-[140px] sm:max-w-[180px] w-full mx-auto"
       onClick={() => navigate(`/trancista/${braider.id}`)}
     >
       {showFavorite && (
