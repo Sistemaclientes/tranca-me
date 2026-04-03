@@ -59,6 +59,16 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
       if (session) {
         await checkOwner(session.user.id);
         
+        // Check if admin
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .eq("role", "admin")
+          .maybeSingle();
+        
+        setIsAdmin(!!roleData);
+        
         // Use user metadata to prefill name
         if (session.user.user_metadata?.full_name) {
           setClientName(session.user.user_metadata.full_name);
