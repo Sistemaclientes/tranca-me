@@ -91,7 +91,7 @@ const Buscar = () => {
   const loadBraiders = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from("braider_profiles")
+      .from("active_braiders")
       .select("*")
       .order("plan_tier", { ascending: false }) // Premium > Pro > Free
       .order("whatsapp_click_count", { ascending: false })
