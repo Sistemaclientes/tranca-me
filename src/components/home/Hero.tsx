@@ -39,13 +39,13 @@ const Hero = () => {
           
           <div className="flex flex-wrap gap-4 pt-4">
             <Link to="/buscar">
-              <Button variant="hero" size="xl" className="shadow-glow hover:scale-105 transition-all">
+              <Button variant="hero" size="hero" className="shadow-glow hover:scale-105 transition-all">
                 <Search className="h-5 w-5 mr-2" />
                 Buscar Trancistas
               </Button>
             </Link>
             <Link to="/quero-ser-trancista">
-              <Button variant="outline" size="xl" className="bg-background/50 backdrop-blur-sm border-2 hover:bg-background/80 transition-all">
+              <Button variant="outline" size="hero" className="bg-background/50 backdrop-blur-sm border-2 hover:bg-background/80 transition-all">
                 Sou Trancista
               </Button>
             </Link>
