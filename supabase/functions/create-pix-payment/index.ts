@@ -125,6 +125,10 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
+    const isPreference = paymentMethod !== 'pix'
+    const status = isPreference ? 'pending' : paymentData.status
+    const paymentId = isPreference ? paymentData.id : paymentData.id.toString()
+
     const { data: paymentAttempt, error: dbError } = await supabase
       .from('payment_attempts')
       .insert({
@@ -132,10 +136,10 @@ serve(async (req) => {
         email: email,
         amount: amount,
         plan_type: determinedPlanType,
-        status: paymentData.status,
-        payment_id: paymentData.id.toString(),
-        qr_code: paymentData.point_of_interaction?.transaction_data?.qr_code,
-        qr_code_base64: paymentData.point_of_interaction?.transaction_data?.qr_code_base64,
+        status: status,
+        payment_id: paymentId,
+        qr_code: isPreference ? null : paymentData.point_of_interaction?.transaction_data?.qr_code,
+        qr_code_base64: isPreference ? null : paymentData.point_of_interaction?.transaction_data?.qr_code_base64,
         payment_method: paymentMethod,
       })
       .select()
@@ -151,11 +155,12 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        payment_id: paymentData.id.toString(),
-        status: paymentData.status,
-        qr_code: paymentData.point_of_interaction?.transaction_data?.qr_code,
-        qr_code_base64: paymentData.point_of_interaction?.transaction_data?.qr_code_base64,
+        payment_id: paymentId,
+        status: status,
+        qr_code: isPreference ? null : paymentData.point_of_interaction?.transaction_data?.qr_code,
+        qr_code_base64: isPreference ? null : paymentData.point_of_interaction?.transaction_data?.qr_code_base64,
         attempt_id: paymentAttempt.id,
+        init_point: isPreference ? paymentData.init_point : null,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
