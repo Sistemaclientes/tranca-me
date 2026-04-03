@@ -10,8 +10,11 @@ import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook, Edit, Heart 
 import ImageGallery from "@/components/ImageGallery";
 import FavoriteButton from "@/components/FavoriteButton";
 import ReviewsSection from "@/components/ReviewsSection";
+import FeaturedBraidersCarousel from "@/components/FeaturedBraidersCarousel";
 import { useLeads } from "@/hooks/useLeads";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
+import { Search } from "lucide-react";
 
 const formatPhoneNumber = (phone: string): string => {
   const digits = phone.replace(/[^0-9]/g, '');
@@ -320,6 +323,24 @@ const BraiderProfile = () => {
                 </CardContent>
               </Card>
             </div>
+          </div>
+
+          <Separator className="my-16" />
+          
+          <div className="space-y-8">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="text-center md:text-left">
+                <h2 className="font-display text-3xl font-bold mb-2">Trancistas em Destaque</h2>
+                <p className="text-muted-foreground">Conheça outras profissionais de destaque na plataforma</p>
+              </div>
+              <Link to="/buscar">
+                <Button variant="outline" className="group">
+                  Ver Todas
+                  <Search className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                </Button>
+              </Link>
+            </div>
+            <FeaturedBraidersCarousel />
           </div>
         </div>
       </section>
