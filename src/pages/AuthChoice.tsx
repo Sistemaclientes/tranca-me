@@ -2,10 +2,31 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, Search } from "lucide-react";
+import { Sparkles, Search, ShieldAlert } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const AuthChoice = () => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    checkAdmin();
+  }, []);
+
+  const checkAdmin = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      
+      setIsAdmin(!!roleData);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-warm">
@@ -22,7 +43,40 @@ const AuthChoice = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className={`grid ${isAdmin ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-8`}>
+            {isAdmin && (
+              <Card className="bg-gradient-card border-none shadow-soft hover:shadow-glow transition-all duration-300 group cursor-pointer" onClick={() => navigate("/paineladm")}>
+                <CardHeader className="text-center pb-4">
+                  <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <ShieldAlert className="h-8 w-8 text-primary" />
+                  </div>
+                  <CardTitle className="font-display text-2xl">Administrador</CardTitle>
+                  <CardDescription>
+                    Gerenciar plataforma e trancistas
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      Aprovar sugestões de locais
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      Moderar avaliações e denúncias
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      Gerenciar trancistas e planos
+                    </li>
+                  </ul>
+                  <Button variant="hero" className="w-full">
+                    Acessar Painel Master
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
             <Card className="bg-gradient-card border-none shadow-soft hover:shadow-glow transition-all duration-300 group cursor-pointer" onClick={() => navigate("/buscar")}>
               <CardHeader className="text-center pb-4">
                 <div className="h-16 w-16 rounded-2xl bg-secondary/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">

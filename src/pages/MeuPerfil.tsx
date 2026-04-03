@@ -25,7 +25,8 @@ import {
   Share2,
   Sparkles,
   Zap,
-  Users
+  Users,
+  ShieldAlert
 } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import StarRating from "@/components/StarRating";
@@ -229,22 +230,32 @@ const MeuPerfil = () => {
                 Gerencie seus resultados e atraia mais clientes
               </p>
             </div>
-            {profile && (
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={shareProfile}>
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Compartilhar Perfil
-                </Button>
-                {profile.plan_tier !== 'premium' && (
-                  <Link to="/assinatura">
-                    <Button variant="hero">
-                      <Zap className="h-4 w-4 mr-2" />
-                      Quero Mais Clientes
-                    </Button>
-                  </Link>
-                )}
-              </div>
-            )}
+            <div className="flex flex-wrap gap-2">
+              {userRole === 'admin' && (
+                <Link to="/paineladm">
+                  <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white">
+                    <ShieldAlert className="h-4 w-4 mr-2" />
+                    Painel Administrativo
+                  </Button>
+                </Link>
+              )}
+              {profile && (
+                <>
+                  <Button variant="outline" onClick={shareProfile}>
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Compartilhar Perfil
+                  </Button>
+                  {profile.plan_tier !== 'premium' && (
+                    <Link to="/assinatura">
+                      <Button variant="hero">
+                        <Zap className="h-4 w-4 mr-2" />
+                        Quero Mais Clientes
+                      </Button>
+                    </Link>
+                  )}
+                </>
+              )}
+            </div>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">

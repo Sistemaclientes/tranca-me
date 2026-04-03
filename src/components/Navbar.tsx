@@ -132,10 +132,10 @@ const Navbar = () => {
               )}
               
               {isAdmin && (
-                <Link to="/paineladm" className="hidden lg:block">
-                  <Button variant="ghost" size="sm" className="text-primary font-bold">
-                    <Settings className="h-4 w-4 mr-2" />
-                    Painel Adm
+                <Link to="/paineladm">
+                  <Button variant="ghost" size="sm" className="text-primary font-bold px-2 sm:px-4">
+                    <Settings className="h-4 w-4 md:mr-2" />
+                    <span className="hidden md:inline">Painel Adm</span>
                   </Button>
                 </Link>
               )}

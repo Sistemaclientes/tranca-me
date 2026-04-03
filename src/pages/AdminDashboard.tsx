@@ -203,7 +203,8 @@ const AdminDashboard = () => {
                 )}
               </TabsTrigger>
               <TabsTrigger value="gallery">Galeria</TabsTrigger>
-              <TabsTrigger value="subscriptions">Assinaturas</TabsTrigger>
+              <TabsTrigger value="sugestoes">Sugestões</TabsTrigger>
+              <TabsTrigger value="subscriptions">Financeiro</TabsTrigger>
             </TabsList>
 
             <TabsContent value="trancistas">
@@ -344,13 +345,26 @@ const AdminDashboard = () => {
               </Card>
             </TabsContent>
 
+            <TabsContent value="sugestoes">
+              <Card className="bg-white/80 backdrop-blur-sm border-none shadow-soft p-12 text-center">
+                <MessageSquare className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Sugestões de Cidades e Bairros</h3>
+                <p className="text-muted-foreground max-w-md mx-auto mb-6">
+                  Gerencie as solicitações de novas localizações enviadas pelos usuários.
+                </p>
+                <Button onClick={() => navigate("/paineladm/sugestoes")}>
+                  Ver Sugestões Pendentes
+                </Button>
+              </Card>
+            </TabsContent>
+
             <TabsContent value="subscriptions">
               <Card className="bg-white/80 backdrop-blur-sm border-none shadow-soft p-12 text-center">
                 <CreditCard className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Faturamento via Mercado Pago</h3>
+                <h3 className="text-lg font-semibold mb-2">Gestão Financeira</h3>
                 <p className="text-muted-foreground max-w-md mx-auto">
-                  A gestão detalhada de faturamento e assinaturas é feita via webhook.
-                  Total acumulado: R$ {stats.totalRevenue.toFixed(2)}
+                  Acompanhamento de assinaturas e faturamento via Mercado Pago.
+                  Total acumulado em assinaturas ativas: R$ {stats.totalRevenue.toFixed(2)}
                 </p>
               </Card>
             </TabsContent>
