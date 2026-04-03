@@ -324,6 +324,24 @@ const BraiderProfile = () => {
               </Card>
             </div>
           </div>
+
+          <Separator className="my-16" />
+          
+          <div className="space-y-8">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="text-center md:text-left">
+                <h2 className="font-display text-3xl font-bold mb-2">Trancistas em Destaque</h2>
+                <p className="text-muted-foreground">Conheça outras profissionais de destaque na plataforma</p>
+              </div>
+              <Link to="/buscar">
+                <Button variant="outline" className="group">
+                  Ver Todas
+                  <Search className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                </Button>
+              </Link>
+            </div>
+            <FeaturedBraidersCarousel />
+          </div>
         </div>
       </section>
     </div>
