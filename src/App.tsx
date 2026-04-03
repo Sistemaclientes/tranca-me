@@ -63,6 +63,7 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/sugestoes" element={<AdminSuggestions />} />
             <Route path="/quero-ser-trancista" element={<QueroSerTrancista />} />
+            <Route path="/cursos" element={<Cursos />} />
             {/* SEO Routes for Cities */}
             <Route path="/trancistas-sao-jose-sc" element={<CitySEO />} />
             <Route path="/trancistas-florianopolis" element={<CitySEO />} />
