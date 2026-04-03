@@ -13,6 +13,7 @@ import { cities, neighborhoodsByCity } from "@/data/braiders";
 import { Upload, X, Loader2 } from "lucide-react";
 import SuggestCityDialog from "@/components/SuggestCityDialog";
 import SuggestNeighborhoodDialog from "@/components/SuggestNeighborhoodDialog";
+import { compressImage } from "@/lib/image-utils";
 
 const BraiderProfileEdit = () => {
   const navigate = useNavigate();
