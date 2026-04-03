@@ -72,9 +72,15 @@ const BraiderProfile = () => {
     return null; // Will redirect automatically
   }
 
-  const handleWhatsApp = () => {
-    const message = encodeURIComponent(`Olá ${braider.name}! Encontrei seu perfil na plataforma de trancistas e gostaria de agendar um horário.`);
-    window.open(`https://wa.me/${braider.whatsapp.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
+  const handleWhatsApp = async () => {
+    // Register lead
+    const success = await registerLead(braider.id);
+    if (success) {
+      const message = encodeURIComponent(`Olá ${braider.name}! Encontrei seu perfil na plataforma de trancistas e gostaria de agendar um horário.`);
+      window.open(`https://wa.me/${braider.whatsapp.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
+    } else {
+      toast.error("Erro ao registrar interesse. Tente novamente.");
+    }
   };
 
   return (
