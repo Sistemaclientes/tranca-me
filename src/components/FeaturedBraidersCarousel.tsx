@@ -51,7 +51,7 @@ const FeaturedBraidersCarousel = () => {
         AutoScroll({
           speed: 1,
           stopOnInteraction: false,
-          stopOnMouseEnter: true,
+          stopOnMouseEnter: false,
         }),
       ]}
       className="w-full max-w-7xl mx-auto"
