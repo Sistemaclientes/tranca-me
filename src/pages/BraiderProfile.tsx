@@ -260,6 +260,7 @@ const BraiderProfile = () => {
                       <ImageGallery 
                         images={braider.gallery_urls} 
                         title={braider.professional_name || braider.name}
+                        isPremium={braider.is_premium}
                       />
                     </>
                   )}
