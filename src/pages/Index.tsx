@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Search, Sparkles, MapPin, Star } from "lucide-react";
 import { Link } from "react-router-dom";
-import FeaturedBraidersCarousel from "@/components/FeaturedBraidersCarousel";
+// Removed FeaturedBraidersCarousel as requested to use PremiumBraiders grid style
 import CoverageAreas from "@/components/home/CoverageAreas";
 import Hero from "@/components/home/Hero";
 import Features from "@/components/home/Features";
