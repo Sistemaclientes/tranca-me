@@ -10,10 +10,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cities, neighborhoodsByCity } from "@/data/braiders";
-import { Upload, X, Loader2 } from "lucide-react";
+import { Upload, X, Loader2, Check } from "lucide-react";
 import SuggestCityDialog from "@/components/SuggestCityDialog";
 import SuggestNeighborhoodDialog from "@/components/SuggestNeighborhoodDialog";
 import { compressImage } from "@/lib/image-utils";
+import { BRAID_TYPES } from "@/constants/braidTypes";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const BraiderProfileEdit = () => {
   const navigate = useNavigate();
