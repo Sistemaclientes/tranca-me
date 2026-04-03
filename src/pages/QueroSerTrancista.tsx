@@ -69,31 +69,74 @@ const QueroSerTrancista = () => {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-24 px-4">
+      <section className="py-24 px-4 overflow-hidden">
         <div className="container mx-auto">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="font-display text-4xl font-bold">Por que fazer parte da Trancei?</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Nossa plataforma foi desenhada para valorizar seu trabalho e facilitar o contato direto com clientes.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <BenefitCard 
-              icon={<TrendingUp className="h-8 w-8 text-primary" />}
-              title="Mais Clientes"
-              description="Apareça para pessoas que já estão procurando por trancistas na sua cidade."
-            />
-            <BenefitCard 
-              icon={<ShieldCheck className="h-8 w-8 text-secondary" />}
-              title="Autoridade"
-              description="Tenha um perfil profissional com avaliações reais e portfólio visual impactante."
-            />
-            <BenefitCard 
-              icon={<Smartphone className="h-8 w-8 text-primary" />}
-              title="WhatsApp Direto"
-              description="Receba contatos diretamente no seu WhatsApp sem intermediários ou taxas por serviço."
-            />
+          <div className="flex flex-col lg:flex-row gap-16 items-center">
+            <div className="lg:w-1/2 space-y-12">
+              <div className="space-y-4">
+                <h2 className="font-display text-4xl font-bold leading-tight">Por que fazer parte da Trancei?</h2>
+                <p className="text-muted-foreground text-lg max-w-2xl">
+                  Nossa plataforma foi desenhada para valorizar seu trabalho e facilitar o contato direto com clientes de forma visualmente atraente.
+                </p>
+              </div>
+              
+              <div className="grid gap-8">
+                <div className="flex gap-6 group">
+                  <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                    <TrendingUp className="h-7 w-7 text-primary" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="font-display text-2xl font-semibold">Mais Clientes</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Apareça para pessoas que já estão procurando por trancistas na sua cidade.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-6 group">
+                  <div className="h-14 w-14 rounded-2xl bg-secondary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-secondary/20 transition-colors">
+                    <ShieldCheck className="h-7 w-7 text-secondary" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="font-display text-2xl font-semibold">Autoridade</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Tenha um perfil profissional com avaliações reais e portfólio visual impactante.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-6 group">
+                  <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                    <Smartphone className="h-7 w-7 text-primary" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="font-display text-2xl font-semibold">WhatsApp Direto</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Receba contatos diretamente no seu WhatsApp sem intermediários ou taxas por serviço.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:w-1/2 grid grid-cols-2 gap-4">
+              <div className="space-y-4 pt-12">
+                <div className="aspect-[3/4] rounded-3xl overflow-hidden shadow-soft transform -rotate-2 hover:rotate-0 transition-transform duration-500">
+                  <img src="https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?q=80&w=600&auto=format&fit=crop" alt="Trança sendo feita" className="w-full h-full object-cover" />
+                </div>
+                <div className="aspect-square rounded-3xl overflow-hidden shadow-soft">
+                  <img src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=600&auto=format&fit=crop" alt="Cliente feliz" className="w-full h-full object-cover" />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="aspect-square rounded-3xl overflow-hidden shadow-soft">
+                  <img src="https://images.unsplash.com/photo-1620331311520-246422fd82f9?q=80&w=600&auto=format&fit=crop" alt="Detalhe de penteado" className="w-full h-full object-cover" />
+                </div>
+                <div className="aspect-[3/4] rounded-3xl overflow-hidden shadow-soft transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                  <img src="https://images.unsplash.com/photo-1560869713-7d0a29430803?q=80&w=600&auto=format&fit=crop" alt="Trancista trabalhando" className="w-full h-full object-cover" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
