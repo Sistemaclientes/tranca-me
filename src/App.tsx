@@ -1,21 +1,33 @@
+import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import AuthChoice from "./pages/AuthChoice";
-import Buscar from "./pages/Buscar";
-import BraiderProfile from "./pages/BraiderProfile";
-import BraiderProfileEdit from "./pages/BraiderProfileEdit";
-import MeuPerfil from "./pages/MeuPerfil";
-import Assinatura from "./pages/Assinatura";
-import Checkout from "./pages/Checkout";
-import AdminSuggestions from "./pages/AdminSuggestions";
-import Favoritos from "./pages/Favoritos";
-import NotFound from "./pages/NotFound";
-import BraiderNotFound from "./pages/BraiderNotFound";
+
+// Lazy load pages for optimization
+const Index = lazy(() => import("./pages/Index"));
+const Auth = lazy(() => import("./pages/Auth"));
+const AuthChoice = lazy(() => import("./pages/AuthChoice"));
+const Buscar = lazy(() => import("./pages/Buscar"));
+const BraiderProfile = lazy(() => import("./pages/BraiderProfile"));
+const BraiderProfileEdit = lazy(() => import("./pages/BraiderProfileEdit"));
+const MeuPerfil = lazy(() => import("./pages/MeuPerfil"));
+const Assinatura = lazy(() => import("./pages/Assinatura"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const AdminSuggestions = lazy(() => import("./pages/AdminSuggestions"));
+const Favoritos = lazy(() => import("./pages/Favoritos"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const BraiderNotFound = lazy(() => import("./pages/BraiderNotFound"));
+
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gradient-warm">
+    <div className="animate-pulse flex flex-col items-center gap-4">
+      <div className="h-12 w-12 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+      <p className="text-muted-foreground font-medium">Carregando...</p>
+    </div>
+  </div>
+);
 
 const queryClient = new QueryClient();
 
