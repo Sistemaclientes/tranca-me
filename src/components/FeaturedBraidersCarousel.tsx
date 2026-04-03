@@ -51,20 +51,22 @@ const FeaturedBraidersCarousel = () => {
         AutoScroll({
           speed: 1,
           stopOnInteraction: false,
-          stopOnMouseEnter: false,
+          stopOnMouseEnter: true,
         }),
       ]}
-      className="w-full max-w-5xl mx-auto"
+      className="w-full max-w-7xl mx-auto"
     >
-      <CarouselContent>
+      <CarouselContent className="-ml-4">
         {braiders.map((braider) => (
-          <CarouselItem key={braider.id} className="md:basis-1/2 lg:basis-1/4">
+          <CarouselItem key={braider.id} className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 pb-4">
             <BraiderCard braider={braider} />
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="hidden md:flex" />
-      <CarouselNext className="hidden md:flex" />
+      <div className="flex justify-center gap-4 mt-12">
+        <CarouselPrevious className="relative inset-0 h-12 w-12 border-2 text-primary hover:bg-primary hover:text-white transition-all shadow-sm" />
+        <CarouselNext className="relative inset-0 h-12 w-12 border-2 text-primary hover:bg-primary hover:text-white transition-all shadow-sm" />
+      </div>
     </Carousel>
   );
 };
