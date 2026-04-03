@@ -196,8 +196,10 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-semibold">{review.client_name}</span>
-                    {review.is_verified && (
+                    {review.is_verified ? (
                       <span className="text-xs text-primary font-medium">Verificado</span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground font-medium">Pendente de verificação</span>
                     )}
                   </div>
                   <StarRating rating={review.rating} showNumber={false} size="sm" />
