@@ -25,9 +25,10 @@ interface ReviewsSectionProps {
 }
 
 const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
-  const { reviews, averageRating, totalReviews, loading, submitReview } = useReviews(braiderId);
+  const { reviews, averageRating, totalReviews, loading, submitReview, loadReviews } = useReviews(braiderId);
   const [isLogged, setIsLogged] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [clientName, setClientName] = useState("");
