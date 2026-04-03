@@ -92,6 +92,7 @@ const BraiderProfileEdit = () => {
           neighborhood: profile.neighborhood || "",
           services: profile.services?.join(", ") || "",
           pricing: profile.pricing || "",
+          braidTypes: profile.braid_types || [],
         });
         
         if (profile.image_url) {
