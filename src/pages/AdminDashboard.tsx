@@ -240,7 +240,7 @@ const AdminDashboard = () => {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <Badge variant={braider.status === "active" ? "success" : "destructive"}>
+                            <Badge variant={braider.status === "active" ? "default" : "destructive"} className={braider.status === "active" ? "bg-green-500" : ""}>
                               {braider.status === "active" ? "Ativo" : "Inativo"}
                             </Badge>
                           </TableCell>
