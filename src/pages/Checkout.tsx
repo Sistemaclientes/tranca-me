@@ -314,7 +314,11 @@ const Checkout = () => {
                     className="w-full"
                     size="lg"
                   >
-                    {loading ? "Gerando QR Code..." : "Gerar QR Code PIX"}
+                    {loading 
+                      ? "Processando..." 
+                      : paymentMethod === "pix" 
+                        ? "Gerar QR Code PIX" 
+                        : "Pagar com Cartão"}
                   </Button>
                 </CardContent>
               </Card>
