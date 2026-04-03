@@ -27,9 +27,9 @@ const Hero = () => {
           </div>
           
           <h1 className="font-display text-4xl lg:text-5xl font-bold leading-tight">
-            Sua beleza, <br />
+            Conectando <br />
             <span className="bg-gradient-hero bg-clip-text text-transparent">
-              nossa conexão.
+              Trancistas e Clientes
             </span>
           </h1>
           

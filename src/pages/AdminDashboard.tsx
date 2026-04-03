@@ -389,6 +389,8 @@ const AdminDashboard = () => {
                 </p>
               </Card>
             </TabsContent>
+              </div>
+            </div>
           </Tabs>
         </div>
       </section>
