@@ -236,6 +236,7 @@ const BraiderProfileEdit = () => {
         city: formData.city,
         neighborhood: formData.neighborhood,
         services: servicesArray,
+        braid_types: formData.braidTypes,
         pricing: formData.pricing,
         image_url: imageUrl,
         gallery_urls: galleryUrls,
