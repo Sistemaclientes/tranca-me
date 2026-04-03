@@ -98,6 +98,13 @@ const FeaturedBraidersCarousel = () => {
         align: "start",
         loop: true,
       }}
+      plugins={[
+        AutoScroll({
+          speed: 1.5,
+          stopOnInteraction: false,
+          stopOnMouseEnter: true,
+        }),
+      ]}
       className="w-full max-w-5xl mx-auto"
     >
       <CarouselContent>
