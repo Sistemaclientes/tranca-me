@@ -6,6 +6,7 @@ import { MapPin } from "lucide-react";
 import StarRating from "@/components/StarRating";
 import FavoriteButton from "@/components/FavoriteButton";
 import { useReviews } from "@/hooks/useReviews";
+import { getOptimizedImageUrl } from "@/lib/image-utils";
 
 interface BraiderCardProps {
   braider: any;

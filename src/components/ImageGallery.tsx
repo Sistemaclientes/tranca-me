@@ -10,6 +10,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import AutoScroll from "embla-carousel-auto-scroll";
+import { getOptimizedImageUrl } from "@/lib/image-utils";
 
 interface ImageGalleryProps {
   images: string[];
