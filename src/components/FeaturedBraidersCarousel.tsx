@@ -56,11 +56,11 @@ const FeaturedBraidersCarousel = () => {
       ]}
       className="w-full max-w-7xl mx-auto"
     >
-      <CarouselContent className="-ml-2 md:-ml-4">
+      <CarouselContent className="-ml-1 md:-ml-2">
         {braiders.map((braider) => (
           <CarouselItem 
             key={braider.id} 
-            className="pl-2 md:pl-4 basis-[85%] sm:basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 pb-12"
+            className="pl-1 md:pl-2 basis-[45%] sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pb-12"
           >
             <div className="h-full px-1">
               <BraiderCard braider={braider} />
