@@ -204,45 +204,68 @@ const Checkout = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-card border-none shadow-soft">
-                <CardHeader>
-                  <CardTitle className="font-display text-2xl">Dados para Pagamento</CardTitle>
-                  <CardDescription>
-                    Preencha seus dados para gerar o QR Code PIX
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Nome Completo *</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Seu nome completo"
-                      required
-                    />
+            <Card className="bg-gradient-card border-none shadow-soft">
+              <CardHeader>
+                <CardTitle className="font-display text-2xl">Pagamento</CardTitle>
+                <CardDescription>
+                  Escolha como deseja pagar sua assinatura
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <Tabs value={paymentMethod} onValueChange={(v) => setPaymentMethod(v as "pix" | "credit_card")}>
+                  <TabsList className="grid w-full grid-cols-2 mb-6">
+                    <TabsTrigger value="pix" className="gap-2">
+                      <QrCode className="h-4 w-4" /> PIX
+                    </TabsTrigger>
+                    <TabsTrigger value="credit_card" className="gap-2">
+                      <CreditCard className="h-4 w-4" /> Cartão
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Nome Completo *</Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="Seu nome completo"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">E-mail *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="seu@email.com"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="cpf">CPF *</Label>
+                      <Input
+                        id="cpf"
+                        value={formData.cpf}
+                        onChange={(e) => setFormData({ ...formData, cpf: formatCPF(e.target.value) })}
+                        placeholder="000.000.000-00"
+                        required
+                      />
+                    </div>
+
+                    <TabsContent value="credit_card">
+                      <div className="p-4 bg-muted/50 rounded-lg border border-dashed border-primary/50 text-center space-y-2">
+                        <CreditCard className="h-8 w-8 mx-auto text-primary opacity-50" />
+                        <p className="text-sm font-medium">Pagamento via Cartão de Crédito</p>
+                        <p className="text-xs text-muted-foreground">
+                          Você será redirecionado para o ambiente seguro do Mercado Pago para finalizar com seu cartão.
+                        </p>
+                      </div>
+                    </TabsContent>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">E-mail *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="seu@email.com"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cpf">CPF *</Label>
-                    <Input
-                      id="cpf"
-                      value={formData.cpf}
-                      onChange={(e) => setFormData({ ...formData, cpf: formatCPF(e.target.value) })}
-                      placeholder="000.000.000-00"
-                      required
-                    />
-                  </div>
+                </Tabs>
 
                   <div className="space-y-2">
                     <Label htmlFor="coupon">Cupom de Desconto (opcional)</Label>
