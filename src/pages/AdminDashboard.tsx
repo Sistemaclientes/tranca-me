@@ -190,22 +190,43 @@ const AdminDashboard = () => {
           </div>
 
           <Tabs defaultValue="trancistas" className="w-full">
-            <TabsList className="bg-white/50 backdrop-blur-sm p-1 mb-8 overflow-x-auto flex-nowrap h-auto">
-              <TabsTrigger value="trancistas">Profissionais</TabsTrigger>
-              <TabsTrigger value="reviews">Avaliações</TabsTrigger>
-              <TabsTrigger value="reports" className="relative">
-                Denúncias
-                {reports.filter(r => r.status === 'pending').length > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive"></span>
-                  </span>
-                )}
-              </TabsTrigger>
-              <TabsTrigger value="gallery">Galeria</TabsTrigger>
-              <TabsTrigger value="sugestoes">Sugestões</TabsTrigger>
-              <TabsTrigger value="subscriptions">Financeiro</TabsTrigger>
-            </TabsList>
+            <div className="flex flex-col md:flex-row gap-8">
+              <aside className="w-full md:w-64 flex-shrink-0">
+                <TabsList className="flex flex-col h-auto bg-white/50 backdrop-blur-sm p-2 gap-1 items-stretch border-none shadow-soft">
+                  <TabsTrigger value="trancistas" className="justify-start px-4 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
+                    <Users className="h-4 w-4 mr-2" />
+                    Profissionais
+                  </TabsTrigger>
+                  <TabsTrigger value="reviews" className="justify-start px-4 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
+                    <Star className="h-4 w-4 mr-2" />
+                    Avaliações
+                  </TabsTrigger>
+                  <TabsTrigger value="reports" className="justify-start px-4 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all relative">
+                    <ShieldAlert className="h-4 w-4 mr-2" />
+                    Denúncias
+                    {reports.filter(r => r.status === 'pending').length > 0 && (
+                      <span className="absolute top-1/2 -translate-y-1/2 right-3 flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive"></span>
+                      </span>
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="gallery" className="justify-start px-4 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
+                    <ImageIcon className="h-4 w-4 mr-2" />
+                    Galeria
+                  </TabsTrigger>
+                  <TabsTrigger value="sugestoes" className="justify-start px-4 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    Sugestões
+                  </TabsTrigger>
+                  <TabsTrigger value="subscriptions" className="justify-start px-4 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Financeiro
+                  </TabsTrigger>
+                </TabsList>
+              </aside>
+
+              <div className="flex-1">
 
             <TabsContent value="trancistas">
               <Card className="bg-white/80 backdrop-blur-sm border-none shadow-soft overflow-hidden">
