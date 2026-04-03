@@ -57,6 +57,19 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
 
       if (session) {
         await checkOwner(session.user.id);
+        
+        // Fetch user profile to get their name
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("display_name")
+          .eq("id", session.user.id)
+          .maybeSingle();
+        
+        if (profile?.display_name) {
+          setClientName(profile.display_name);
+        } else if (session.user.user_metadata?.full_name) {
+          setClientName(session.user.user_metadata.full_name);
+        }
       }
     } catch (error) {
       console.error("Error checking user:", error);
