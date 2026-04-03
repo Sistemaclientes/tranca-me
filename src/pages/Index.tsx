@@ -71,17 +71,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Premium Section - Re-adding this as it was removed previously */}
-        <section className="py-16 px-4 bg-white/50">
-          <div className="container mx-auto">
-             <div className="text-center mb-12 space-y-2">
-                <h2 className="font-display text-3xl font-bold text-primary">Profissionais Premium</h2>
-                <p className="text-muted-foreground">Encontre as melhores trancistas com planos exclusivos</p>
-             </div>
-             <PremiumBraiders />
-          </div>
-        </section>
-
         {/* Map Section */}
         <CoverageAreas />
 

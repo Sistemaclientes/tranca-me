@@ -63,10 +63,6 @@ const FeaturedBraidersCarousel = () => {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <div className="flex justify-center gap-4 mt-12">
-        <CarouselPrevious className="relative inset-0 h-12 w-12 border-2 text-primary hover:bg-primary hover:text-white transition-all shadow-sm" />
-        <CarouselNext className="relative inset-0 h-12 w-12 border-2 text-primary hover:bg-primary hover:text-white transition-all shadow-sm" />
-      </div>
     </Carousel>
   );
 };
