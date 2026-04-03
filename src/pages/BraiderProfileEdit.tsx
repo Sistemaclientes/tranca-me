@@ -36,6 +36,7 @@ const BraiderProfileEdit = () => {
     neighborhood: "",
     services: "",
     pricing: "",
+    braidTypes: [] as string[],
   });
   
   const [uploading, setUploading] = useState(false);
