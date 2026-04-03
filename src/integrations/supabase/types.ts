@@ -467,57 +467,45 @@ export type Database = {
       }
       subscriptions: {
         Row: {
-          amount: number | null
-          braider_id: string
-          created_at: string | null
+          created_at: string
           id: string
-          mercado_pago_id: string | null
-          payment_date: string | null
+          is_active: boolean
+          is_blocked: boolean
+          last_payment_date: string | null
+          next_payment_date: string | null
           plan_type: string
           status: string
-          updated_at: string | null
+          trial_ends_at: string | null
+          updated_at: string
           user_id: string
         }
         Insert: {
-          amount?: number | null
-          braider_id: string
-          created_at?: string | null
+          created_at?: string
           id?: string
-          mercado_pago_id?: string | null
-          payment_date?: string | null
-          plan_type: string
+          is_active?: boolean
+          is_blocked?: boolean
+          last_payment_date?: string | null
+          next_payment_date?: string | null
+          plan_type?: string
           status?: string
-          updated_at?: string | null
+          trial_ends_at?: string | null
+          updated_at?: string
           user_id: string
         }
         Update: {
-          amount?: number | null
-          braider_id?: string
-          created_at?: string | null
+          created_at?: string
           id?: string
-          mercado_pago_id?: string | null
-          payment_date?: string | null
+          is_active?: boolean
+          is_blocked?: boolean
+          last_payment_date?: string | null
+          next_payment_date?: string | null
           plan_type?: string
           status?: string
-          updated_at?: string | null
+          trial_ends_at?: string | null
+          updated_at?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "subscriptions_braider_id_fkey"
-            columns: ["braider_id"]
-            isOneToOne: false
-            referencedRelation: "active_braiders"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "subscriptions_braider_id_fkey"
-            columns: ["braider_id"]
-            isOneToOne: false
-            referencedRelation: "braider_profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       user_roles: {
         Row: {
@@ -548,6 +536,7 @@ export type Database = {
           city: string | null
           created_at: string | null
           description: string | null
+          display_priority: number | null
           email: string | null
           facebook: string | null
           gallery_urls: string[] | null
@@ -555,6 +544,7 @@ export type Database = {
           image_url: string | null
           instagram: string | null
           is_premium: boolean | null
+          leads_count: number | null
           mercado_pago_id: string | null
           name: string | null
           neighborhood: string | null
@@ -578,6 +568,7 @@ export type Database = {
           city?: string | null
           created_at?: string | null
           description?: string | null
+          display_priority?: never
           email?: string | null
           facebook?: string | null
           gallery_urls?: string[] | null
@@ -585,6 +576,7 @@ export type Database = {
           image_url?: string | null
           instagram?: string | null
           is_premium?: boolean | null
+          leads_count?: number | null
           mercado_pago_id?: string | null
           name?: string | null
           neighborhood?: string | null
@@ -608,6 +600,7 @@ export type Database = {
           city?: string | null
           created_at?: string | null
           description?: string | null
+          display_priority?: never
           email?: string | null
           facebook?: string | null
           gallery_urls?: string[] | null
@@ -615,6 +608,7 @@ export type Database = {
           image_url?: string | null
           instagram?: string | null
           is_premium?: boolean | null
+          leads_count?: number | null
           mercado_pago_id?: string | null
           name?: string | null
           neighborhood?: string | null
