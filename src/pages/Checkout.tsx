@@ -81,7 +81,7 @@ const Checkout = () => {
           description: "Redirecionando para seu perfil...",
         });
         setTimeout(() => {
-          navigate("/perfil/editar");
+          navigate("/perfil");
         }, 2000);
       }
     }, 3000);

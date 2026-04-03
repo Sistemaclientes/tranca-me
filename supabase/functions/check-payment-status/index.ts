@@ -85,17 +85,17 @@ serve(async (req) => {
       const email = paymentAttempt.email
       
       // Determine plan type based on amount
-      let planType = 'busca'
+      let planType = 'pro'
       let isPremium = false
       
-      if (amount === 29.99) {
-        planType = 'destaque'
+      if (amount >= 29.99) {
+        planType = 'premium'
         isPremium = true // Featured on homepage
-        console.log('Activating PLANO_DESTAQUE (Premium) for:', email)
-      } else if (amount === 9.99) {
-        planType = 'busca'
+        console.log('Activating PREMIUM (Destaque) for:', email)
+      } else if (amount >= 9.99) {
+        planType = 'pro'
         isPremium = false // Only in search
-        console.log('Activating PLANO_BUSCA for:', email)
+        console.log('Activating PRO (Busca) for:', email)
       }
 
       // Update braider profile to activate plan
