@@ -93,9 +93,11 @@ const Buscar = () => {
     const { data, error } = await supabase
       .from("braider_profiles")
       .select("*")
-      .order("is_premium", { ascending: false })
+      .order("plan_tier", { ascending: false }) // Premium > Pro > Free
+      .order("whatsapp_click_count", { ascending: false })
+      .order("view_count", { ascending: false })
       .order("professional_name");
-    
+
     if (error) {
       toast({
         title: "Erro ao carregar trancistas",
