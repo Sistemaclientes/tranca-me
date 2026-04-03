@@ -68,7 +68,7 @@ const Index = () => {
               </Link>
             </div>
             <div className="w-full mt-4 md:mt-8">
-              <FeaturedBraidersCarousel />
+              <PremiumBraiders />
             </div>
           </div>
         </section>
