@@ -112,9 +112,36 @@ const BraiderProfile = () => {
       
       <section className="pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-6xl">
+          {braider.status !== 'active' && braider.status !== 'trial' && (
+            <Card className="mb-8 border-none bg-destructive/10 text-destructive shadow-soft">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="p-2 bg-destructive/20 rounded-full">
+                    <Phone className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <p className="font-bold">
+                      {braider.status === 'blocked' ? 'Perfil Bloqueado' : 'Plano Expirado'}
+                    </p>
+                    <p className="text-sm opacity-90">
+                      {isOwner 
+                        ? 'Seu perfil está oculto. Regularize seu pagamento para voltar a aparecer.' 
+                        : 'Este perfil está temporariamente indisponível para novos agendamentos.'}
+                    </p>
+                  </div>
+                </div>
+                {isOwner && (
+                  <Button variant="destructive" onClick={() => navigate("/assinatura")}>
+                    Regularizar Agora
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           <Button 
             variant="ghost" 
-            onClick={() => navigate("/buscar")}
+...
             className="mb-6"
           >
             <ArrowLeft className="h-4 w-4" />
