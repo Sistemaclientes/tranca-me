@@ -80,4 +80,5 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
   );
 };
 
+BraiderCard.displayName = "BraiderCard";
 export default BraiderCard;
