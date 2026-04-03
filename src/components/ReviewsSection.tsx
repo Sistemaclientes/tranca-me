@@ -38,17 +38,24 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
   }, [braiderId]);
 
   const checkUser = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    setIsLogged(!!session);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsLogged(!!session);
 
-    if (session) {
-      const { data: profile } = await supabase
-        .from("braider_profiles")
-        .select("user_id")
-        .eq("id", braiderId)
-        .maybeSingle();
+      if (session) {
+        // Use a simpler query or type assertion if needed, but maybeSingle should be fine
+        const { data: profile } = await supabase
+          .from("braider_profiles")
+          .select("user_id")
+          .eq("id", braiderId)
+          .single();
 
-      setIsOwner(session.user.id === profile?.user_id);
+        if (profile) {
+          setIsOwner(session.user.id === profile.user_id);
+        }
+      }
+    } catch (error) {
+      console.error("Error checking user:", error);
     }
   };
 
