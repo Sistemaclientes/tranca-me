@@ -33,26 +33,27 @@ const Checkout = () => {
 
   const plans = {
     pro: {
-      name: "Plano Pro",
-      price: 19.99,
+      name: "Plano Profissional",
+      price: 9.99,
       features: [
-        "7 dias de teste grátis",
-        "Perfil completo com foto",
-        "Galeria ilimitada",
+        "Aparecer nos resultados de busca",
+        "Perfil completo sem limites",
+        "Galeria ilimitada de fotos",
         "Contato direto via WhatsApp",
-        "Destaque nos resultados",
-        "Suporte prioritário",
+        "Badge Verificado",
+        "Suporte por WhatsApp",
       ],
     },
     premium: {
       name: "Plano Premium",
-      price: 49.90,
+      price: 29.99,
       features: [
-        "Todos os benefícios do Pro",
-        "Destaque máximo na home",
-        "Badge Premium exclusiva",
+        "Destaque máximo na página inicial",
+        "Topo dos resultados de busca",
+        "Destaque visual exclusivo (Glow)",
+        "Slide fluido no carrossel principal",
+        "Relatório detalhado de leads",
         "Prioridade total na região",
-        "Aparecerá em campanhas",
       ],
     },
   };
