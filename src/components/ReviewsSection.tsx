@@ -125,10 +125,20 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
           </div>
         </div>
 
-        {isLogged && !isOwner && (
+        {!isOwner && (
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button variant="hero" className="shrink-0">
+              <Button 
+                variant="hero" 
+                className="shrink-0"
+                onClick={(e) => {
+                  if (!isLogged) {
+                    e.preventDefault();
+                    toast.info("Faça login para deixar sua avaliação!");
+                    navigate("/auth");
+                  }
+                }}
+              >
                 <MessageSquarePlus className="h-4 w-4 mr-2" />
                 Avaliar Trancista
               </Button>
