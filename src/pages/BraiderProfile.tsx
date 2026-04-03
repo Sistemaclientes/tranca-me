@@ -47,6 +47,10 @@ const BraiderProfile = () => {
   const [braider, setBraider] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false);
+  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportDescription, setReportDescription] = useState("");
+  const [submittingReport, setSubmittingReport] = useState(false);
   const { registerLead } = useLeads();
 
   useEffect(() => {
