@@ -10,6 +10,8 @@ import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook, Edit, Heart 
 import ImageGallery from "@/components/ImageGallery";
 import FavoriteButton from "@/components/FavoriteButton";
 import ReviewsSection from "@/components/ReviewsSection";
+import { useLeads } from "@/hooks/useLeads";
+import { toast } from "sonner";
 
 const formatPhoneNumber = (phone: string): string => {
   const digits = phone.replace(/[^0-9]/g, '');
