@@ -14,7 +14,9 @@ interface BraiderCardProps {
 
 const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) => {
   const navigate = useNavigate();
-  const { averageRating, totalReviews } = useReviews(braider.id);
+  // Use the pre-calculated ratings from the braider object
+  const averageRating = braider.average_rating || 0;
+  const totalReviews = braider.total_reviews || 0;
 
   return (
     <Card 

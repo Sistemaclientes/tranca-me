@@ -331,6 +331,52 @@ const MeuPerfil = () => {
                 </CardContent>
               </Card>
 
+              {/* Reviews Received */}
+              <Card className="bg-white border-none shadow-soft overflow-hidden">
+                <CardHeader className="bg-secondary/5 border-b border-secondary/10">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <CardTitle className="font-display text-2xl text-secondary flex items-center gap-2">
+                        <Star className="h-6 w-6 text-amber-500" />
+                        Avaliações Recebidas
+                      </CardTitle>
+                      <CardDescription>O que suas clientes estão dizendo sobre seu trabalho</CardDescription>
+                    </div>
+                    <Badge variant="outline" className="text-xs">
+                      {reviews.length} Avaliações
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                  {reviews.length > 0 ? (
+                    <div className="divide-y divide-border">
+                      {reviews.map((review) => (
+                        <div key={review.id} className="p-6 space-y-2 hover:bg-muted/30 transition-colors">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="font-bold">{review.client_name}</p>
+                              <StarRating rating={review.rating} showNumber={false} size="sm" />
+                            </div>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(review.created_at).toLocaleDateString('pt-BR')}
+                            </span>
+                          </div>
+                          {review.comment && (
+                            <p className="text-sm text-foreground italic">"{review.comment}"</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="p-12 text-center space-y-4">
+                      <Star className="h-12 w-12 text-muted-foreground/30 mx-auto" />
+                      <p className="text-muted-foreground">Você ainda não recebeu avaliações.</p>
+                      <p className="text-sm text-muted-foreground">As avaliações aparecerão aqui assim que as clientes começarem a comentar.</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
               {/* Conversion Trigger for Leads */}
               {leads.length > 0 && profile?.plan_tier === 'free' && (
                 <div className="bg-gradient-hero p-6 rounded-2xl text-white shadow-lg animate-bounce-subtle">
