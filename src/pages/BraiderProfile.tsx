@@ -289,17 +289,29 @@ const BraiderProfile = () => {
 
                   <h2 className="font-display text-xl font-semibold mb-4">Serviços</h2>
                   <div className="flex flex-wrap gap-2">
-                    {braider.services && braider.services.length > 0 ? (
+                    {braider.braid_types && braider.braid_types.length > 0 && (
+                      braider.braid_types.map((type: string, index: number) => (
+                        <Badge 
+                          key={`braid-${index}`} 
+                          variant="hero"
+                          className="px-3 py-1"
+                        >
+                          {type}
+                        </Badge>
+                      ))
+                    )}
+                    {braider.services && braider.services.length > 0 && (
                       braider.services.map((service: string, index: number) => (
                         <Badge 
-                          key={index} 
+                          key={`service-${index}`} 
                           variant="secondary"
                           className="px-3 py-1"
                         >
                           {service}
                         </Badge>
                       ))
-                    ) : (
+                    )}
+                    {(!braider.braid_types || braider.braid_types.length === 0) && (!braider.services || braider.services.length === 0) && (
                       <p className="text-muted-foreground">Nenhum serviço cadastrado</p>
                     )}
                   </div>
