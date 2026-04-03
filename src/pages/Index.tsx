@@ -43,32 +43,34 @@ const Index = () => {
         </section>
 
         {/* Featured Braiders Section */}
-        <section id="destaques" className="py-16 px-4 bg-muted/30 relative overflow-hidden">
+        <section id="destaques" className="py-20 px-4 bg-muted/30 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl -z-10"></div>
           
           <div className="container mx-auto">
-            <div className="flex flex-col items-center text-center mb-12 gap-6">
-              <div className="space-y-3">
+            <div className="flex flex-col items-center text-center mb-16 gap-8">
+              <div className="space-y-4 max-w-3xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-bold uppercase tracking-wider mx-auto">
                   Seleção Premium
                 </div>
-                <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-primary leading-tight">
+                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-primary leading-tight">
                   Trancistas em Destaque
                 </h2>
-                <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
+                <p className="text-muted-foreground text-lg md:text-xl">
                   Conheça as profissionais mais recomendadas e bem avaliadas da nossa plataforma.
                 </p>
               </div>
-            </div>
+              
               <Link to="/buscar">
-                <Button variant="outline" size="sm" className="group border-2 font-bold px-6 shadow-sm hover:shadow-md transition-all">
-                  Ver Todas
-                  <Search className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                <Button variant="outline" size="lg" className="group border-2 font-bold px-8 shadow-sm hover:shadow-md transition-all rounded-full">
+                  Ver Todas as Profissionais
+                  <Search className="ml-2 h-5 w-5 group-hover:scale-110 transition-transform text-primary" />
                 </Button>
               </Link>
             </div>
             
-            <FeaturedBraidersCarousel />
+            <div className="w-full">
+              <FeaturedBraidersCarousel />
+            </div>
           </div>
         </section>
 
