@@ -43,6 +43,7 @@ const App = () => (
           v7_relativeSplatPath: true,
         }}
       >
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
           <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth /></Suspense>} />
