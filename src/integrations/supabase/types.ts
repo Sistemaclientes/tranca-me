@@ -417,6 +417,54 @@ export type Database = {
         }
         Relationships: []
       }
+      reports: {
+        Row: {
+          braider_id: string
+          created_at: string
+          description: string | null
+          id: string
+          reason: string
+          reporter_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          braider_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          reason: string
+          reporter_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          braider_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          reason?: string
+          reporter_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_braider_id_fkey"
+            columns: ["braider_id"]
+            isOneToOne: false
+            referencedRelation: "active_braiders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_braider_id_fkey"
+            columns: ["braider_id"]
+            isOneToOne: false
+            referencedRelation: "braider_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reviews: {
         Row: {
           braider_id: string
