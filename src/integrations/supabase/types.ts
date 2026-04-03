@@ -499,6 +499,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_view_count: { Args: { profile_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "braider" | "client"
