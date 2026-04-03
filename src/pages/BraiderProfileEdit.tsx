@@ -218,7 +218,7 @@ const BraiderProfileEdit = () => {
 
       const servicesArray = formData.services.split(",").map(s => s.trim()).filter(Boolean);
 
-      const profileData = {
+      const profileData: any = {
         user_id: userId,
         name: formData.name,
         professional_name: formData.professionalName,
@@ -235,6 +235,17 @@ const BraiderProfileEdit = () => {
         gallery_urls: galleryUrls,
         video_url: videoUrl,
       };
+
+      // Load current profile to check if status exists
+      const { data: currentProfile } = await supabase
+        .from("braider_profiles")
+        .select("status")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (!currentProfile?.status) {
+        profileData.status = 'trial';
+      }
 
       console.log("Dados do perfil a serem salvos:", profileData);
 
