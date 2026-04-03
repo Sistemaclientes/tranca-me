@@ -123,9 +123,9 @@ serve(async (req) => {
           const amount = paymentAttempt.amount?.toFixed(2) || '0.00'
           
           const emailResponse = await resend.emails.send({
-            from: 'Trancistas <onboarding@resend.dev>',
+            from: 'Trancei <onboarding@resend.dev>',
             to: [paymentAttempt.email],
-            subject: '✅ Pagamento Aprovado - Bem-vinda ao Trancistas!',
+            subject: '✅ Pagamento Aprovado - Bem-vinda ao Trancei!',
             html: `
               <!DOCTYPE html>
               <html>
@@ -133,16 +133,16 @@ serve(async (req) => {
                 <style>
                   body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
                   .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-                  .header { background: linear-gradient(135deg, #8B5CF6, #D946EF); padding: 40px 20px; text-align: center; }
+                  .header { background: linear-gradient(135deg, #E29E42, #7C3AED); padding: 40px 20px; text-align: center; }
                   .header h1 { color: white; margin: 0; font-size: 28px; }
                   .content { padding: 40px 30px; }
                   .success-icon { font-size: 48px; text-align: center; margin-bottom: 20px; }
-                  .info-box { background: #f8f4ff; border-radius: 12px; padding: 20px; margin: 20px 0; }
+                  .info-box { background: #fff8f0; border-radius: 12px; padding: 20px; margin: 20px 0; }
                   .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e5e5e5; }
                   .info-row:last-child { border-bottom: none; }
                   .label { color: #666; }
                   .value { font-weight: bold; color: #333; }
-                  .cta-button { display: block; width: 100%; background: linear-gradient(135deg, #8B5CF6, #D946EF); color: white; text-align: center; padding: 16px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 30px; }
+                  .cta-button { display: block; width: 100%; background: linear-gradient(135deg, #E29E42, #7C3AED); color: white; text-align: center; padding: 16px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 30px; }
                   .footer { text-align: center; padding: 20px; color: #999; font-size: 12px; }
                 </style>
               </head>
@@ -154,7 +154,7 @@ serve(async (req) => {
                   <div class="content">
                     <div class="success-icon">✅</div>
                     <p>Olá <strong>${paymentAttempt.user_name}</strong>,</p>
-                    <p>Seu pagamento foi aprovado com sucesso! Agora você faz parte da comunidade de trancistas.</p>
+                    <p>Seu pagamento foi aprovado com sucesso! Agora você faz parte da comunidade Trancei.</p>
                     
                     <div class="info-box">
                       <div class="info-row">
@@ -173,12 +173,12 @@ serve(async (req) => {
                     
                     <p>Agora você pode criar seu perfil e começar a receber clientes!</p>
                     
-                    <a href="https://trancistas.lovable.app/perfil/editar" class="cta-button">
+                    <a href="https://tranca-me.lovable.app/perfil" class="cta-button">
                       Criar meu perfil
                     </a>
                   </div>
                   <div class="footer">
-                    <p>Este email foi enviado automaticamente pelo sistema Trancistas.</p>
+                    <p>Este email foi enviado automaticamente pelo sistema Trancei.</p>
                     <p>Em caso de dúvidas, entre em contato conosco.</p>
                   </div>
                 </div>

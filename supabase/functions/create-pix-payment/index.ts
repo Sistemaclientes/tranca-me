@@ -35,7 +35,7 @@ serve(async (req) => {
     }
 
     // Determine plan type based on amount
-    const determinedPlanType = amount === 29.99 ? 'destaque' : amount === 9.99 ? 'busca' : planType || 'basic'
+    const determinedPlanType = amount >= 29.99 ? 'premium' : amount >= 9.99 ? 'pro' : planType || 'basic'
 
     console.log('Creating payment with Mercado Pago...')
 
