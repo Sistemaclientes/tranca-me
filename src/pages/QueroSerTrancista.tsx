@@ -35,7 +35,7 @@ const QueroSerTrancista = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-scale-in delay-200">
             <Link to="/auth?role=braider">
               <Button size="hero" className="text-lg px-8 py-6">
-                Criar meu perfil grátis
+                Criar meu perfil
               </Button>
             </Link>
           </div>
