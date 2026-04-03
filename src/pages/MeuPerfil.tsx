@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLeads } from "@/hooks/useLeads";
 import { 
   User, 
   Mail, 
@@ -19,10 +20,16 @@ import {
   Crown,
   Calendar,
   Heart,
-  MessageSquare
+  MessageSquare,
+  TrendingUp,
+  Share2,
+  Sparkles,
+  Zap,
+  Users
 } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import StarRating from "@/components/StarRating";
+import { toast as sonnerToast } from "sonner";
 
 interface BraiderProfile {
   id: string;
@@ -40,41 +47,31 @@ interface BraiderProfile {
   image_url: string | null;
   gallery_urls: string[] | null;
   is_premium: boolean;
+  plan_tier: 'free' | 'pro' | 'premium';
+  view_count: number;
+  whatsapp_click_count: number;
   premium_since: string | null;
   created_at: string;
 }
 
-interface Review {
-  id: string;
-  rating: number;
-  comment: string | null;
-  client_name: string;
-  created_at: string;
-  is_verified: boolean;
-}
-
-interface Favorite {
+interface Lead {
   id: string;
   braider_id: string;
-  braider_profiles: {
-    id: string;
-    name: string;
-    professional_name: string | null;
-    image_url: string | null;
-    city: string;
-    neighborhood: string;
-  };
+  client_id: string | null;
+  created_at: string;
 }
 
 const MeuPerfil = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { getBraiderLeads } = useLeads();
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string>("");
   const [profile, setProfile] = useState<BraiderProfile | null>(null);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [favorites, setFavorites] = useState<Favorite[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [favorites, setFavorites] = useState<any[]>([]);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [leads, setLeads] = useState<Lead[]>([]);
 
   useEffect(() => {
     loadUserData();
@@ -90,7 +87,6 @@ const MeuPerfil = () => {
 
     setUserEmail(session.user.email || "");
 
-    // Check user role
     const { data: roleData } = await supabase
       .from("user_roles")
       .select("role")
@@ -101,7 +97,6 @@ const MeuPerfil = () => {
       setUserRole(roleData.role);
     }
 
-    // Load braider profile if exists
     const { data: profileData } = await supabase
       .from("braider_profiles")
       .select("*")
@@ -109,9 +104,8 @@ const MeuPerfil = () => {
       .maybeSingle();
 
     if (profileData) {
-      setProfile(profileData);
+      setProfile(profileData as BraiderProfile);
 
-      // Load reviews for this braider
       const { data: reviewsData } = await supabase
         .from("reviews")
         .select("*")
@@ -120,9 +114,12 @@ const MeuPerfil = () => {
         .limit(5);
 
       setReviews(reviewsData || []);
+
+      // Load leads
+      const braiderLeads = await getBraiderLeads(profileData.id);
+      setLeads(braiderLeads || []);
     }
 
-    // Load favorites
     const { data: favoritesData } = await supabase
       .from("favorites")
       .select(`
@@ -140,23 +137,28 @@ const MeuPerfil = () => {
       .eq("user_id", session.user.id);
 
     setFavorites(favoritesData as any || []);
-
     setLoading(false);
   };
 
-  const calculateAverageRating = () => {
-    if (reviews.length === 0) return 0;
-    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-    return (sum / reviews.length).toFixed(1);
+  const shareProfile = () => {
+    if (!profile) return;
+    const url = `${window.location.origin}/trancista/${profile.id}`;
+    if (navigator.share) {
+      navigator.share({
+        title: profile.professional_name || profile.name,
+        text: 'Confira meu perfil na Trancei!',
+        url: url,
+      });
+    } else {
+      navigator.clipboard.writeText(url);
+      sonnerToast.success("Link do perfil copiado!");
+    }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-warm">
-        <Navbar />
-        <div className="container mx-auto px-4 pt-24 text-center">
-          <p className="text-muted-foreground">Carregando...</p>
-        </div>
+      <div className="min-h-screen bg-gradient-warm flex items-center justify-center">
+        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     );
   }
@@ -167,313 +169,234 @@ const MeuPerfil = () => {
       
       <section className="pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-6xl">
-          <div className="mb-8">
-            <h1 className="font-display text-4xl font-bold text-foreground mb-2">
-              Meu Perfil
-            </h1>
-            <p className="text-muted-foreground">
-              Gerencie suas informações e acompanhe sua atividade
-            </p>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+              <h1 className="font-display text-4xl font-bold text-foreground mb-2">
+                Painel da Trancista
+              </h1>
+              <p className="text-muted-foreground">
+                Gerencie seus resultados e atraia mais clientes
+              </p>
+            </div>
+            {profile && (
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={shareProfile}>
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Compartilhar Perfil
+                </Button>
+                {profile.plan_tier !== 'premium' && (
+                  <Link to="/assinatura">
+                    <Button variant="hero">
+                      <Zap className="h-4 w-4 mr-2" />
+                      Quero Mais Clientes
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Sidebar - User Info */}
+            {/* Sidebar - Quick Stats */}
             <div className="lg:col-span-1 space-y-6">
-              {/* User Card */}
               <Card className="bg-gradient-card border-none shadow-soft">
-                <CardContent className="pt-6">
-                  <div className="text-center">
+                <CardContent className="pt-6 text-center space-y-4">
+                  <div className="relative inline-block">
                     {profile?.image_url ? (
                       <img 
                         src={profile.image_url} 
                         alt={profile.name}
-                        className="w-32 h-32 rounded-full object-cover mx-auto mb-4 ring-4 ring-primary/20"
-                        loading="lazy"
+                        className="w-32 h-32 rounded-full object-cover ring-4 ring-primary/20"
                       />
                     ) : (
                       <div className="w-32 h-32 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
                         <User className="h-16 w-16 text-muted-foreground" />
                       </div>
                     )}
-                    
+                    {profile?.plan_tier === 'premium' && (
+                      <div className="absolute -bottom-1 -right-1 bg-gradient-hero text-white p-1.5 rounded-full shadow-lg">
+                        <Crown className="h-4 w-4" />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
                     <h2 className="font-display text-xl font-bold">
-                      {profile?.professional_name || profile?.name || userEmail.split("@")[0]}
+                      {profile?.professional_name || profile?.name}
                     </h2>
-                    
-                    <p className="text-sm text-muted-foreground flex items-center justify-center gap-2 mt-2">
-                      <Mail className="h-4 w-4" />
-                      {userEmail}
-                    </p>
-
-                    {profile && (
-                      <>
-                        <p className="text-sm text-muted-foreground flex items-center justify-center gap-2 mt-1">
-                          <MapPin className="h-4 w-4" />
-                          {profile.city}, {profile.neighborhood}
-                        </p>
-
-                        {profile.is_premium && (
-                          <Badge className="mt-3 bg-gradient-hero text-white">
-                            <Crown className="h-3 w-3 mr-1" />
-                            Premium
-                          </Badge>
-                        )}
-                      </>
-                    )}
+                    <Badge variant="secondary" className="mt-1">
+                      Plano {profile?.plan_tier || 'Grátis'}
+                    </Badge>
                   </div>
 
-                  <Separator className="my-6" />
-
-                  <div className="space-y-3">
-                    {profile ? (
-                      <>
-                        <Link to="/perfil">
-                          <Button variant="outline" className="w-full">
-                            <Edit className="h-4 w-4 mr-2" />
-                            Editar Perfil
-                          </Button>
-                        </Link>
-                        <Link to={`/trancista/${profile.id}`}>
-                          <Button variant="ghost" className="w-full">
-                            Ver Página Pública
-                          </Button>
-                        </Link>
-                      </>
-                    ) : (
-                      <Link to="/perfil">
-                        <Button variant="hero" className="w-full">
-                          Cadastrar como Trancista
-                        </Button>
-                      </Link>
-                    )}
+                  <div className="grid grid-cols-2 gap-4 pt-4">
+                    <div className="p-3 bg-white/50 rounded-xl">
+                      <p className="text-sm text-muted-foreground">Vistas</p>
+                      <p className="text-xl font-bold">{profile?.view_count || 0}</p>
+                    </div>
+                    <div className="p-3 bg-primary/10 rounded-xl">
+                      <p className="text-sm text-primary font-medium">Cliques</p>
+                      <p className="text-xl font-bold text-primary">{profile?.whatsapp_click_count || 0}</p>
+                    </div>
                   </div>
+
+                  <Link to="/perfil" className="block w-full">
+                    <Button variant="outline" className="w-full">
+                      <Edit className="h-4 w-4 mr-2" />
+                      Editar Perfil
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
 
-              {/* Stats Card */}
-              {profile && (
-                <Card className="bg-gradient-card border-none shadow-soft">
-                  <CardHeader>
-                    <CardTitle className="text-lg font-display">Estatísticas</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-3 bg-muted/50 rounded-lg">
-                        <div className="flex items-center justify-center gap-1 mb-1">
-                          <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                          <span className="font-bold text-lg">{calculateAverageRating()}</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground">Avaliação</p>
-                      </div>
-                      <div className="text-center p-3 bg-muted/50 rounded-lg">
-                        <div className="flex items-center justify-center gap-1 mb-1">
-                          <MessageSquare className="h-5 w-5 text-primary" />
-                          <span className="font-bold text-lg">{reviews.length}</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground">Avaliações</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+              {/* Tips for Instagram */}
+              <Card className="bg-gradient-hero text-white border-none shadow-soft overflow-hidden">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Instagram className="h-5 w-5" />
+                    Bora Postar?
+                  </CardTitle>
+                  <CardDescription className="text-white/80">Ideias para seu Instagram hoje</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="bg-white/10 p-3 rounded-lg text-sm border border-white/10">
+                    <p className="font-bold">✨ Transformação</p>
+                    <p className="text-white/80">Poste um Reel do "Antes e Depois" com uma música viral.</p>
+                  </div>
+                  <div className="bg-white/10 p-3 rounded-lg text-sm border border-white/10">
+                    <p className="font-bold">📸 Close nos Detalhes</p>
+                    <p className="text-white/80">Mostre o acabamento impecável das suas tranças nagô.</p>
+                  </div>
+                  <Button variant="outline" className="w-full bg-white text-primary hover:bg-white/90" onClick={shareProfile}>
+                    Postar link do meu perfil
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* Main Content */}
+            {/* Main Section - Leads and Reviews */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Profile Details */}
-              {profile && (
-                <>
-                  {/* Contact Info */}
-                  <Card className="bg-gradient-card border-none shadow-soft">
-                    <CardHeader>
-                      <CardTitle className="font-display text-primary">Informações de Contato</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div className="flex items-center gap-3">
-                          <Phone className="h-5 w-5 text-muted-foreground" />
-                          <div>
-                            <p className="text-sm text-muted-foreground">WhatsApp</p>
-                            <p className="font-medium">{profile.whatsapp}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <Mail className="h-5 w-5 text-muted-foreground" />
-                          <div>
-                            <p className="text-sm text-muted-foreground">Email</p>
-                            <p className="font-medium">{profile.email}</p>
-                          </div>
-                        </div>
-                        {profile.instagram && (
-                          <div className="flex items-center gap-3">
-                            <Instagram className="h-5 w-5 text-muted-foreground" />
-                            <div>
-                              <p className="text-sm text-muted-foreground">Instagram</p>
-                              <p className="font-medium">{profile.instagram}</p>
+              {/* Leads Received */}
+              <Card className="bg-white border-none shadow-soft overflow-hidden">
+                <CardHeader className="bg-primary/5 border-b border-primary/10">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <CardTitle className="font-display text-2xl text-primary flex items-center gap-2">
+                        <Users className="h-6 w-6" />
+                        Leads Recebidos
+                      </CardTitle>
+                      <CardDescription>Pessoas que demonstraram interesse no seu trabalho</CardDescription>
+                    </div>
+                    <Badge variant="hero" className="text-xs">
+                      {leads.length} Contatos
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                  {leads.length > 0 ? (
+                    <div className="divide-y divide-border">
+                      {leads.map((lead) => (
+                        <div key={lead.id} className="p-6 flex items-center justify-between hover:bg-muted/30 transition-colors">
+                          <div className="flex items-center gap-4">
+                            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                              <MessageSquare className="h-5 w-5 text-primary" />
                             </div>
-                          </div>
-                        )}
-                        {profile.facebook && (
-                          <div className="flex items-center gap-3">
-                            <Facebook className="h-5 w-5 text-muted-foreground" />
                             <div>
-                              <p className="text-sm text-muted-foreground">Facebook</p>
-                              <p className="font-medium">{profile.facebook}</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Services */}
-                  <Card className="bg-gradient-card border-none shadow-soft">
-                    <CardHeader>
-                      <CardTitle className="font-display text-primary">Serviços Oferecidos</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {profile.services && profile.services.length > 0 ? (
-                        <div className="flex flex-wrap gap-2">
-                          {profile.services.map((service, index) => (
-                            <Badge key={index} variant="secondary" className="text-sm">
-                              {service}
-                            </Badge>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-muted-foreground">Nenhum serviço cadastrado</p>
-                      )}
-                    </CardContent>
-                  </Card>
-
-                  {/* Gallery */}
-                  {profile.gallery_urls && profile.gallery_urls.length > 0 && (
-                    <Card className="bg-gradient-card border-none shadow-soft">
-                      <CardHeader>
-                        <CardTitle className="font-display text-primary">Galeria de Trabalhos</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <ImageGallery images={profile.gallery_urls} />
-                      </CardContent>
-                    </Card>
-                  )}
-
-                  {/* Recent Reviews */}
-                  <Card className="bg-gradient-card border-none shadow-soft">
-                    <CardHeader>
-                      <CardTitle className="font-display text-primary">Avaliações Recentes</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {reviews.length > 0 ? (
-                        <div className="space-y-4">
-                          {reviews.map((review) => (
-                            <div key={review.id} className="p-4 bg-muted/50 rounded-lg">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="font-medium">{review.client_name}</span>
-                                <StarRating rating={review.rating} size="sm" />
-                              </div>
-                              {review.comment && (
-                                <p className="text-sm text-muted-foreground">{review.comment}</p>
-                              )}
-                              <p className="text-xs text-muted-foreground mt-2">
-                                {new Date(review.created_at).toLocaleDateString("pt-BR")}
+                              <p className="font-bold">Cliente interessada em Tranças</p>
+                              <p className="text-sm text-muted-foreground">
+                                Clicou no seu WhatsApp em {new Date(lead.created_at).toLocaleDateString('pt-BR')} às {new Date(lead.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                               </p>
                             </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-muted-foreground">Nenhuma avaliação ainda</p>
-                      )}
-                    </CardContent>
-                  </Card>
-                </>
-              )}
-
-              {/* Favorites Section - for all users */}
-              <Card className="bg-gradient-card border-none shadow-soft">
-                <CardHeader>
-                  <CardTitle className="font-display text-primary flex items-center gap-2">
-                    <Heart className="h-5 w-5" />
-                    Trancistas Favoritas
-                  </CardTitle>
-                  <CardDescription>Trancistas que você salvou</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {favorites.length > 0 ? (
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      {favorites.map((fav) => (
-                        <Link 
-                          key={fav.id} 
-                          to={`/trancista/${fav.braider_profiles.id}`}
-                          className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
-                        >
-                          {fav.braider_profiles.image_url ? (
-                            <img 
-                              src={fav.braider_profiles.image_url} 
-                              alt={fav.braider_profiles.name}
-                              className="w-12 h-12 rounded-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                              <User className="h-6 w-6 text-primary" />
-                            </div>
-                          )}
-                          <div>
-                            <p className="font-medium">
-                              {fav.braider_profiles.professional_name || fav.braider_profiles.name}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {fav.braider_profiles.city}, {fav.braider_profiles.neighborhood}
-                            </p>
                           </div>
-                        </Link>
+                          {profile?.plan_tier === 'free' ? (
+                            <div className="text-right">
+                              <Badge variant="secondary" className="mb-2">Oculto</Badge>
+                              <p className="text-xs text-muted-foreground max-w-[150px]">Faça upgrade para ver mais detalhes do cliente.</p>
+                            </div>
+                          ) : (
+                            <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">Contato Ativo</Badge>
+                          )}
+                        </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-6">
-                      <Heart className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
-                      <p className="text-muted-foreground">Você ainda não tem favoritos</p>
-                      <Link to="/buscar">
-                        <Button variant="link" className="mt-2">
-                          Buscar trancistas
-                        </Button>
+                    <div className="p-12 text-center space-y-4">
+                      <TrendingUp className="h-12 w-12 text-muted-foreground/30 mx-auto" />
+                      <p className="text-muted-foreground">Você ainda não recebeu contatos. Complete seu perfil para atrair clientes!</p>
+                      <Link to="/perfil">
+                        <Button variant="outline">Adicionar mais fotos</Button>
                       </Link>
                     </div>
                   )}
                 </CardContent>
               </Card>
 
-              {/* Account Info */}
-              <Card className="bg-gradient-card border-none shadow-soft">
-                <CardHeader>
-                  <CardTitle className="font-display text-primary flex items-center gap-2">
-                    <Calendar className="h-5 w-5" />
-                    Informações da Conta
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Email</span>
-                      <span className="font-medium">{userEmail}</span>
+              {/* Conversion Trigger for Leads */}
+              {leads.length > 0 && profile?.plan_tier === 'free' && (
+                <div className="bg-gradient-hero p-6 rounded-2xl text-white shadow-lg animate-bounce-subtle">
+                  <div className="flex items-start gap-4">
+                    <Sparkles className="h-8 w-8 shrink-0" />
+                    <div className="space-y-2">
+                      <p className="font-bold text-lg">Você recebeu {leads.length} potenciais clientes!</p>
+                      <p className="text-white/80 text-sm">Trancistas Pro recebem até 5x mais contatos. Faça o upgrade agora para desbloquear seu potencial máximo.</p>
+                      <Link to="/assinatura">
+                        <Button className="bg-white text-primary hover:bg-white/90 border-none mt-2">
+                          Fazer Upgrade e Ver Leads
+                        </Button>
+                      </Link>
                     </div>
-                    {profile && (
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Membro desde</span>
-                        <span className="font-medium">
-                          {new Date(profile.created_at).toLocaleDateString("pt-BR")}
-                        </span>
-                      </div>
-                    )}
-                    {userRole && (
-                      <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Tipo de conta</span>
-                        <Badge variant="outline">{userRole}</Badge>
-                      </div>
-                    )}
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              )}
+
+              {/* Favorites & Account Info Section (Simplified) */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card className="bg-white border-none shadow-soft">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Heart className="h-5 w-5 text-red-500" />
+                      Suas Favoritas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {favorites.length > 0 ? (
+                      favorites.slice(0, 3).map((fav: any) => (
+                        <Link key={fav.id} to={`/trancista/${fav.braider_profiles.id}`} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted transition-colors">
+                          <img src={fav.braider_profiles.image_url || "/placeholder.svg"} className="h-10 w-10 rounded-full object-cover" alt="" />
+                          <div className="text-sm">
+                            <p className="font-bold truncate max-w-[150px]">{fav.braider_profiles.professional_name || fav.braider_profiles.name}</p>
+                            <p className="text-xs text-muted-foreground">{fav.braider_profiles.city}</p>
+                          </div>
+                        </Link>
+                      ))
+                    ) : (
+                      <p className="text-sm text-muted-foreground">Nenhuma favorita ainda.</p>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white border-none shadow-soft">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Calendar className="h-5 w-5 text-primary" />
+                      Sua Conta
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Email:</span>
+                      <span className="font-medium truncate max-w-[150px]">{userEmail}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Tipo:</span>
+                      <Badge variant="outline" className="capitalize">{userRole || 'Usuário'}</Badge>
+                    </div>
+                    <Button variant="ghost" className="w-full text-red-500 hover:text-red-600 hover:bg-red-50 p-0 h-auto text-sm justify-start" onClick={() => supabase.auth.signOut().then(() => navigate('/auth'))}>
+                      Sair da conta
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </div>

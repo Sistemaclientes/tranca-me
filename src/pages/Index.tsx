@@ -37,7 +37,7 @@ const Index = () => {
                   Buscar Trancistas
                 </Button>
               </Link>
-              <Link to="/auth">
+              <Link to="/quero-ser-trancista">
                 <Button variant="outline" size="lg" className="animate-scale-in">
                   Sou Trancista
                 </Button>
@@ -126,7 +126,7 @@ const Index = () => {
               clientes todos os dias. Crie seu perfil gratuito e comece agora!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Link to="/auth">
+              <Link to="/quero-ser-trancista">
                 <Button variant="outline" size="lg" className="bg-white text-primary hover:bg-white/90 border-white">
                   Criar Perfil Grátis
                 </Button>
@@ -165,7 +165,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-
 
       {/* Footer */}
       <footer className="py-8 px-4 border-t border-border">

@@ -10,6 +10,8 @@ import { ArrowLeft, MapPin, Star, Phone, Mail, Instagram, Facebook, Edit, Heart 
 import ImageGallery from "@/components/ImageGallery";
 import FavoriteButton from "@/components/FavoriteButton";
 import ReviewsSection from "@/components/ReviewsSection";
+import { useLeads } from "@/hooks/useLeads";
+import { toast } from "sonner";
 
 const formatPhoneNumber = (phone: string): string => {
   const digits = phone.replace(/[^0-9]/g, '');
@@ -28,6 +30,7 @@ const BraiderProfile = () => {
   const [braider, setBraider] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false);
+  const { registerLead } = useLeads();
 
   useEffect(() => {
     loadProfile();
@@ -42,6 +45,9 @@ const BraiderProfile = () => {
 
     if (profile) {
       setBraider(profile);
+      
+      // Increment view count
+      await supabase.rpc('increment_view_count', { profile_id: id });
       
       // Check if current user is the owner
       const { data: { session } } = await supabase.auth.getSession();
@@ -66,9 +72,15 @@ const BraiderProfile = () => {
     return null; // Will redirect automatically
   }
 
-  const handleWhatsApp = () => {
-    const message = encodeURIComponent(`Olá ${braider.name}! Encontrei seu perfil na plataforma de trancistas e gostaria de agendar um horário.`);
-    window.open(`https://wa.me/${braider.whatsapp.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
+  const handleWhatsApp = async () => {
+    // Register lead
+    const success = await registerLead(braider.id);
+    if (success) {
+      const message = encodeURIComponent(`Olá ${braider.name}! Encontrei seu perfil na plataforma de trancistas e gostaria de agendar um horário.`);
+      window.open(`https://wa.me/${braider.whatsapp.replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
+    } else {
+      toast.error("Erro ao registrar interesse. Tente novamente.");
+    }
   };
 
   return (
