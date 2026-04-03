@@ -17,6 +17,7 @@ const MeuPerfil = lazy(() => import("./pages/MeuPerfil"));
 const Assinatura = lazy(() => import("./pages/Assinatura"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 const AdminSuggestions = lazy(() => import("./pages/AdminSuggestions"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const Favoritos = lazy(() => import("./pages/Favoritos"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const BraiderNotFound = lazy(() => import("./pages/BraiderNotFound"));
