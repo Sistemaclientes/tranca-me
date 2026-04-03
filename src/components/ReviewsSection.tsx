@@ -240,11 +240,27 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
       </div>
 
       {totalReviews === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">Nenhuma avaliação ainda.</p>
-          <p className="text-sm text-muted-foreground mt-2">
+        <div className="text-center py-12 bg-muted/20 rounded-xl border-2 border-dashed border-muted-foreground/10">
+          <MessageSquarePlus className="h-12 w-12 mx-auto text-muted-foreground/30 mb-4" />
+          <p className="text-muted-foreground font-medium">Nenhuma avaliação ainda.</p>
+          <p className="text-sm text-muted-foreground mt-2 mb-6">
             Seja o primeiro a avaliar esta trancista!
           </p>
+          {!isOwner && (
+            <Button 
+              variant="hero" 
+              onClick={() => {
+                if (!isLogged) {
+                  toast.info("Faça login para deixar sua avaliação!");
+                  navigate("/auth");
+                } else {
+                  setIsOpen(true);
+                }
+              }}
+            >
+              Avaliar Agora
+            </Button>
+          )}
         </div>
       ) : (
         <div className="space-y-4">
