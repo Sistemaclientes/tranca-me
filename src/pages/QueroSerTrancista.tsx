@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle2, TrendingUp, Users, Smartphone, Star, ShieldCheck, Sparkles, WhatsApp } from "lucide-react";
+import { CheckCircle2, TrendingUp, Users, Smartphone, Star, ShieldCheck, Sparkles, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroCover from "@/assets/hero-cover.png";
 
