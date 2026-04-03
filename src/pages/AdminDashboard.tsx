@@ -203,7 +203,8 @@ const AdminDashboard = () => {
                 )}
               </TabsTrigger>
               <TabsTrigger value="gallery">Galeria</TabsTrigger>
-              <TabsTrigger value="subscriptions">Assinaturas</TabsTrigger>
+              <TabsTrigger value="sugestoes">Sugestões</TabsTrigger>
+              <TabsTrigger value="subscriptions">Financeiro</TabsTrigger>
             </TabsList>
 
             <TabsContent value="trancistas">
