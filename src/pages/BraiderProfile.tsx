@@ -141,7 +141,7 @@ const BraiderProfile = () => {
 
           <Button 
             variant="ghost" 
-...
+            onClick={() => navigate("/buscar")}
             className="mb-6"
           >
             <ArrowLeft className="h-4 w-4" />
