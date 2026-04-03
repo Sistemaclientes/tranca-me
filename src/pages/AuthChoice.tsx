@@ -2,10 +2,31 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, Search } from "lucide-react";
+import { Sparkles, Search, ShieldAlert } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const AuthChoice = () => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    checkAdmin();
+  }, []);
+
+  const checkAdmin = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      
+      setIsAdmin(!!roleData);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-warm">
