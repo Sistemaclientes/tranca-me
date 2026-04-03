@@ -62,7 +62,9 @@ const BraiderCard = memo(({ braider }: { braider: any }) => {
       </CardContent>
     </Card>
   );
-};
+});
+
+BraiderCard.displayName = "BraiderCard";
 
 const FeaturedBraidersCarousel = () => {
   const navigate = useNavigate();
