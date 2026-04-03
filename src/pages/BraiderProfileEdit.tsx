@@ -77,7 +77,7 @@ const BraiderProfileEdit = () => {
         setFormData({
           name: profile.name || "",
           professionalName: profile.professional_name || "",
-          whatsapp: profile.whatsapp || "",
+          whatsapp: formatPhoneNumber(profile.whatsapp || ""),
           email: profile.email || "",
           instagram: profile.instagram || "",
           facebook: profile.facebook || "",
@@ -101,6 +101,23 @@ const BraiderProfileEdit = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatPhoneNumber = (value: string) => {
+    if (!value) return value;
+    const phoneNumber = value.replace(/\D/g, "");
+    const phoneNumberLength = phoneNumber.length;
+    if (phoneNumberLength < 3) return phoneNumber;
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 2)}) ${phoneNumber.slice(2)}`;
+    }
+    if (phoneNumberLength < 11) {
+      return `(${phoneNumber.slice(0, 2)}) ${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6)}`;
+    }
+    return `(${phoneNumber.slice(0, 2)}) ${phoneNumber.slice(
+      2,
+      7
+    )}-${phoneNumber.slice(7, 11)}`;
   };
 
   const handleProfilePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,27 +169,37 @@ const BraiderProfileEdit = () => {
     if (!userId) return;
 
     setUploading(true);
+    console.log("Iniciando salvamento do perfil...");
 
     try {
       let imageUrl = profilePhotoPreview;
+      if (imageUrl && imageUrl.startsWith('blob:')) {
+        imageUrl = ""; // Don't save blob URLs
+      }
+      
       let videoUrl = null;
-      let galleryUrls = galleryPreviews.filter(url => url.startsWith('http'));
+      let galleryUrls = galleryPreviews.filter(url => url && typeof url === 'string' && url.startsWith('http'));
 
       // Upload profile photo
       if (profilePhoto) {
+        console.log("Fazendo upload da foto de perfil...");
         const photoPath = `${userId}/profile-${Date.now()}.jpg`;
         imageUrl = await uploadFile(profilePhoto, 'profile-photos', photoPath);
       }
 
       // Upload gallery photos
-      for (const photo of galleryPhotos) {
-        const galleryPath = `${userId}/gallery-${Date.now()}-${Math.random()}.jpg`;
-        const url = await uploadFile(photo, 'gallery-photos', galleryPath);
-        galleryUrls.push(url);
+      if (galleryPhotos.length > 0) {
+        console.log(`Fazendo upload de ${galleryPhotos.length} fotos da galeria...`);
+        for (const photo of galleryPhotos) {
+          const galleryPath = `${userId}/gallery-${Date.now()}-${Math.random()}.jpg`;
+          const url = await uploadFile(photo, 'gallery-photos', galleryPath);
+          galleryUrls.push(url);
+        }
       }
 
       // Upload presentation video
       if (presentationVideo) {
+        console.log("Fazendo upload do vídeo...");
         const videoPath = `${userId}/video-${Date.now()}.mp4`;
         videoUrl = await uploadFile(presentationVideo, 'presentation-videos', videoPath);
       }
@@ -183,7 +210,7 @@ const BraiderProfileEdit = () => {
         user_id: userId,
         name: formData.name,
         professional_name: formData.professionalName,
-        whatsapp: formData.whatsapp,
+        whatsapp: formData.whatsapp.replace(/\D/g, ""), // Save only digits
         email: formData.email,
         instagram: formData.instagram,
         facebook: formData.facebook,
@@ -197,6 +224,8 @@ const BraiderProfileEdit = () => {
         video_url: videoUrl,
       };
 
+      console.log("Dados do perfil a serem salvos:", profileData);
+
       const { data, error } = await supabase
         .from("braider_profiles")
         .upsert(profileData, { onConflict: "user_id" })
@@ -204,25 +233,28 @@ const BraiderProfileEdit = () => {
         .single();
 
       if (error) {
+        console.error("Erro no upsert:", error);
         toast({
           title: "Erro ao salvar perfil",
           description: error.message,
           variant: "destructive",
         });
       } else {
+        console.log("Perfil salvo com sucesso!", data);
         toast({
           title: "Perfil salvo com sucesso!",
-          description: "Redirecionando para pagamento...",
+          description: "Redirecionando...",
         });
         
-        // Redirect to the subscription payment page
+        // Redirect to the profile page directly to show it's saved
         setTimeout(() => {
-          navigate("/assinatura");
+          navigate(`/trancista/${data.id}`);
         }, 1500);
       }
     } catch (error: any) {
+      console.error("Exceção no handleSubmit:", error);
       toast({
-        title: "Erro no upload",
+        title: "Erro no processamento",
         description: error.message,
         variant: "destructive",
       });
@@ -373,7 +405,8 @@ const BraiderProfileEdit = () => {
                       id="whatsapp"
                       placeholder="(11) 99999-9999"
                       value={formData.whatsapp}
-                      onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+                      onChange={(e) => setFormData({ ...formData, whatsapp: formatPhoneNumber(e.target.value) })}
+                      maxLength={15}
                       required
                     />
                   </div>
