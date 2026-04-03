@@ -88,44 +88,51 @@ const Navbar = () => {
           <Link to="/buscar">
             <Button variant="ghost">Buscar Trancistas</Button>
           </Link>
-          {isAuthenticated && (
+          {!isLoading && (
             <>
-              <Link to="/meu-perfil">
-                <Button variant="ghost" size="sm">
-                  <User className="h-4 w-4 mr-2" />
-                  Meu Perfil
+              {isAuthenticated && (
+                <>
+                  <Link to="/meu-perfil">
+                    <Button variant="ghost" size="sm">
+                      <User className="h-4 w-4 mr-2" />
+                      Meu Perfil
+                    </Button>
+                  </Link>
+                  <Link to="/favoritos">
+                    <Button variant="ghost" size="sm">
+                      <Heart className="h-4 w-4 mr-2" />
+                      Favoritos
+                    </Button>
+                  </Link>
+                </>
+              )}
+              {isAdmin && (
+                <Link to="/admin/sugestoes">
+                  <Button variant="ghost" size="sm">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Admin
+                  </Button>
+                </Link>
+              )}
+              {isAuthenticated ? (
+                <Button variant="outline" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sair
                 </Button>
-              </Link>
-              <Link to="/favoritos">
-                <Button variant="ghost" size="sm">
-                  <Heart className="h-4 w-4 mr-2" />
-                  Favoritos
-                </Button>
-              </Link>
+              ) : (
+                <>
+                  <Link to="/auth">
+                    <Button variant="outline">Entrar</Button>
+                  </Link>
+                  <Link to="/auth">
+                    <Button variant="hero">Cadastrar-se</Button>
+                  </Link>
+                </>
+              )}
             </>
           )}
-          {isAdmin && (
-            <Link to="/admin/sugestoes">
-              <Button variant="ghost" size="sm">
-                <Settings className="h-4 w-4 mr-2" />
-                Admin
-              </Button>
-            </Link>
-          )}
-          {isAuthenticated ? (
-            <Button variant="outline" onClick={handleLogout}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Sair
-            </Button>
-          ) : (
-            <>
-              <Link to="/auth">
-                <Button variant="outline">Entrar</Button>
-              </Link>
-              <Link to="/auth">
-                <Button variant="hero">Cadastrar-se</Button>
-              </Link>
-            </>
+          {isLoading && (
+             <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
           )}
         </div>
       </div>
