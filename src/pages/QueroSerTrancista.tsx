@@ -30,7 +30,7 @@ const QueroSerTrancista = () => {
             Consiga <span className="text-primary">clientes todos os dias</span> na sua região
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-slide-up delay-100">
-            Cadastre seu perfil gratuitamente e apareça para centenas de clientes que buscam trancistas em São José, Florianópolis e região.
+            Cadastre seu perfil e apareça para centenas de clientes que buscam trancistas em São José, Florianópolis e região.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-scale-in delay-200">
             <Link to="/auth?role=braider">

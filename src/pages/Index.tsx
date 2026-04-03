@@ -160,7 +160,7 @@ const Index = () => {
               <h2 className="font-display text-4xl md:text-5xl font-bold leading-tight">Valorize seu Talento</h2>
               <p className="text-lg text-white/90">
                 Divulgue seu trabalho, mostre seu portfólio e conquiste novos
-                clientes todos os dias. Crie seu perfil gratuito e comece agora!
+                clientes todos os dias. Comece agora!
               </p>
               
               <div className="grid sm:grid-cols-2 gap-6 pt-4">
