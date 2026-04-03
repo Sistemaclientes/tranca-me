@@ -16,7 +16,7 @@ const Checkout = () => {
   const { toast } = useToast();
   const { validateCoupon, validatingCoupon } = useCouponValidation();
   
-  const planType = searchParams.get("plan") as "basic" | "premium";
+  const planType = searchParams.get("plan") as "pro" | "premium";
   
   const [formData, setFormData] = useState({
     name: "",
