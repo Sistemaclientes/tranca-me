@@ -25,7 +25,8 @@ import {
   Share2,
   Sparkles,
   Zap,
-  Users
+  Users,
+  ShieldAlert
 } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import StarRating from "@/components/StarRating";
