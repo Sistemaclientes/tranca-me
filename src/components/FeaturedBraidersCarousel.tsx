@@ -12,11 +12,9 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import StarRating from "@/components/StarRating";
-import { useReviews } from "@/hooks/useReviews";
+import BraiderCard from "@/components/BraiderCard";
 import AutoScroll from "embla-carousel-auto-scroll";
 
-const BraiderCard = memo(({ braider }: { braider: any }) => {
-  const navigate = useNavigate();
   const { averageRating, totalReviews } = useReviews(braider.id);
 
   return (
