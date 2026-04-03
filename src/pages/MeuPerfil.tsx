@@ -78,66 +78,71 @@ const MeuPerfil = () => {
   }, []);
 
   const loadUserData = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session) {
-      navigate("/auth");
-      return;
-    }
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        navigate("/auth");
+        return;
+      }
 
-    setUserEmail(session.user.email || "");
+      setUserEmail(session.user.email || "");
 
-    const { data: roleData } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", session.user.id)
-      .maybeSingle();
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .maybeSingle();
 
-    if (roleData) {
-      setUserRole(roleData.role);
-    }
+      if (roleData) {
+        setUserRole(roleData.role);
+      }
 
-    const { data: profileData } = await supabase
-      .from("braider_profiles")
-      .select("*")
-      .eq("user_id", session.user.id)
-      .maybeSingle();
-
-    if (profileData) {
-      setProfile(profileData as BraiderProfile);
-
-      const { data: reviewsData } = await supabase
-        .from("reviews")
+      const { data: profileData } = await supabase
+        .from("braider_profiles")
         .select("*")
-        .eq("braider_id", profileData.id)
-        .order("created_at", { ascending: false })
-        .limit(5);
+        .eq("user_id", session.user.id)
+        .maybeSingle();
 
-      setReviews(reviewsData || []);
+      if (profileData) {
+        setProfile(profileData as BraiderProfile);
 
-      // Load leads
-      const braiderLeads = await getBraiderLeads(profileData.id);
-      setLeads(braiderLeads || []);
-    }
+        const { data: reviewsData } = await supabase
+          .from("reviews")
+          .select("*")
+          .eq("braider_id", profileData.id)
+          .order("created_at", { ascending: false })
+          .limit(5);
 
-    const { data: favoritesData } = await supabase
-      .from("favorites")
-      .select(`
-        id,
-        braider_id,
-        braider_profiles (
+        setReviews(reviewsData || []);
+
+        // Load leads
+        const braiderLeads = await getBraiderLeads(profileData.id);
+        setLeads(braiderLeads || []);
+      }
+
+      const { data: favoritesData } = await supabase
+        .from("favorites")
+        .select(`
           id,
-          name,
-          professional_name,
-          image_url,
-          city,
-          neighborhood
-        )
-      `)
-      .eq("user_id", session.user.id);
+          braider_id,
+          braider_profiles (
+            id,
+            name,
+            professional_name,
+            image_url,
+            city,
+            neighborhood
+          )
+        `)
+        .eq("user_id", session.user.id);
 
-    setFavorites(favoritesData as any || []);
-    setLoading(false);
+      setFavorites(favoritesData as any || []);
+    } catch (error) {
+      console.error("Error loading user data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const shareProfile = () => {

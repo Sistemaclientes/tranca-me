@@ -16,14 +16,19 @@ const Navbar = () => {
     let mounted = true;
 
     const initializeAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!mounted) return;
-      
-      setIsAuthenticated(!!session);
-      if (session) {
-        await checkAdminRole(session.user.id);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!mounted) return;
+        
+        setIsAuthenticated(!!session);
+        if (session) {
+          await checkAdminRole(session.user.id);
+        }
+      } catch (error) {
+        console.error("Error initializing auth:", error);
+      } finally {
+        if (mounted) setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     initializeAuth();
