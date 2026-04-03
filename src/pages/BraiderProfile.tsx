@@ -57,9 +57,12 @@ const BraiderProfile = () => {
           .maybeSingle();
         
         const is_admin = !!roleData;
-        const is_expired = profile.status !== 'active' || (profile.trial_ends_at && new Date(profile.trial_ends_at) < new Date() && profile.plan_tier === 'free');
+        
+        // Bloqueio deve ser validado no backend, mas no frontend tratamos a visibilidade
+        const is_blocked = profile.status === 'blocked';
+        const is_expired = profile.status === 'expired';
 
-        if (is_expired && !is_owner && !is_admin) {
+        if ((is_blocked || is_expired) && !is_owner && !is_admin) {
           navigate("/trancista-nao-encontrada");
           return;
         }

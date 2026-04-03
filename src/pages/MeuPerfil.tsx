@@ -48,6 +48,7 @@ interface BraiderProfile {
   gallery_urls: string[] | null;
   is_premium: boolean;
   plan_tier: 'free' | 'pro' | 'premium';
+  status: 'trial' | 'active' | 'expired' | 'blocked' | 'pending_payment';
   view_count: number;
   whatsapp_click_count: number;
   premium_since: string | null;
