@@ -34,6 +34,7 @@ const Assinatura = () => {
       name: "Plano Grátis",
       price: 0,
       features: [
+        "Teste grátis por 7 dias",
         "Perfil básico com foto",
         "Galeria limitada (3 fotos)",
         "Contato via WhatsApp",
@@ -49,15 +50,16 @@ const Assinatura = () => {
         "Destaque nos resultados",
         "Badge Verificado",
         "Suporte por WhatsApp",
-        "Teste grátis por 7 dias",
+        "Acesso a recursos básicos",
       ],
     },
     premium: {
       name: "Plano Premium",
-      price: 49.90,
+      price: 39.99,
       features: [
         "Topo dos resultados de busca",
         "Destaque visual exclusivo",
+        "Slide fluido no carrossel principal",
         "Relatório detalhado de leads",
         "Acesso antecipado a recursos",
         "Prioridade total na região",

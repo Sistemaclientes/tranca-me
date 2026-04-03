@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/carousel";
 import StarRating from "@/components/StarRating";
 import { useReviews } from "@/hooks/useReviews";
+import AutoScroll from "embla-carousel-auto-scroll";
 
 const BraiderCard = memo(({ braider }: { braider: any }) => {
   const navigate = useNavigate();
@@ -79,9 +80,9 @@ const FeaturedBraidersCarousel = () => {
     const { data } = await supabase
       .from("active_braiders")
       .select("*")
-      .order("is_premium", { ascending: false })
+      .eq("is_premium", true)
       .order("created_at", { ascending: false })
-      .limit(6);
+      .limit(8);
     
     setBraiders(data || []);
     setLoading(false);
@@ -97,6 +98,13 @@ const FeaturedBraidersCarousel = () => {
         align: "start",
         loop: true,
       }}
+      plugins={[
+        AutoScroll({
+          speed: 1.5,
+          stopOnInteraction: false,
+          stopOnMouseEnter: true,
+        }),
+      ]}
       className="w-full max-w-5xl mx-auto"
     >
       <CarouselContent>
