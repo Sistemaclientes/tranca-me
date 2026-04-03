@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Search, Sparkles, MapPin, Star } from "lucide-react";
 import { Link } from "react-router-dom";
-import FeaturedBraidersCarousel from "@/components/FeaturedBraidersCarousel";
+// Removed FeaturedBraidersCarousel as requested to use PremiumBraiders grid style
 import CoverageAreas from "@/components/home/CoverageAreas";
 import Hero from "@/components/home/Hero";
 import Features from "@/components/home/Features";
@@ -43,7 +43,7 @@ const Index = () => {
         </section>
 
         {/* Featured Braiders Section */}
-        <section id="destaques" className="py-20 px-4 bg-muted/30 relative overflow-hidden">
+        <section id="destaques" className="py-24 px-4 bg-gradient-to-b from-muted/50 to-background relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl -z-10"></div>
           
           <div className="container mx-auto">
@@ -52,8 +52,8 @@ const Index = () => {
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-bold uppercase tracking-wider mx-auto">
                   Seleção Premium
                 </div>
-                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-primary leading-tight">
-                  Trancistas em Destaque
+                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                  Trancistas em <span className="text-primary italic">Destaque</span>
                 </h2>
                 <p className="text-muted-foreground text-lg md:text-xl">
                   Conheça as profissionais mais recomendadas e bem avaliadas da nossa plataforma.
@@ -68,7 +68,7 @@ const Index = () => {
               </Link>
             </div>
             <div className="w-full mt-4 md:mt-8">
-              <FeaturedBraidersCarousel />
+              <PremiumBraiders />
             </div>
           </div>
         </section>
