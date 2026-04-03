@@ -30,6 +30,7 @@ const BraiderProfile = () => {
   const [braider, setBraider] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false);
+  const { registerLead } = useLeads();
 
   useEffect(() => {
     loadProfile();
