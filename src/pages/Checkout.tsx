@@ -81,7 +81,7 @@ const Checkout = () => {
   useEffect(() => {
     const initMP = () => {
       if (window.MercadoPago) {
-        mpRef.current = new window.MercadoPago(import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY || "APP_USR-1823332334143026", {
+        mpRef.current = new window.MercadoPago("APP_USR-1823332334143026", {
           locale: "pt-BR",
         });
       } else {
