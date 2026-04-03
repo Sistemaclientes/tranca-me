@@ -19,9 +19,20 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
   const averageRating = braider.average_rating || 0;
   const totalReviews = braider.total_reviews || 0;
 
+  const maskPhone = (phone: string) => {
+    if (!phone) return "";
+    const clean = phone.replace(/\D/g, "");
+    if (clean.length === 11) {
+      return `(${clean.slice(0, 2)}) ${clean.slice(2, 7)}-${clean.slice(7)}`;
+    } else if (clean.length === 10) {
+      return `(${clean.slice(0, 2)}) ${clean.slice(2, 6)}-${clean.slice(6)}`;
+    }
+    return phone;
+  };
+
   return (
     <Card 
-      className="bg-card border border-border/50 shadow-sm hover:shadow-glow transition-all duration-500 cursor-pointer relative group overflow-hidden rounded-[24px]"
+      className="bg-card border border-border/50 shadow-sm hover:shadow-glow hover:scale-[1.02] transition-all duration-500 cursor-pointer relative group overflow-hidden rounded-[24px]"
       onClick={() => navigate(`/trancista/${braider.id}`)}
     >
       {showFavorite && (
@@ -53,6 +64,12 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
             <MapPin className="h-3 w-3 text-primary" />
             <span>{braider.neighborhood}, {braider.city}</span>
           </div>
+          {braider.whatsapp && (
+            <div className="h-0 opacity-0 group-hover:h-auto group-hover:opacity-100 group-hover:mt-2 transition-all duration-300 overflow-hidden transform group-hover:scale-105 origin-left">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-primary">Informações de Contato</p>
+              <p className="text-sm font-semibold">{maskPhone(braider.whatsapp)}</p>
+            </div>
+          )}
         </div>
       </div>
 
