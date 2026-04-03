@@ -17,6 +17,7 @@ export type Database = {
       braider_profiles: {
         Row: {
           average_rating: number | null
+          braid_types: string[] | null
           city: string
           created_at: string
           description: string | null
@@ -48,6 +49,7 @@ export type Database = {
         }
         Insert: {
           average_rating?: number | null
+          braid_types?: string[] | null
           city: string
           created_at?: string
           description?: string | null
@@ -79,6 +81,7 @@ export type Database = {
         }
         Update: {
           average_rating?: number | null
+          braid_types?: string[] | null
           city?: string
           created_at?: string
           description?: string | null
