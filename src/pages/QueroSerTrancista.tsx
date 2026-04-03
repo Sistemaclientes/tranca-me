@@ -1,9 +1,10 @@
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle2, TrendingUp, Users, Smartphone, Star, ShieldCheck, Sparkles, MessageCircle } from "lucide-react";
+import { CheckCircle2, TrendingUp, Users, Smartphone, Star, ShieldCheck, Sparkles, MessageCircle, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroCover from "@/assets/hero-cover.png";
+import { Badge } from "@/components/ui/badge";
 
 const QueroSerTrancista = () => {
   return (
@@ -68,7 +69,7 @@ const QueroSerTrancista = () => {
         </div>
       </section>
 
-      {/* Benefits Section */}
+      {/* Benefits Section with Images */}
       <section className="py-24 px-4 overflow-hidden">
         <div className="container mx-auto">
           <div className="flex flex-col lg:flex-row gap-16 items-center">
@@ -179,7 +180,7 @@ const QueroSerTrancista = () => {
               <Card className="relative bg-white border-none shadow-2xl overflow-hidden">
                 <div className="bg-primary/10 p-4 border-b border-primary/10 flex justify-between items-center">
                   <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                    <div className="w-3 h-3 rounded-full bg-destructive/60"></div>
                     <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
                     <div className="w-3 h-3 rounded-full bg-green-400"></div>
                   </div>
@@ -285,18 +286,6 @@ const QueroSerTrancista = () => {
   );
 };
 
-const BenefitCard = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
-  <Card className="bg-white border-none shadow-soft hover:shadow-glow transition-all duration-300">
-    <CardContent className="p-8 space-y-4">
-      <div className="h-16 w-16 rounded-2xl bg-muted/50 flex items-center justify-center mb-4">
-        {icon}
-      </div>
-      <h3 className="font-display text-2xl font-semibold">{title}</h3>
-      <p className="text-muted-foreground leading-relaxed">{description}</p>
-    </CardContent>
-  </Card>
-);
-
 const TestimonialCard = ({ name, city, text, rating }: { name: string, city: string, text: string, rating: number }) => (
   <Card className="bg-white/50 backdrop-blur-sm border-none shadow-soft">
     <CardContent className="p-8 space-y-4">
@@ -313,7 +302,5 @@ const TestimonialCard = ({ name, city, text, rating }: { name: string, city: str
     </CardContent>
   </Card>
 );
-
-import { Badge } from "@/components/ui/badge";
 
 export default QueroSerTrancista;
