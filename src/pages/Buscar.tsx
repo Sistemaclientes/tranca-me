@@ -122,7 +122,9 @@ const Buscar = () => {
     return braiders.filter((braider) => {
       const cityMatch = !selectedCity || selectedCity === "all" || braider.city === selectedCity;
       const neighborhoodMatch = !selectedNeighborhood || selectedNeighborhood === "all" || braider.neighborhood === selectedNeighborhood;
-      const serviceMatch = !selectedService || selectedService === "all" || braider.services?.includes(selectedService);
+      const serviceMatch = !selectedService || selectedService === "all" || 
+                           braider.services?.includes(selectedService) || 
+                           braider.braid_types?.includes(selectedService);
       
       return cityMatch && neighborhoodMatch && serviceMatch;
     });
