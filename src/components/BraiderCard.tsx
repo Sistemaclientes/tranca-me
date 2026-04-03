@@ -34,6 +34,7 @@ const BraiderCard = memo(({ braider, showFavorite = false }: BraiderCardProps) =
               src={braider.image_url} 
               alt={braider.professional_name || braider.name}
               className="w-full h-full object-cover"
+              loading="lazy"
             />
           ) : (
             <div className="w-full h-full bg-gradient-hero flex items-center justify-center">
