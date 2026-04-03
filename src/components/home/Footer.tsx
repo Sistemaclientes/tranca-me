@@ -44,7 +44,7 @@ const Footer = () => {
             <ul className="space-y-2 text-muted-foreground text-sm">
               <li><Link to="/auth" className="hover:text-primary transition-colors">Entrar na Conta</Link></li>
               <li><Link to="/paineladm" className="hover:text-primary transition-colors flex items-center gap-1.5 justify-center md:justify-start">
-                <Lock className="h-3 w-3" /> Painel Admin
+                <Lock className="h-3 w-3" /> Painel Adm
               </Link></li>
               <li><Link to="#" className="hover:text-primary transition-colors">Termos de Uso</Link></li>
             </ul>
