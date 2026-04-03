@@ -293,28 +293,54 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
                   <span className="text-xs text-muted-foreground">
                     {format(new Date(review.created_at), "dd MMM yyyy", { locale: ptBR })}
                   </span>
-                  {isOwner && !review.is_verified && (
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="h-7 text-xs border-primary text-primary hover:bg-primary/10"
-                      onClick={async () => {
-                        const { error } = await supabase
-                          .from("reviews")
-                          .update({ is_verified: true })
-                          .eq("id", review.id);
-                        
-                        if (error) {
-                          toast.error("Erro ao publicar avaliação.");
-                        } else {
-                          toast.success("Avaliação publicada!");
-                          const { loadReviews } = useReviews(braiderId); // This won't work like this, need to use the one from the hook
-                        }
-                      }}
-                    >
-                      Publicar
-                    </Button>
-                  )}
+                  <div className="flex gap-2">
+                    {(isOwner || isAdmin) && !review.is_verified && (
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="h-7 text-xs border-primary text-primary hover:bg-primary/10"
+                        onClick={async () => {
+                          const { error } = await supabase
+                            .from("reviews")
+                            .update({ is_verified: true })
+                            .eq("id", review.id);
+                          
+                          if (error) {
+                            toast.error("Erro ao publicar avaliação.");
+                          } else {
+                            toast.success("Avaliação publicada!");
+                            loadReviews();
+                          }
+                        }}
+                      >
+                        Publicar
+                      </Button>
+                    )}
+                    {isAdmin && (
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="h-7 text-xs text-destructive hover:bg-destructive/10 border-destructive"
+                        onClick={async () => {
+                          if (!confirm("Tem certeza que deseja excluir esta avaliação?")) return;
+                          
+                          const { error } = await supabase
+                            .from("reviews")
+                            .delete()
+                            .eq("id", review.id);
+                          
+                          if (error) {
+                            toast.error("Erro ao excluir avaliação.");
+                          } else {
+                            toast.success("Avaliação excluída!");
+                            loadReviews();
+                          }
+                        }}
+                      >
+                        Excluir
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
               {review.comment && (
