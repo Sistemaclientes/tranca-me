@@ -59,6 +59,7 @@ const App = () => (
           <Route path="/meu-perfil" element={<Suspense fallback={<LoadingFallback />}><MeuPerfil /></Suspense>} />
           <Route path="/assinatura" element={<Suspense fallback={<LoadingFallback />}><Assinatura /></Suspense>} />
           <Route path="/checkout" element={<Suspense fallback={<LoadingFallback />}><Checkout /></Suspense>} />
+          <Route path="/admin" element={<Suspense fallback={<LoadingFallback />}><AdminDashboard /></Suspense>} />
           <Route path="/admin/sugestoes" element={<Suspense fallback={<LoadingFallback />}><AdminSuggestions /></Suspense>} />
           <Route path="/quero-ser-trancista" element={<Suspense fallback={<LoadingFallback />}><QueroSerTrancista /></Suspense>} />
           {/* SEO Routes for Cities */}
