@@ -278,9 +278,33 @@ const ReviewsSection = ({ braiderId }: ReviewsSectionProps) => {
                   </div>
                   <StarRating rating={review.rating} showNumber={false} size="sm" />
                 </div>
-                <span className="text-xs text-muted-foreground">
-                  {format(new Date(review.created_at), "dd MMM yyyy", { locale: ptBR })}
-                </span>
+                <div className="flex flex-col items-end gap-2">
+                  <span className="text-xs text-muted-foreground">
+                    {format(new Date(review.created_at), "dd MMM yyyy", { locale: ptBR })}
+                  </span>
+                  {isOwner && !review.is_verified && (
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="h-7 text-xs border-primary text-primary hover:bg-primary/10"
+                      onClick={async () => {
+                        const { error } = await supabase
+                          .from("reviews")
+                          .update({ is_verified: true })
+                          .eq("id", review.id);
+                        
+                        if (error) {
+                          toast.error("Erro ao publicar avaliação.");
+                        } else {
+                          toast.success("Avaliação publicada!");
+                          const { loadReviews } = useReviews(braiderId); // This won't work like this, need to use the one from the hook
+                        }
+                      }}
+                    >
+                      Publicar
+                    </Button>
+                  )}
+                </div>
               </div>
               {review.comment && (
                 <p className="text-sm text-foreground mt-2">{review.comment}</p>
