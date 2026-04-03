@@ -65,6 +65,7 @@ interface Lead {
 const MeuPerfil = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
   const { getBraiderLeads } = useLeads();
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string>("");
