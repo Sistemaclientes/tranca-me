@@ -15,7 +15,7 @@ const Assinatura = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { validateCoupon, validatingCoupon } = useCouponValidation();
-  const [selectedPlan, setSelectedPlan] = useState<"basic" | "premium" | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<"free" | "pro" | "premium" | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
